@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Kickstalker</string>
+    <string name="title_project_detail">A tool to watch the kickstarter projects
+        	you have backed. Also helps you to keep an eye on bookmarked project.s
+        	</string>
+    <string name="configuration_activity_label_username">Username</string>
+    <string name="configuration_activity_label_password">Password</string>
+    <string name="configuration_activity_username_hint">Your Kickstarter username</string>
+    <string name="configuration_activity_password_hint">Your Kickstarter password</string>
+    <string name="configuration_activity_button_ok">Save</string>
+    <string name="label_project_name">Project name</string>
+    <string name="fragment_caption_discover">Discover</string>
+
+</resources>
