@@ -12,5 +12,8 @@
     <string name="configuration_activity_button_ok">Save</string>
     <string name="label_project_name">Project name</string>
     <string name="fragment_caption_discover">Discover</string>
+    <string name="project_detail_label_backers">Backers:</string>
+    <string name="project_detail_label_pledged">Pledged:</string>
+    <string name="project_detail_label_timeleft">Time left:</string>
 
 </resources>

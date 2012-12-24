@@ -19,6 +19,12 @@ public class KickstarterResources {
 	 */
 	public static final String ID_PROJECT_TITLE = "#title";
 	
+	public static final String ID_PROJECT_BACKERS = "#backers_count";
+	
+	public static final String ID_PROJECT_PLEDGED = "#pledged";
+	
+	public static final String ID_PROJECT_TIMELEFT = "#project_duration_data";
+	
 	/**
 	 * This is the id of the video area within a specific project page. 
 	 */

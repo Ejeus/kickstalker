@@ -23,6 +23,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.util.Log;
+
 /**
  * The main client for content retrieval from Kickstarter.
  * 
@@ -74,9 +76,31 @@ public class KickstarterClient {
 		Document doc = Jsoup.connect(BASE_URL + reference.getRef()).get();
 
 		Elements meta = doc.select("meta");
-		project.setTitle(meta.select("meta[property=og:title]").first().attr("content"));
-		project.setDescription(meta.select("meta[property=og:description").first().attr("content"));
-
+		project.setTitle(meta.select("meta[property=og:title]").
+				first().attr("content"));
+		project.setShortDescription(meta.select("meta[property=og:description").
+				first().attr("content"));
+		
+		project.setDescription(doc.select(
+				KickstarterResources.CLASS_PROJECT_DESCRIPTION).first().text());
+		
+		String backers = doc.select(
+				KickstarterResources.ID_PROJECT_BACKERS).
+				first().attr("data-backers-count");
+		project.setBackers(Float.valueOf(backers).intValue());
+		
+		String pledged = doc.select(
+				KickstarterResources.ID_PROJECT_PLEDGED).
+				first().attr("data-pledged");
+		int pledgedInt = Float.valueOf(pledged).intValue();
+		Log.i(TAG, project.getTitle() + ": " + pledged + " | " + pledgedInt);
+		project.setPledged(Float.valueOf(pledged).intValue());
+		
+		String timeLeft = doc.select(
+				KickstarterResources.ID_PROJECT_TIMELEFT).
+				first().attr("data-hours-remaining");
+		project.setTimeLeft(Float.valueOf(timeLeft).intValue());
+		
 		String imgRef = meta.select("meta[property=og:image]").first().attr("content");
 		project.setImageData(extractImage(imgRef));
 		return project;

@@ -5,7 +5,10 @@
 package org.hummer.kickstalker.activity;
 
 import org.hummer.kickstalker.R;
+import org.hummer.kickstalker.fragment.ProjectListFragment;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 
 /**
@@ -23,6 +26,11 @@ public class DiscoverProjectsActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_discover);
 		
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		Fragment fragment = new ProjectListFragment();
+		ft.add(R.id.appContent, fragment);
+		
+		ft.commit();
 		
 	}
 

@@ -8,37 +8,63 @@
 package org.hummer.kickstalker;
 
 public final class R {
+    public static final class anim {
+        public static final int incoming=0x7f040000;
+        public static final int outgoing=0x7f040001;
+    }
     public static final class attr {
     }
     public static final class color {
-        public static final int background_subheading=0x7f040000;
-        public static final int kickstarter_green=0x7f040001;
+        public static final int background_subheading=0x7f050000;
+        public static final int black=0x7f050003;
+        public static final int kickstarter_green=0x7f050001;
+        public static final int light_gray=0x7f050004;
+        public static final int white=0x7f050002;
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int loader=0x7f070004;
-        public static final int mainContent=0x7f070003;
-        public static final int projectListFragment=0x7f070000;
-        public static final int root=0x7f070001;
-        public static final int textView1=0x7f070002;
+        public static final int appContent=0x7f080000;
+        public static final int fieldBackers=0x7f080007;
+        public static final int fieldDescription=0x7f08000f;
+        public static final int fieldPledged=0x7f08000a;
+        public static final int fieldShortDescription=0x7f080004;
+        public static final int fieldTimeLeft=0x7f08000d;
+        public static final int labelBackers=0x7f080006;
+        public static final int labelPledged=0x7f080009;
+        public static final int labelTimeLeft=0x7f08000c;
+        public static final int loader=0x7f080013;
+        public static final int mainContent=0x7f080012;
+        public static final int projectImage=0x7f080003;
+        public static final int projectTitle=0x7f080001;
+        public static final int root=0x7f080010;
+        public static final int scrollView1=0x7f080002;
+        public static final int tableRow1=0x7f080005;
+        public static final int tableRow2=0x7f080008;
+        public static final int tableRow3=0x7f08000b;
+        public static final int tableRow4=0x7f08000e;
+        public static final int textView1=0x7f080011;
     }
     public static final class layout {
         public static final int activity_discover=0x7f030000;
-        public static final int fragment_list_general=0x7f030001;
-        public static final int list_detail_project=0x7f030002;
+        public static final int fragment_detail_project=0x7f030001;
+        public static final int fragment_list_general=0x7f030002;
+        public static final int list_detail_project=0x7f030003;
     }
     public static final class string {
-        public static final int app_name=0x7f050000;
-        public static final int configuration_activity_button_ok=0x7f050006;
-        public static final int configuration_activity_label_password=0x7f050003;
-        public static final int configuration_activity_label_username=0x7f050002;
-        public static final int configuration_activity_password_hint=0x7f050005;
-        public static final int configuration_activity_username_hint=0x7f050004;
-        public static final int fragment_caption_discover=0x7f050008;
-        public static final int label_project_name=0x7f050007;
-        public static final int title_project_detail=0x7f050001;
+        public static final int app_name=0x7f060000;
+        public static final int configuration_activity_button_ok=0x7f060006;
+        public static final int configuration_activity_label_password=0x7f060003;
+        public static final int configuration_activity_label_username=0x7f060002;
+        public static final int configuration_activity_password_hint=0x7f060005;
+        public static final int configuration_activity_username_hint=0x7f060004;
+        public static final int fragment_caption_discover=0x7f060008;
+        public static final int label_project_name=0x7f060007;
+        public static final int project_detail_label_backers=0x7f060009;
+        public static final int project_detail_label_pledged=0x7f06000a;
+        public static final int project_detail_label_timeleft=0x7f06000b;
+        public static final int title_project_detail=0x7f060001;
     }
     public static final class style {
         /** 
@@ -62,10 +88,10 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f060000;
+        public static final int AppBaseTheme=0x7f070000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f060001;
+        public static final int AppTheme=0x7f070001;
     }
 }

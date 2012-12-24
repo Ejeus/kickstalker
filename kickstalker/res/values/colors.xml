@@ -2,5 +2,7 @@
 <resources>
     <color name="background_subheading">#333</color>
     <color name="kickstarter_green">#87c442</color>
-    
+    <color name="white">#FFF</color>
+    <color name="black">#000</color>
+    <color name="light_gray">#DDD</color>
 </resources>

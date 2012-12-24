@@ -15,11 +15,15 @@ import org.hummer.kickstalker.client.KickstarterClient;
 import org.hummer.kickstalker.data.Project;
 import org.hummer.kickstalker.data.Reference;
 import org.hummer.kickstalker.view.ProjectCardListView;
+import org.hummer.kickstalker.view.ProjectCardListView.OnItemSelectedListener;
+import org.hummer.kickstalker.view.ProjectCardView;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +38,10 @@ import android.widget.ScrollView;
  * @version 1.0
  *
  */
-public class ProjectListFragment extends Fragment {
+public class ProjectListFragment extends Fragment implements OnItemSelectedListener {
 
 	public static final String TAG = "FR-PRJLIST";
+	private List<Project> prjRefs;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Fragment#onCreate(android.os.Bundle)
@@ -64,11 +69,13 @@ public class ProjectListFragment extends Fragment {
 	 */
 	private void refreshContent(List<Project> prjRefs){
 		
+		this.prjRefs = prjRefs;
 		Activity current = getActivity();
 		LinearLayout main = 
 				(LinearLayout) getActivity().findViewById(R.id.mainContent);
 		ScrollView container = new ScrollView(current);
-		View tiledView = new ProjectCardListView(current, prjRefs);
+		ProjectCardListView tiledView = new ProjectCardListView(current, prjRefs);
+		tiledView.addItemSelectedListener(this);
 		container.addView(tiledView);
 		
 		main.removeAllViews();
@@ -112,6 +119,32 @@ public class ProjectListFragment extends Fragment {
 			refreshContent(result);
 			
 		}
+		
+	}
+
+
+	/* (non-Javadoc)
+	 * @see org.hummer.kickstalker.view.ProjectCardListView.OnItemSelectedListener#onSelected(
+	 * org.hummer.kickstalker.view.ProjectCardListView, org.hummer.kickstalker.view.ProjectCardView)
+	 */
+	@Override
+	public void onSelected(ProjectCardListView view, ProjectCardView select) {
+		
+		Log.i(TAG, "Starting transaction ...");
+		view.removeItemSelectedListener(this);
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ProjectDetailFragment newFragment = new ProjectDetailFragment();
+		Bundle args = new Bundle();
+		args.putSerializable(
+				ProjectDetailFragment.KEY_PROJECT, select.getProject());
+
+		newFragment.setArguments(args);
+		ft.replace(R.id.appContent, newFragment, "projectDetailFragment");
+		ft.addToBackStack(null);
+		ft.setTransitionStyle(R.anim.incoming);
+		
+		Log.i(TAG, "Committing transaction ...");
+		ft.commit();
 		
 	}
 	
