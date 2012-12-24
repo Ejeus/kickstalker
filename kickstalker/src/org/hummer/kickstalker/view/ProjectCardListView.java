@@ -6,8 +6,10 @@ package org.hummer.kickstalker.view;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.hummer.kickstalker.data.Project;
 
@@ -15,7 +17,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -35,13 +36,16 @@ public class ProjectCardListView extends View {
 	private Paint paint;
 	private int singleTileWidth;
 	private int singleTileHeight;
+	private Set<OnItemSelectedListener> listeners;
 	
 	private float x, y;
 	private float movedX, movedY;
-	private float threshold=10;
+	private float threshold=3;
+	private boolean click;
 
 	public ProjectCardListView(Context context){
 		super(context);
+		init();
 	}
 	
 	/**
@@ -52,14 +56,40 @@ public class ProjectCardListView extends View {
 		this.projects = projects;
 		tiles = new ArrayList<ProjectCardView>();
 		cache = new HashMap<String, Bitmap>();
-		
-		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-		for(int i=0, l=projects.size(); i<l; i++)
-				tiles.add(new ProjectCardView(context,projects.get(i)));
+		for(int i=0, l=projects.size(); i<l; i++){
+				ProjectCardView v = new ProjectCardView(context,projects.get(i));
+				
+				tiles.add(v);
+		}
+		init();
 
 	}
+	
+	/**
+	 * Needs to be called on creation
+	 */
+	private void init(){
+		
+		listeners = new HashSet<ProjectCardListView.OnItemSelectedListener>();
+		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		
+	}
 
+	/**
+	 * @param l, OnItemSelectedListener - The listener to add
+	 */
+	public void addItemSelectedListener(OnItemSelectedListener l){
+		listeners.add(l);
+	}
+	
+	/**
+	 * @param l, OnItemSelectedListener - The listener to remove
+	 */
+	public void removeItemSelectedListener(OnItemSelectedListener l){
+		listeners.remove(l);
+	}
+	
 	/**
 	 * @param canvas, Canvas - The canvas to draw component on.
 	 */
@@ -131,6 +161,9 @@ public class ProjectCardListView extends View {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see android.view.View#onTouchEvent(android.view.MotionEvent)
+	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		
@@ -139,14 +172,18 @@ public class ProjectCardListView extends View {
 		case MotionEvent.ACTION_DOWN:
 			x=event.getX();
 			y=event.getY();
+			click = true;
 			return true;
 		case MotionEvent.ACTION_MOVE:
 			movedX = event.getX();
 			movedY = event.getY();
 		case MotionEvent.ACTION_UP:
 			if(movedX>=x-threshold && movedX<=x+threshold &&
-					movedY>=y-threshold && movedY<=y+threshold){
-				Log.i(TAG, findTile(x, y).getProject().getTitle());
+					movedY>=y-threshold && movedY<=y+threshold && click){
+				ProjectCardView tile = findTile(x, y);
+				for(OnItemSelectedListener l : listeners)
+					l.onSelected(this, tile);
+				click=false;
 			}
 		default:
 			return false;
@@ -154,12 +191,24 @@ public class ProjectCardListView extends View {
 		
 	}	
 
+	/**
+	 * @param x, double - The x coordinate of the point to find tile at.
+	 * @param y, double - The y coordinate of the point to find tile at.
+	 * @return ProjectCardView - The found tile at this position.
+	 */
 	private ProjectCardView findTile(double x, double y){
 		double wx = Math.floor(x / singleTileWidth);
 		double wy = Math.floor(y / singleTileHeight);
 		
 		int idx = Double.valueOf(wy * 2 + wx).intValue();
 		return tiles.get(idx);
+	}
+	
+	public interface OnItemSelectedListener{
+		
+		public void onSelected(ProjectCardListView view,
+				ProjectCardView select);
+		
 	}
 	
 }
