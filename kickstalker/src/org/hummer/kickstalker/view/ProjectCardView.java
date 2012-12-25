@@ -4,7 +4,7 @@
  */
 package org.hummer.kickstalker.view;
 
-import org.hummer.kickstalker.data.Project;
+import org.hummer.kickstalker.data.Reference;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -31,7 +31,7 @@ import android.view.View;
  */
 public class ProjectCardView extends View {
 	
-	Project project;
+	Reference project;
 	TextPaint paint;
 	Paint translucentPaint;
 	Paint borderPaint;
@@ -55,12 +55,12 @@ public class ProjectCardView extends View {
 	/**
 	 * @param context
 	 */
-	public ProjectCardView(Context context, Project project) {
+	public ProjectCardView(Context context, Reference project) {
 		super(context);
 		this.project = project;
 	}
 
-	public Project getProject(){
+	public Reference getProjectReference(){
 		return project;
 	}
 	
@@ -93,7 +93,7 @@ public class ProjectCardView extends View {
 		shadowPaint.setStyle(Style.FILL_AND_STROKE);
 		
 		int titlePadding = paddingLeft + paddingRight + textPadding * 2;
-		titleLayout = new StaticLayout(project.getTitle(), paint, width-titlePadding, 
+		titleLayout = new StaticLayout(project.getLabel(), paint, width-titlePadding, 
 				Alignment.ALIGN_NORMAL, 1, 1, true);
 		text = Bitmap.createBitmap(titleLayout.getWidth(), 
 				titleLayout.getHeight(), Bitmap.Config.ARGB_8888);

@@ -5,7 +5,6 @@
 package org.hummer.kickstalker.activity;
 
 import org.hummer.kickstalker.AppController;
-import org.hummer.kickstalker.client.KickstarterClient;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -20,23 +19,17 @@ public class BaseActivity extends Activity {
 
 	public static final String RETURN_TO = "NAV_RETURNTO";
 	protected AppController appC;
-	protected KickstarterClient client;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		appC = AppController.getInstance();
-		client = appC.getClient();
 		
 	}
 	
 	public AppController getAppController(){
 		return appC;
-	}
-	
-	public KickstarterClient getClient(){
-		return client;
 	}
 	
 }

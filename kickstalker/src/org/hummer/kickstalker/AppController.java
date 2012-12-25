@@ -7,7 +7,8 @@ package org.hummer.kickstalker;
 import java.io.IOException;
 import java.io.StreamCorruptedException;
 
-import org.hummer.kickstalker.client.KickstarterClient;
+import org.hummer.kickstalker.cache.HTMLCache;
+import org.hummer.kickstalker.cache.ImageCache;
 import org.hummer.kickstalker.factory.CacheFactory;
 
 import android.content.Context;
@@ -22,8 +23,8 @@ public class AppController {
 
 	public static final String SETTINGS_CREDENTIALS = "SETTINGS_CREDENTIALS";
 	private static AppController INSTANCE;
-	private ProjectCache projectCache;
-	private KickstarterClient client;
+	private HTMLCache htmlCache;
+	private ImageCache imgCache;
 	
 	private AppController(){}
 	
@@ -32,15 +33,10 @@ public class AppController {
 		return INSTANCE;
 	}
 	
-	public KickstarterClient getClient(){
-		if(client==null) client = new KickstarterClient();
-		return client;
-	}
-	
-	public ProjectCache getProjectCache(Context context){
-		if(projectCache==null)
+	public ImageCache getImageCache(Context context){
+		if(imgCache==null)
 			try {
-				projectCache = CacheFactory.loadProjectCache(context);
+				imgCache = CacheFactory.loadImageCache(context);
 			} catch (StreamCorruptedException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -49,7 +45,24 @@ public class AppController {
 				e.printStackTrace();
 			}
 		
-		return projectCache;
+		if(imgCache==null) return new ImageCache();
+		return imgCache;
+	}
+	
+	public HTMLCache getHTMLCache(Context context){
+		if(htmlCache==null)
+			try {
+				htmlCache = CacheFactory.loadHTMLCache(context);
+			} catch (StreamCorruptedException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		
+		if(htmlCache==null) return new HTMLCache();
+		return htmlCache;
 	}
 
 }

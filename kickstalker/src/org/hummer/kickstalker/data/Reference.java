@@ -19,6 +19,7 @@ public class Reference implements Serializable {
 	 */
 	private static final long serialVersionUID = 1194023285557190446L;
 	private String ref;
+	private byte[] image;
 	private String label;
 
 	public Reference(String ref, String label){
@@ -32,6 +33,14 @@ public class Reference implements Serializable {
 
 	public String getLabel() {
 		return label;
+	}
+	
+	public void setImage(byte[] image){
+		this.image = image;
+	}
+	
+	public byte[] getImageData(){
+		return image;
 	}
 	
 	@Override

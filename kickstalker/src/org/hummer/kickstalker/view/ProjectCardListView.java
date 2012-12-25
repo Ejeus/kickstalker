@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.hummer.kickstalker.data.Project;
+import org.hummer.kickstalker.data.Reference;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -30,7 +30,7 @@ public class ProjectCardListView extends View {
 	
 	public static final String TAG = "PRJCDLST";
 	public static final int TILE_HEIGHT_STANDARD = 305;
-	private List<Project> projects;
+	private List<Reference> projects;
 	private List<ProjectCardView> tiles;
 	private Map<String, Bitmap> cache;
 	private Paint paint;
@@ -51,7 +51,7 @@ public class ProjectCardListView extends View {
 	/**
 	 * @param context
 	 */
-	public ProjectCardListView(Context context, List<Project> projects) {
+	public ProjectCardListView(Context context, List<Reference> projects) {
 		super(context);
 		this.projects = projects;
 		tiles = new ArrayList<ProjectCardView>();
@@ -99,7 +99,7 @@ public class ProjectCardListView extends View {
 		int x=0,y=0;
 		for(int i=0, l=tiles.size(); i<l; i++){
 			
-			Project prj = projects.get(i);
+			Reference prj = projects.get(i);
 			ProjectCardView tile = tiles.get(i);
 			int tileIdx = i % 2;
 			x = singleTileWidth * tileIdx;

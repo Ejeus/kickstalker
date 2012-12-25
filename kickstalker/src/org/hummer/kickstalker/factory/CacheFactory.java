@@ -10,9 +10,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.StreamCorruptedException;
+import java.io.OptionalDataException;
 
-import org.hummer.kickstalker.ProjectCache;
+import org.hummer.kickstalker.cache.HTMLCache;
+import org.hummer.kickstalker.cache.ImageCache;
 
 import android.content.Context;
 
@@ -24,32 +25,66 @@ import android.content.Context;
  */
 public class CacheFactory {
 
-	public static final String FILENAME_CACHE_PROJECT = "project.cache";
-
-	public static void store(Context context, ProjectCache cache) throws IOException{
+	public static final String FILENAME_CACHE_IMAGE = "img.cache";
+	public static final String FILENAME_CACHE_HTML = "html.cache";
+	
+	public static void store(Context context, HTMLCache cache) throws IOException{
 		FileOutputStream fos = context.openFileOutput(
-				FILENAME_CACHE_PROJECT, Context.MODE_PRIVATE);
+				FILENAME_CACHE_HTML, Context.MODE_PRIVATE);
+		ObjectOutputStream os = new ObjectOutputStream(fos);
+		os.writeObject(cache);
+		os.close();
+	}
+	
+	public static void store(Context context, ImageCache cache) throws IOException{
+		FileOutputStream fos = context.openFileOutput(
+				FILENAME_CACHE_IMAGE, Context.MODE_PRIVATE);
 		ObjectOutputStream os = new ObjectOutputStream(fos);
 		os.writeObject(cache);
 		os.close();
 	}
 
-	public static ProjectCache loadProjectCache(Context context) 
-			throws StreamCorruptedException, IOException, ClassNotFoundException{
+	public static HTMLCache loadHTMLCache(Context context) 
+			throws OptionalDataException, IOException, ClassNotFoundException{
 
-		ProjectCache pcache;
+		HTMLCache htmlCache;
 
 		try{
-			FileInputStream fis = context.openFileInput(FILENAME_CACHE_PROJECT);
+			FileInputStream fis = context.openFileInput(FILENAME_CACHE_HTML);
 			ObjectInputStream is = new ObjectInputStream(fis);
-			pcache = (ProjectCache) is.readObject();
+			htmlCache = (HTMLCache) is.readObject();
 			is.close();
 		}catch(FileNotFoundException e){
-			pcache = new ProjectCache();
+			htmlCache = new HTMLCache();
 		}
 		
-		return pcache;
+		return htmlCache;
 
+	}
+
+	/**
+	 * @param context
+	 * @return
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
+	 * @throws OptionalDataException 
+	 */
+	public static ImageCache loadImageCache(Context context) 
+			throws OptionalDataException, ClassNotFoundException, IOException {
+
+		ImageCache imgCache;
+
+		try{
+			FileInputStream fis = context.openFileInput(FILENAME_CACHE_IMAGE);
+			ObjectInputStream is = new ObjectInputStream(fis);
+			imgCache = (ImageCache) is.readObject();
+			is.close();
+		}catch(FileNotFoundException e){
+			imgCache = new ImageCache();
+		}
+		
+		return imgCache;
+		
 	}
 
 }

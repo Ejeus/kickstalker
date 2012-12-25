@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hummer.kickstalker.AppController;
 import org.hummer.kickstalker.R;
 import org.hummer.kickstalker.activity.BaseActivity;
 import org.hummer.kickstalker.client.KickstarterClient;
@@ -41,17 +40,21 @@ import android.widget.ScrollView;
 public class ProjectListFragment extends Fragment implements OnItemSelectedListener {
 
 	public static final String TAG = "PRJLSTFR";
+	private ProjectListFragment self;
 	private static final String KEY_PROJECT_LIST = "PROJECTLIST";
-	private List<Project> projects;
+	KickstarterClient client;
+	private List<Reference> projects;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Fragment#onCreate(android.os.Bundle)
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-
-		super.onCreate(savedInstanceState);		
-		new DataLoader().execute();
+		
+		self = this;
+		super.onCreate(savedInstanceState);	
+		client = new KickstarterClient(getActivity());
+		new ListDataLoader().execute();
 		
 	}
 	
@@ -68,7 +71,26 @@ public class ProjectListFragment extends Fragment implements OnItemSelectedListe
 	public void onSaveInstanceState(Bundle outState) {
 		
 		super.onSaveInstanceState(outState);
-		outState.putSerializable(KEY_PROJECT_LIST, (ArrayList<Project>)projects);
+		outState.putSerializable(KEY_PROJECT_LIST, (ArrayList<Reference>)projects);
+		try {
+			client.persistCache(getActivity());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+
+	@Override
+	public void onStop() {
+
+		super.onStop();
+		try {
+			client.persistCache(getActivity());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
@@ -76,7 +98,7 @@ public class ProjectListFragment extends Fragment implements OnItemSelectedListe
 	 * @param prjRefs, List<References> - The project references to load the list
 	 * 	view from.
 	 */
-	private void refreshContent(List<Project> projects){
+	private void refreshContent(List<Reference> projects){
 		
 		this.projects = projects;
 		Activity current = getActivity();
@@ -91,47 +113,6 @@ public class ProjectListFragment extends Fragment implements OnItemSelectedListe
 		main.addView(container);
 	}
 
-
-	/**
-	 * The internal data loader to fill the data into the list asynchronously.
-	 * 
-	 * @author gernot.hummer
-	 *
-	 * @version 1.0
-	 *
-	 */
-	private class DataLoader extends AsyncTask<Void, Void, List<Project>>{
-
-		/* (non-Javadoc)
-		 * @see android.os.AsyncTask#doInBackground(Params[])
-		 */
-		@Override
-		protected List<Project> doInBackground(Void... params) {
-			
-			KickstarterClient client = AppController.getInstance().getClient();
-			try {
-				List<Reference> refs = client.getDiscoverProjects();
-				return client.getProjectsFromRef((BaseActivity) getActivity(), refs);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			return new ArrayList<Project>();
-		}
-
-		/* (non-Javadoc)
-		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
-		 */
-		@Override
-		protected void onPostExecute(List<Project> result) {
-
-			refreshContent(result);
-			
-		}
-		
-	}
-
-
 	/* (non-Javadoc)
 	 * @see org.hummer.kickstalker.view.ProjectCardListView.OnItemSelectedListener#onSelected(
 	 * org.hummer.kickstalker.view.ProjectCardListView, org.hummer.kickstalker.view.ProjectCardView)
@@ -139,17 +120,7 @@ public class ProjectListFragment extends Fragment implements OnItemSelectedListe
 	@Override
 	public void onSelected(ProjectCardListView view, ProjectCardView select) {
 		
-		FragmentManager mgr = getFragmentManager();
-		FragmentTransaction ft = mgr.beginTransaction();
-	
-		ft.hide(this);
-		toggleDetailFragment(select.getProject(), ft);
-		
-		
-		ft.addToBackStack(null);
-		ft.setTransitionStyle(R.anim.incoming);
-		
-		ft.commit();
+		new DetailDataLoader().execute(select.getProjectReference());
 		
 	}
 	
@@ -176,5 +147,87 @@ public class ProjectListFragment extends Fragment implements OnItemSelectedListe
 		
 		
 	}
+
+	/**
+	 * The internal data loader to fill the data into the list asynchronously.
+	 * 
+	 * @author gernot.hummer
+	 *
+	 * @version 1.0
+	 *
+	 */
+	private class ListDataLoader extends AsyncTask<Void, Void, List<Reference>>{
+
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
+		@Override
+		protected List<Reference> doInBackground(Void... params) {
+			
+			try {
+				return client.getDiscoverProjects();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			return new ArrayList<Reference>();
+		}
+
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+		 */
+		@Override
+		protected void onPostExecute(List<Reference> result) {
+
+			refreshContent(result);
+			
+		}
+		
+	}
+	
+	/**
+	 * Internal data loader for project details.
+	 * 
+	 * @author gernot.hummer
+	 *
+	 * @version 1.0
+	 *
+	 */
+	private class DetailDataLoader extends AsyncTask<Reference, Void, Project>{
+
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
+		@Override
+		protected Project doInBackground(Reference... params) {
+			try {
+				return client.getProjectFromRef(getActivity(), params[0]);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return new Project(params[0].getRef());
+			}
+		}
+
+		@Override
+		protected void onPostExecute(Project result) {
+			
+			FragmentManager mgr = getFragmentManager();
+			FragmentTransaction ft = mgr.beginTransaction();
+		
+			ft.hide(self);
+			toggleDetailFragment(result, ft);
+			
+			
+			ft.addToBackStack(null);
+			ft.setTransitionStyle(R.anim.incoming);
+			
+			ft.commit();
+			
+		}
+		
+		
+		
+	}
+
 	
 }

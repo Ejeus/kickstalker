@@ -18,11 +18,8 @@ public class KickstarterResources {
 	 * Id of a project title on a project detail page. 
 	 */
 	public static final String ID_PROJECT_TITLE = "#title";
-	
 	public static final String ID_PROJECT_BACKERS = "#backers_count";
-	
-	public static final String ID_PROJECT_PLEDGED = "#pledged";
-	
+	public static final String ID_PROJECT_PLEDGED = "#pledged";	
 	public static final String ID_PROJECT_TIMELEFT = "#project_duration_data";
 	
 	/**
@@ -34,7 +31,7 @@ public class KickstarterResources {
 	 * A handle for a typical project card on kickstarter.
 	 */
 	public static final String CLASS_PROJECT_CARD = ".project-card";
-	
+	public static final String CLASS_PROJECTCARD_IMAGE = "img.projectphoto-little";
 	public static final String CLASS_PROJECT_IMAGE = ".overlay";
 	
 	/**
@@ -63,6 +60,6 @@ public class KickstarterResources {
 	 */
 	public static final String ATTR_VIDEOCONFIG = "data-video_tag_markup";
 	
-	public static final String PAGE_DISCOVER = "discover";
+	public static final String PAGE_DISCOVER = "/discover";
 	
 }
