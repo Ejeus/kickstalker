@@ -27,6 +27,7 @@ public class Project implements Serializable {
 	private Reference video;
 	private int backers;
 	private int pledged;
+	private float percent;
 	private int goal;
 	private int timeLeft;
 	private String owner;
@@ -73,9 +74,6 @@ public class Project implements Serializable {
 	public void setVideoReference(Reference video) {
 		this.video = video;
 	}
-	public byte[] getImage() {
-		return image;
-	}
 	public void setImage(byte[] image) {
 		this.image = image;
 	}
@@ -108,5 +106,11 @@ public class Project implements Serializable {
 	}
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+	public float getPercent() {
+		return percent;
+	}
+	public void setPercent(float percent) {
+		this.percent = percent;
 	}
 }

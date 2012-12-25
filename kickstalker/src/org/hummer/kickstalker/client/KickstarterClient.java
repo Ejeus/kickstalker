@@ -23,8 +23,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import android.util.Log;
-
 /**
  * The main client for content retrieval from Kickstarter.
  * 
@@ -82,19 +80,20 @@ public class KickstarterClient {
 				first().attr("content"));
 		
 		project.setDescription(doc.select(
-				KickstarterResources.CLASS_PROJECT_DESCRIPTION).first().text());
+				KickstarterResources.CLASS_PROJECT_DESCRIPTION).first().html());
 		
 		String backers = doc.select(
 				KickstarterResources.ID_PROJECT_BACKERS).
 				first().attr("data-backers-count");
 		project.setBackers(Float.valueOf(backers).intValue());
 		
-		String pledged = doc.select(
+		Element pledged = doc.select(
 				KickstarterResources.ID_PROJECT_PLEDGED).
-				first().attr("data-pledged");
-		int pledgedInt = Float.valueOf(pledged).intValue();
-		Log.i(TAG, project.getTitle() + ": " + pledged + " | " + pledgedInt);
-		project.setPledged(Float.valueOf(pledged).intValue());
+				first();
+		
+		project.setPledged(Float.valueOf(pledged.attr("data-pledged")).intValue());
+		project.setPercent(Float.valueOf(pledged.attr("data-percent-raised")));
+		project.setGoal(Float.valueOf(pledged.attr("data-goal")).intValue());
 		
 		String timeLeft = doc.select(
 				KickstarterResources.ID_PROJECT_TIMELEFT).

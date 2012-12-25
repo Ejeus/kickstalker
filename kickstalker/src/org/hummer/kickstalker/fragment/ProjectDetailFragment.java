@@ -5,9 +5,11 @@
 package org.hummer.kickstalker.fragment;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 import org.hummer.kickstalker.R;
 import org.hummer.kickstalker.data.Project;
+import org.hummer.kickstalker.util.TimeUtil;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
@@ -17,11 +19,14 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
@@ -33,14 +38,17 @@ import android.widget.TextView;
 public class ProjectDetailFragment extends Fragment {
 
 	public static final String KEY_PROJECT = "KEY_PROJECT";
+	public static final String TAG = "PRJDTLFR";
 	private Project project;
 	private NumberFormat nF;
 	private NumberFormat cF;
+	private NumberFormat pF;
 
 	public ProjectDetailFragment(){
 		project = null;
 		nF = NumberFormat.getInstance();
-		cF = NumberFormat.getCurrencyInstance();
+		cF = NumberFormat.getCurrencyInstance(Locale.US);
+		pF = NumberFormat.getPercentInstance();
 	}
 	
 	
@@ -62,19 +70,37 @@ public class ProjectDetailFragment extends Fragment {
 
 
 	@Override
+	public void onResume() {
+
+		super.onResume();
+		loadValues(getView());
+		
+	}
+
+
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_detail_project, 
+		return inflater.inflate(R.layout.fragment_detail_project, 
 				container, false);
-		
-		loadValues(view);
-		return view;
 	}
 
 	
 	private void loadValues(View parent){
-		TextView title = (TextView) parent.findViewById(R.id.projectTitle);
+		
+		int pldg = project.getPledged();
+		int gl = project.getGoal();
+		int prg = pldg > gl ? gl : pldg;
+		
+		TextView title = (TextView) parent.findViewById(R.id.fieldTitle);
 		title.setText(project.getTitle());
+		
+		ProgressBar progress = (ProgressBar) 
+				parent.findViewById(R.id.progressFunding);
+		
+		progress.setMax(gl);
+		progress.setProgress(prg);
 		
 		ImageView img = (ImageView) parent.findViewById(R.id.projectImage);
 		img.setImageBitmap(scaleImage());
@@ -87,13 +113,20 @@ public class ProjectDetailFragment extends Fragment {
 		backers.setText(nF.format(project.getBackers()));
 		
 		TextView pledged = (TextView) parent.findViewById(R.id.fieldPledged);
-		pledged.setText(cF.format(project.getPledged()));
+		pledged.setText(cF.format(pldg));
+		
+		TextView percent = (TextView) parent.findViewById(R.id.fieldPercent);
+		percent.setText(" (" + pF.format(project.getPercent()) + ")");
+		
+		TextView goal = (TextView) parent.findViewById(R.id.fieldGoal);
+		goal.setText(cF.format(gl));
 		
 		TextView timeLeft = (TextView) parent.findViewById(R.id.fieldTimeLeft);
-		timeLeft.setText(nF.format(project.getTimeLeft()));
+		timeLeft.setText(TimeUtil.hoursToReadable(project.getTimeLeft()));
 		
 		TextView description = (TextView) parent.findViewById(R.id.fieldDescription);
-		description.setText(project.getDescription());
+		Spanned spanned = Html.fromHtml(project.getDescription());
+		description.setText(spanned);
 		
 	}
 

@@ -15,5 +15,6 @@
     <string name="project_detail_label_backers">Backers:</string>
     <string name="project_detail_label_pledged">Pledged:</string>
     <string name="project_detail_label_timeleft">Time left:</string>
+    <string name="project_detail_label_goal">Goal:</string>
 
 </resources>

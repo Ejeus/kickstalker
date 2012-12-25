@@ -26,25 +26,29 @@ public final class R {
     }
     public static final class id {
         public static final int appContent=0x7f080000;
-        public static final int fieldBackers=0x7f080007;
-        public static final int fieldDescription=0x7f08000f;
-        public static final int fieldPledged=0x7f08000a;
-        public static final int fieldShortDescription=0x7f080004;
-        public static final int fieldTimeLeft=0x7f08000d;
-        public static final int labelBackers=0x7f080006;
-        public static final int labelPledged=0x7f080009;
-        public static final int labelTimeLeft=0x7f08000c;
-        public static final int loader=0x7f080013;
-        public static final int mainContent=0x7f080012;
-        public static final int projectImage=0x7f080003;
-        public static final int projectTitle=0x7f080001;
-        public static final int root=0x7f080010;
-        public static final int scrollView1=0x7f080002;
-        public static final int tableRow1=0x7f080005;
-        public static final int tableRow2=0x7f080008;
-        public static final int tableRow3=0x7f08000b;
-        public static final int tableRow4=0x7f08000e;
-        public static final int textView1=0x7f080011;
+        public static final int fieldBackers=0x7f080008;
+        public static final int fieldDescription=0x7f080013;
+        public static final int fieldGoal=0x7f08000f;
+        public static final int fieldPercent=0x7f08000c;
+        public static final int fieldPledged=0x7f08000b;
+        public static final int fieldShortDescription=0x7f080005;
+        public static final int fieldTimeLeft=0x7f080012;
+        public static final int fieldTitle=0x7f080001;
+        public static final int labelBackers=0x7f080007;
+        public static final int labelGoal=0x7f08000e;
+        public static final int labelPledged=0x7f08000a;
+        public static final int labelTimeLeft=0x7f080011;
+        public static final int loader=0x7f080017;
+        public static final int mainContent=0x7f080016;
+        public static final int progressFunding=0x7f080002;
+        public static final int projectImage=0x7f080004;
+        public static final int root=0x7f080014;
+        public static final int scrollView1=0x7f080003;
+        public static final int tableRow1=0x7f080006;
+        public static final int tableRow2=0x7f080009;
+        public static final int tableRow3=0x7f08000d;
+        public static final int tableRow4=0x7f080010;
+        public static final int textView1=0x7f080015;
     }
     public static final class layout {
         public static final int activity_discover=0x7f030000;
@@ -62,6 +66,7 @@ public final class R {
         public static final int fragment_caption_discover=0x7f060008;
         public static final int label_project_name=0x7f060007;
         public static final int project_detail_label_backers=0x7f060009;
+        public static final int project_detail_label_goal=0x7f06000c;
         public static final int project_detail_label_pledged=0x7f06000a;
         public static final int project_detail_label_timeleft=0x7f06000b;
         public static final int title_project_detail=0x7f060001;

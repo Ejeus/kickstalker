@@ -18,6 +18,7 @@ import android.os.Bundle;
  */
 public class BaseActivity extends Activity {
 
+	public static final String RETURN_TO = "NAV_RETURNTO";
 	protected AppController appC;
 	protected KickstarterClient client;
 	

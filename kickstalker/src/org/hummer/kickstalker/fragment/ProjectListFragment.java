@@ -20,10 +20,10 @@ import org.hummer.kickstalker.view.ProjectCardView;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +40,9 @@ import android.widget.ScrollView;
  */
 public class ProjectListFragment extends Fragment implements OnItemSelectedListener {
 
-	public static final String TAG = "FR-PRJLIST";
-	private List<Project> prjRefs;
+	public static final String TAG = "PRJLSTFR";
+	private static final String KEY_PROJECT_LIST = "PROJECTLIST";
+	private List<Project> projects;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Fragment#onCreate(android.os.Bundle)
@@ -63,18 +64,26 @@ public class ProjectListFragment extends Fragment implements OnItemSelectedListe
 		return inflater.inflate(R.layout.fragment_list_general, container, false);
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		
+		super.onSaveInstanceState(outState);
+		outState.putSerializable(KEY_PROJECT_LIST, (ArrayList<Project>)projects);
+		
+	}
+
 	/**
 	 * @param prjRefs, List<References> - The project references to load the list
 	 * 	view from.
 	 */
-	private void refreshContent(List<Project> prjRefs){
+	private void refreshContent(List<Project> projects){
 		
-		this.prjRefs = prjRefs;
+		this.projects = projects;
 		Activity current = getActivity();
 		LinearLayout main = 
 				(LinearLayout) getActivity().findViewById(R.id.mainContent);
 		ScrollView container = new ScrollView(current);
-		ProjectCardListView tiledView = new ProjectCardListView(current, prjRefs);
+		ProjectCardListView tiledView = new ProjectCardListView(current, projects);
 		tiledView.addItemSelectedListener(this);
 		container.addView(tiledView);
 		
@@ -130,21 +139,41 @@ public class ProjectListFragment extends Fragment implements OnItemSelectedListe
 	@Override
 	public void onSelected(ProjectCardListView view, ProjectCardView select) {
 		
-		Log.i(TAG, "Starting transaction ...");
-		view.removeItemSelectedListener(this);
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ProjectDetailFragment newFragment = new ProjectDetailFragment();
-		Bundle args = new Bundle();
-		args.putSerializable(
-				ProjectDetailFragment.KEY_PROJECT, select.getProject());
-
-		newFragment.setArguments(args);
-		ft.replace(R.id.appContent, newFragment, "projectDetailFragment");
+		FragmentManager mgr = getFragmentManager();
+		FragmentTransaction ft = mgr.beginTransaction();
+	
+		ft.hide(this);
+		toggleDetailFragment(select.getProject(), ft);
+		
+		
 		ft.addToBackStack(null);
 		ft.setTransitionStyle(R.anim.incoming);
 		
-		Log.i(TAG, "Committing transaction ...");
 		ft.commit();
+		
+	}
+	
+	private void toggleDetailFragment(Project project,
+			FragmentTransaction ft){
+		
+		
+		Fragment newFragment = getFragmentManager().findFragmentByTag(
+				ProjectDetailFragment.TAG);
+				
+		if(newFragment==null){ 
+			newFragment = new ProjectDetailFragment();
+			ft.add(R.id.appContent, newFragment, ProjectDetailFragment.TAG);
+		}
+		
+		ft.show(newFragment);
+		
+		
+		Bundle args = new Bundle();
+		args.putSerializable(
+				ProjectDetailFragment.KEY_PROJECT, project);
+		args.putString(BaseActivity.RETURN_TO, getTag());
+		newFragment.setArguments(args);
+		
 		
 	}
 	

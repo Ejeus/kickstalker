@@ -28,7 +28,7 @@ public class DiscoverProjectsActivity extends BaseActivity {
 		
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		Fragment fragment = new ProjectListFragment();
-		ft.add(R.id.appContent, fragment);
+		ft.add(R.id.appContent, fragment, "projectListFragment");
 		
 		ft.commit();
 		
