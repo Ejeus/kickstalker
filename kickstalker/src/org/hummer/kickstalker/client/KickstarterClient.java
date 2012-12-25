@@ -85,6 +85,30 @@ public class KickstarterClient {
 
 	}
 
+	public List<Reference> getBackedProjects(String username) throws IOException{
+		
+		List<Reference> projectRefs = new ArrayList<Reference>();
+		
+		Document doc = Jsoup.connect(BASE_URL +
+				KickstarterResources.PAGE_PROFILE + "/" + username).get();
+		
+		Element list = doc.select(KickstarterResources.ID_BACKED_LIST).first();
+		Elements projects = list.select(KickstarterResources.CLASS_BACKED_PROJECT);
+		
+		for(Element project : projects){
+			String link = project.attr("href");
+			String name = project.select(
+					KickstarterResources.CLASS_BAKCED_PROJECT_NAME).first().text();
+			
+			Reference ref = new Reference(link, name);
+			String src = project.select("img").first().attr("src");
+			ref.setImage(extractImage(src));
+			projectRefs.add(ref);
+		}
+		
+		return projectRefs;
+		
+	}
 
 	private Document getResource(HTMLCache cache, Reference reference,
 			Activity activity, boolean persistImmediately) throws IOException{

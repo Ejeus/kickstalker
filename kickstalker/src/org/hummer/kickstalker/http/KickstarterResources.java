@@ -26,6 +26,7 @@ public class KickstarterResources {
 	 * This is the id of the video area within a specific project page. 
 	 */
 	public static final String ID_PROJECT_VIDEOSECTION = "#video-section";
+	public static final String ID_BACKED_LIST = "#list";
 	
 	/**
 	 * A handle for a typical project card on kickstarter.
@@ -33,6 +34,9 @@ public class KickstarterResources {
 	public static final String CLASS_PROJECT_CARD = ".project-card";
 	public static final String CLASS_PROJECTCARD_IMAGE = "img.projectphoto-little";
 	public static final String CLASS_PROJECT_IMAGE = ".overlay";
+	public static final String CLASS_BACKED_PROJECT = ".project_item";
+	public static final String CLASS_BAKCED_PROJECT_NAME = ".project_name";
+	
 	
 	/**
 	 * Class of the short description of a project.
@@ -61,5 +65,6 @@ public class KickstarterResources {
 	public static final String ATTR_VIDEOCONFIG = "data-video_tag_markup";
 	
 	public static final String PAGE_DISCOVER = "/discover";
+	public static final String PAGE_PROFILE = "/profile";
 	
 }

@@ -9,7 +9,11 @@ import org.hummer.kickstalker.fragment.ProjectListFragment;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 /**
  * @author gernot.hummer
@@ -28,11 +32,41 @@ public class DiscoverProjectsActivity extends BaseActivity {
 		
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		Fragment fragment = new ProjectListFragment();
+		Bundle args = new Bundle();
+		args.putString(ProjectListFragment.KEY_TYPE, 
+				ProjectListFragment.TYPE_DISCOVER);
+		
+		fragment.setArguments(args);
 		ft.add(R.id.appContent, fragment, "projectListFragment");
 		
-		ft.commit();
+		ft.commit();		
 		
 	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu_options_discover, menu);
+		return true;
+		
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch(item.getItemId()){
+		
+		case R.id.ac_backed_projects:
+			Intent i = new Intent(this, BackedProjectsActivity.class);
+			startActivity(i);
+			return true;
+		default:
+			return false;
+		}
+	}
+	
+	
 
 	
 	

@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 /**
  * A generic fragment that can be used to present a list of projects.
@@ -40,6 +41,11 @@ import android.widget.ScrollView;
 public class ProjectListFragment extends Fragment implements OnItemSelectedListener {
 
 	public static final String TAG = "PRJLSTFR";
+	public static final String KEY_TITLE = "TITLE";
+	public static final String KEY_USERNAME = "USERNAME";
+	public static final String KEY_TYPE = "TYPE";
+	public static final String TYPE_DISCOVER = "DISCOVER";
+	public static final String TYPE_BACKED = "BACKED";
 	private ProjectListFragment self;
 	private static final String KEY_PROJECT_LIST = "PROJECTLIST";
 	KickstarterClient client;
@@ -64,7 +70,15 @@ public class ProjectListFragment extends Fragment implements OnItemSelectedListe
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_list_general, container, false);
+		View view = inflater.inflate(R.layout.fragment_list_general, container, false);
+		
+		Bundle args = getArguments();
+		if(args!=null && args.containsKey(KEY_TITLE)){
+			TextView title = (TextView) view.findViewById(R.id.listTitle);
+			title.setText(args.getString(KEY_TITLE));
+		}
+		
+		return view;
 	}
 
 	@Override
@@ -164,8 +178,15 @@ public class ProjectListFragment extends Fragment implements OnItemSelectedListe
 		@Override
 		protected List<Reference> doInBackground(Void... params) {
 			
+			Bundle args = getArguments();
+			String type = args.getString(KEY_TYPE);
+			
 			try {
-				return client.getDiscoverProjects();
+				if(type.equals(TYPE_BACKED)){
+					return client.getBackedProjects(args.getString(KEY_USERNAME));
+				}else{
+					return client.getDiscoverProjects();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

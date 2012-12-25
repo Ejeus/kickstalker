@@ -16,5 +16,7 @@
     <string name="project_detail_label_pledged">Pledged:</string>
     <string name="project_detail_label_timeleft">Time left:</string>
     <string name="project_detail_label_goal">Goal:</string>
+    <string name="ac_backed_projects">Backed Projects</string>
+    <string name="ac_discover_projects">Discover Projects</string>
 
 </resources>
