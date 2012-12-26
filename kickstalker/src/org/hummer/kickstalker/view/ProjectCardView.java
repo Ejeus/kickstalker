@@ -21,6 +21,7 @@ import android.graphics.Typeface;
 import android.text.Layout.Alignment;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -31,6 +32,9 @@ import android.view.View;
  */
 public class ProjectCardView extends View {
 	
+	static final String TAG = "PRJCDVW";
+	static final int PREFERRED_WIDTH = 355;
+	static final int PREFERRED_HEIGHT = 305;
 	Reference project;
 	TextPaint paint;
 	Paint translucentPaint;
@@ -42,32 +46,36 @@ public class ProjectCardView extends View {
 	private StaticLayout titleLayout;
 	private Rect titleRect;
 	private Rect shadowRect;
-	boolean constructed = false;
-	int width;
-	int height;
+	int width = PREFERRED_WIDTH;
+	int height = PREFERRED_HEIGHT;
 	int paddingLeft=5, paddingTop=5, paddingBottom=5, paddingRight=5;
 	int textPadding=5;
 	
 	public ProjectCardView(Context context){
 		super(context);
+		construct();
 	}
 	
 	/**
 	 * @param context
 	 */
 	public ProjectCardView(Context context, Reference project) {
-		super(context);
+		this(context);
 		this.project = project;
+		prepareContent();
 	}
 
+	public void setProjectReference(Reference project){
+		this.project = project;
+		prepareContent();
+		invalidate();
+	}
+	
 	public Reference getProjectReference(){
 		return project;
 	}
 	
 	private void construct(){
-		
-		byte[] imgdata = project.getImageData();
-		image = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length);
 		
 		/*
 		 * Paint initializiation for text drawing font is Helvetica, bold
@@ -92,6 +100,17 @@ public class ProjectCardView extends View {
 		shadowPaint.setMaskFilter(new BlurMaskFilter(4, Blur.NORMAL));
 		shadowPaint.setStyle(Style.FILL_AND_STROKE);
 		
+		titleRect = new Rect(paddingLeft, paddingTop, width-paddingRight, 100);
+		shadowRect = new Rect(paddingLeft+1, paddingTop+1, 
+				width-paddingRight+1, height-paddingBottom+1);
+		imgScaleTarget = new RectF(paddingLeft, 40, width-paddingRight, 300);
+		
+	}
+	
+	private void prepareContent(){
+		byte[] imgdata = project.getImageData();
+		image = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length);
+		
 		int titlePadding = paddingLeft + paddingRight + textPadding * 2;
 		titleLayout = new StaticLayout(project.getLabel(), paint, width-titlePadding, 
 				Alignment.ALIGN_NORMAL, 1, 1, true);
@@ -99,14 +118,6 @@ public class ProjectCardView extends View {
 				titleLayout.getHeight(), Bitmap.Config.ARGB_8888);
 		Canvas textC = new Canvas(text);
 		titleLayout.draw(textC);
-		
-		titleRect = new Rect(paddingLeft, paddingTop, width-paddingRight, 100);
-		shadowRect = new Rect(paddingLeft+1, paddingTop+1, 
-				width-paddingRight+1, height-paddingBottom+1);
-		imgScaleTarget = new RectF(paddingLeft, 40, width-paddingRight, 300);
-		
-		constructed = true;
-		
 	}
 	
 	/* (non-Javadoc)
@@ -134,12 +145,11 @@ public class ProjectCardView extends View {
 		
 		
 		if(isInEditMode()) return;
-		this.width = MeasureSpec.getSize(widthMeasureSpec);
-		this.height = MeasureSpec.getSize(heightMeasureSpec);
-		if(!constructed) construct();
+		Log.i(TAG, "Width:" + MeasureSpec.getSize(widthMeasureSpec) + 
+				" | " + MeasureSpec.getSize(heightMeasureSpec));
 		
 		int w = resolveSizeAndState(width, widthMeasureSpec, 1);
-		int h = resolveSizeAndState(height, heightMeasureSpec, 0);
+		int h = resolveSizeAndState(height, heightMeasureSpec, 1);
 		setMeasuredDimension(w, h);
 		
 	}

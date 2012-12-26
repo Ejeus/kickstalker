@@ -13,8 +13,7 @@ import org.hummer.kickstalker.activity.BaseActivity;
 import org.hummer.kickstalker.client.KickstarterClient;
 import org.hummer.kickstalker.data.Project;
 import org.hummer.kickstalker.data.Reference;
-import org.hummer.kickstalker.view.ProjectCardListView;
-import org.hummer.kickstalker.view.ProjectCardListView.OnItemSelectedListener;
+import org.hummer.kickstalker.view.ProjectCardAdapter;
 import org.hummer.kickstalker.view.ProjectCardView;
 
 import android.app.Activity;
@@ -26,8 +25,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
@@ -38,7 +39,7 @@ import android.widget.TextView;
  * @version 1.0
  *
  */
-public class ProjectListFragment extends Fragment implements OnItemSelectedListener {
+public class ProjectListFragment extends Fragment implements OnItemClickListener {
 
 	public static final String TAG = "PRJLSTFR";
 	public static final String KEY_TITLE = "TITLE";
@@ -118,23 +119,27 @@ public class ProjectListFragment extends Fragment implements OnItemSelectedListe
 		Activity current = getActivity();
 		LinearLayout main = 
 				(LinearLayout) getActivity().findViewById(R.id.mainContent);
-		ScrollView container = new ScrollView(current);
-		ProjectCardListView tiledView = new ProjectCardListView(current, projects);
-		tiledView.addItemSelectedListener(this);
-		container.addView(tiledView);
+		
+		GridView grid = new GridView(current);
+		grid.setNumColumns(2);
+		ProjectCardAdapter adapter = new ProjectCardAdapter();
+		adapter.setData(current, projects);
+		grid.setAdapter(adapter);
+		grid.setOnItemClickListener(this);
 		
 		main.removeAllViews();
-		main.addView(container);
+		main.addView(grid);
+		
 	}
-
+	
 	/* (non-Javadoc)
-	 * @see org.hummer.kickstalker.view.ProjectCardListView.OnItemSelectedListener#onSelected(
-	 * org.hummer.kickstalker.view.ProjectCardListView, org.hummer.kickstalker.view.ProjectCardView)
+	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
 	 */
 	@Override
-	public void onSelected(ProjectCardListView view, ProjectCardView select) {
+	public void onItemClick(AdapterView<?> parent, View item, int position, long row) {
 		
-		new DetailDataLoader().execute(select.getProjectReference());
+		new DetailDataLoader().execute(
+				((ProjectCardView)item).getProjectReference());
 		
 	}
 	
@@ -249,6 +254,5 @@ public class ProjectListFragment extends Fragment implements OnItemSelectedListe
 		
 		
 	}
-
 	
 }
