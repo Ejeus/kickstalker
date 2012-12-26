@@ -10,10 +10,10 @@ import java.util.List;
 
 import org.hummer.kickstalker.R;
 import org.hummer.kickstalker.activity.BaseActivity;
+import org.hummer.kickstalker.adapter.ProjectCardAdapter;
 import org.hummer.kickstalker.client.KickstarterClient;
 import org.hummer.kickstalker.data.Project;
 import org.hummer.kickstalker.data.Reference;
-import org.hummer.kickstalker.view.ProjectCardAdapter;
 import org.hummer.kickstalker.view.ProjectCardView;
 
 import android.app.Activity;

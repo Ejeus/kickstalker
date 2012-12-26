@@ -14,6 +14,8 @@ package org.hummer.kickstalker.http;
  */
 public class KickstarterResources {
 	
+	public static final String TAG_COMMENT_CONTENT = "p";
+	
 	/**
 	 * Id of a project title on a project detail page. 
 	 */
@@ -35,7 +37,11 @@ public class KickstarterResources {
 	public static final String CLASS_PROJECTCARD_IMAGE = "img.projectphoto-little";
 	public static final String CLASS_PROJECT_IMAGE = ".overlay";
 	public static final String CLASS_BACKED_PROJECT = ".project_item";
-	public static final String CLASS_BAKCED_PROJECT_NAME = ".project_name";
+	public static final String CLASS_BACKED_PROJECT_NAME = ".project_name";
+	
+	public static final String CLASS_RECENT_COMMENTS = "ol.comments";
+	public static final String CLASS_COMMENT_AUTHOR = "a.author";
+	public static final String CLASS_COMMENT_DATE = "span.date";
 	
 	
 	/**
@@ -66,5 +72,6 @@ public class KickstarterResources {
 	
 	public static final String PAGE_DISCOVER = "/discover";
 	public static final String PAGE_PROFILE = "/profile";
+	public static final String PAGE_COMMENTS = "/comments";
 	
 }

@@ -4,20 +4,28 @@
  */
 package org.hummer.kickstalker.fragment;
 
+import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.hummer.kickstalker.R;
+import org.hummer.kickstalker.adapter.CommentAdapter;
+import org.hummer.kickstalker.client.KickstarterClient;
+import org.hummer.kickstalker.data.Comment;
 import org.hummer.kickstalker.data.Project;
 import org.hummer.kickstalker.util.TimeUtil;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
@@ -26,7 +34,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 /**
@@ -35,14 +48,23 @@ import android.widget.TextView;
  * @version 1.0
  *
  */
-public class ProjectDetailFragment extends Fragment {
+public class ProjectDetailFragment extends Fragment implements OnTabChangeListener {
 
 	public static final String KEY_PROJECT = "KEY_PROJECT";
 	public static final String TAG = "PRJDTLFR";
+	
+	static final String TAB_DETAILS = "Details";
+	static final String TAB_UPDATES = "Updates";
+	static final String TAB_COMMENTS = "Comments";
+	
+	private KickstarterClient client;
 	private Project project;
+	private CommentAdapter comments;
 	private NumberFormat nF;
 	private NumberFormat cF;
 	private NumberFormat pF;
+	boolean updatesLoaded = false;
+	boolean commentsLoaded = false;
 
 	public ProjectDetailFragment(){
 		project = null;
@@ -65,6 +87,7 @@ public class ProjectDetailFragment extends Fragment {
 		
 		super.onCreate(savedInstanceState);
 		
+		client = new KickstarterClient(getActivity());
 	}
 
 
@@ -82,8 +105,30 @@ public class ProjectDetailFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_detail_project, 
-				container, false);
+		
+		View view = inflater.inflate(
+				R.layout.fragment_detail_project_tabbed, container, false);
+		TabHost tabHost = (TabHost) view.findViewById(android.R.id.tabhost);
+		tabHost.setup();
+		
+		TabSpec details = tabHost.newTabSpec(TAB_DETAILS);
+		details.setIndicator("Details");
+		details.setContent(R.id.projectDetailContent);
+		tabHost.addTab(details);
+		
+		TabSpec updates = tabHost.newTabSpec(TAB_UPDATES);
+		updates.setIndicator("Updates");
+		updates.setContent(R.id.projectUpdateContent);
+		tabHost.addTab(updates);
+		
+		TabSpec comments = tabHost.newTabSpec(TAB_COMMENTS);
+		comments.setIndicator("Comments");
+		comments.setContent(R.id.projectCommentContent);
+		tabHost.addTab(comments);
+		
+		tabHost.setCurrentTab(0);
+		tabHost.setOnTabChangedListener(this);
+		return view;
 	}
 
 	
@@ -157,6 +202,61 @@ public class ProjectDetailFragment extends Fragment {
 		c.drawBitmap(bm, source, dest, p);
 		
 		return scaled;
+		
+	}
+
+	public void refreshComments(List<Comment> comments){
+		
+		Context context = getActivity();
+		this.comments = new CommentAdapter();
+		this.comments.setData(context, comments);
+		
+		ListView list = new ListView(context);
+		list.setAdapter(this.comments);
+		
+		LinearLayout parent = (LinearLayout) 
+				getView().findViewById(R.id.projectCommentContent);
+		
+		parent.removeAllViews();
+		parent.addView(list);
+		
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see android.widget.TabHost.OnTabChangeListener#onTabChanged(java.lang.String)
+	 */
+	@Override
+	public void onTabChanged(String tabId) {
+		
+		if(tabId.equals(TAB_COMMENTS) && !commentsLoaded){
+			new CommentsDataLoader().execute();
+		}
+		
+	}
+	
+	private class CommentsDataLoader extends AsyncTask<Void, Void, List<Comment>>{
+
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
+		@Override
+		protected List<Comment> doInBackground(Void... params) {
+			try {
+				return client.getCommentsFor(getActivity(), project.getRef());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			return new ArrayList<Comment>();
+		}
+
+		@Override
+		protected void onPostExecute(List<Comment> result) {
+			refreshComments(result);
+		}
+		
+		
 		
 	}
 }

@@ -7,6 +7,7 @@ package org.hummer.kickstalker.activity;
 import org.hummer.kickstalker.AppController;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 /**
@@ -25,6 +26,7 @@ public class BaseActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		appC = AppController.getInstance();
+		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 	}
 	

@@ -17,6 +17,7 @@ import org.hummer.kickstalker.cache.CachedImage;
 import org.hummer.kickstalker.cache.CachedPage;
 import org.hummer.kickstalker.cache.HTMLCache;
 import org.hummer.kickstalker.cache.ImageCache;
+import org.hummer.kickstalker.data.Comment;
 import org.hummer.kickstalker.data.Project;
 import org.hummer.kickstalker.data.Reference;
 import org.hummer.kickstalker.factory.CacheFactory;
@@ -98,7 +99,7 @@ public class KickstarterClient {
 		for(Element project : projects){
 			String link = project.attr("href");
 			String name = project.select(
-					KickstarterResources.CLASS_BAKCED_PROJECT_NAME).first().text();
+					KickstarterResources.CLASS_BACKED_PROJECT_NAME).first().text();
 			
 			Reference ref = new Reference(link, name);
 			String src = project.select("img").first().attr("src");
@@ -109,16 +110,52 @@ public class KickstarterClient {
 		return projectRefs;
 		
 	}
+	
+	/**
+	 * @param activity, Activity. The current activity on the front end.
+	 * @param projectRef, String. The referrer on Kickstarter to the project.
+	 * @return List<Comment>. A list of available recent comments on Kickstarter.
+	 * @throws IOException
+	 */
+	public List<Comment> getCommentsFor(Activity activity, String projectRef) throws IOException{
+		
+		if(projectRef.contains("?"))
+			projectRef = projectRef.substring(0, projectRef.indexOf("?"));
+		List<Comment> comments = new ArrayList<Comment>();
+		
+		HTMLCache cache = AppController.getInstance().getHTMLCache(activity);
+		
+		Document doc = getResource(cache, projectRef + 
+				KickstarterResources.PAGE_COMMENTS, activity, true);
+		
+		Element list = doc.select(KickstarterResources.CLASS_RECENT_COMMENTS).first();
+		Elements entries = list.select("li");
+		
+		for(Element entry : entries){
+			Comment comment = new Comment();
+			comment.setAuthor(entry.select(
+					KickstarterResources.CLASS_COMMENT_AUTHOR).first().text());
+			
+			comment.setDate(entry.select(
+					KickstarterResources.CLASS_COMMENT_DATE).first().text());
+			
+			comment.setContent(entry.select(
+					KickstarterResources.TAG_COMMENT_CONTENT).first().html());
+			
+			comments.add(comment);
+		}
+		
+		return comments;
+		
+	}
 
-	private Document getResource(HTMLCache cache, Reference reference,
+	private Document getResource(HTMLCache cache, String ref,
 			Activity activity, boolean persistImmediately) throws IOException{
-
-		String ref = reference.getRef();
 
 		if(cache.containsKey(ref)){
 			return Jsoup.parse(cache.get(ref).getHTML());
 		} else {
-			Document doc = Jsoup.connect(BASE_URL + reference.getRef()).get();
+			Document doc = Jsoup.connect(BASE_URL + ref).get();
 			CachedPage page = new CachedPage();
 			page.setReference(ref);
 			page.setHTML(doc.html());
@@ -225,7 +262,7 @@ public class KickstarterClient {
 		try {
 			for(int i=0, l=refs.size();i<l;i++){
 				Reference ref = refs.get(i);
-				projects.add(getProject(getResource(htmlCache, ref, activity, false), ref));
+				projects.add(getProject(getResource(htmlCache, ref.getRef(), activity, false), ref));
 			}
 
 			CacheFactory.store(activity, htmlCache);
@@ -238,7 +275,7 @@ public class KickstarterClient {
 	}
 	
 	public Project getProjectFromRef(Activity activity, Reference ref) throws IOException{
-		return getProject(getResource(htmlCache, ref, activity, true), ref);
+		return getProject(getResource(htmlCache, ref.getRef(), activity, true), ref);
 	}
 	
 	public void persistCache(Context context) throws IOException{

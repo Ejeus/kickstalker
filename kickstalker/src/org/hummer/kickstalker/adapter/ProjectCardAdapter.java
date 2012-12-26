@@ -2,11 +2,12 @@
  * This file is subject to the terms and conditions defined in
  * file 'LICENSE.txt', which is part of this source code package.
  */
-package org.hummer.kickstalker.view;
+package org.hummer.kickstalker.adapter;
 
 import java.util.List;
 
 import org.hummer.kickstalker.data.Reference;
+import org.hummer.kickstalker.view.ProjectCardView;
 
 import android.content.Context;
 import android.view.View;

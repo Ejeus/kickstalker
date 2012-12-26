@@ -27,40 +27,49 @@ public final class R {
         public static final int ic_launcher=0x7f020002;
     }
     public static final class id {
-        public static final int ac_backed_projects=0x7f09001a;
-        public static final int ac_discover_projects=0x7f090019;
+        public static final int ac_backed_projects=0x7f090022;
+        public static final int ac_discover_projects=0x7f090021;
         public static final int appContent=0x7f090000;
-        public static final int fieldBackers=0x7f090008;
-        public static final int fieldDescription=0x7f090013;
-        public static final int fieldGoal=0x7f09000f;
-        public static final int fieldPercent=0x7f09000c;
-        public static final int fieldPledged=0x7f09000b;
-        public static final int fieldShortDescription=0x7f090005;
-        public static final int fieldTimeLeft=0x7f090012;
-        public static final int fieldTitle=0x7f090001;
-        public static final int labelBackers=0x7f090007;
-        public static final int labelGoal=0x7f09000e;
-        public static final int labelPledged=0x7f09000a;
-        public static final int labelTimeLeft=0x7f090011;
-        public static final int listTitle=0x7f090015;
-        public static final int loader=0x7f090017;
-        public static final int mainContent=0x7f090016;
-        public static final int progressFunding=0x7f090002;
-        public static final int projectImage=0x7f090004;
-        public static final int root=0x7f090014;
-        public static final int scrollView1=0x7f090003;
-        public static final int tableRow1=0x7f090006;
-        public static final int tableRow2=0x7f090009;
-        public static final int tableRow3=0x7f09000d;
-        public static final int tableRow4=0x7f090010;
-        public static final int textView1=0x7f090018;
+        public static final int commentAuthor=0x7f09001d;
+        public static final int commentContent=0x7f09001f;
+        public static final int commentDate=0x7f09001e;
+        public static final int fieldBackers=0x7f09000a;
+        public static final int fieldDescription=0x7f090015;
+        public static final int fieldGoal=0x7f090011;
+        public static final int fieldPercent=0x7f09000e;
+        public static final int fieldPledged=0x7f09000d;
+        public static final int fieldShortDescription=0x7f090007;
+        public static final int fieldTimeLeft=0x7f090014;
+        public static final int fieldTitle=0x7f090002;
+        public static final int labelBackers=0x7f090009;
+        public static final int labelGoal=0x7f090010;
+        public static final int labelPledged=0x7f09000c;
+        public static final int labelTimeLeft=0x7f090013;
+        public static final int listTitle=0x7f09001a;
+        public static final int loader=0x7f09001c;
+        public static final int mainContent=0x7f09001b;
+        public static final int progressBar1=0x7f090017;
+        public static final int progressFunding=0x7f090003;
+        public static final int projectCommentContent=0x7f090018;
+        public static final int projectDetailContent=0x7f090004;
+        public static final int projectImage=0x7f090006;
+        public static final int projectPage=0x7f090001;
+        public static final int projectUpdateContent=0x7f090016;
+        public static final int root=0x7f090019;
+        public static final int scrollView1=0x7f090005;
+        public static final int tableRow1=0x7f090008;
+        public static final int tableRow2=0x7f09000b;
+        public static final int tableRow3=0x7f09000f;
+        public static final int tableRow4=0x7f090012;
+        public static final int textView1=0x7f090020;
     }
     public static final class layout {
         public static final int activity_backed=0x7f030000;
         public static final int activity_discover=0x7f030001;
-        public static final int fragment_detail_project=0x7f030002;
+        public static final int fragment_detail_project_tabbed=0x7f030002;
         public static final int fragment_list_general=0x7f030003;
-        public static final int list_detail_project=0x7f030004;
+        public static final int list_detail_comment=0x7f030004;
+        public static final int list_detail_project=0x7f030005;
     }
     public static final class menu {
         public static final int menu_options_backed=0x7f080000;
