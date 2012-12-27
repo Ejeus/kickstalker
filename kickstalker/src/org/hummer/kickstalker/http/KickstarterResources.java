@@ -27,7 +27,7 @@ public class KickstarterResources {
 	/**
 	 * This is the id of the video area within a specific project page. 
 	 */
-	public static final String ID_PROJECT_VIDEOSECTION = "#video-section";
+	public static final String ID_VIDEOSECTION = "div#video-section";
 	public static final String ID_BACKED_LIST = "#list";
 	
 	public static final String ID_UPDATE_LIST = "#main";
@@ -50,6 +50,7 @@ public class KickstarterResources {
 	public static final String CLASS_UPDATE_TITLE = "h2.title";
 	public static final String CLASS_UPDATE_NUMBER = "span.update-number";
 	public static final String CLASS_UPDATE_BODY = "div.body";
+	public static final String CLASS_UPDATE_BACKERSONLY = "div#for-backers";
 	
 	public static final String CLASS_TIER = "div.NS-projects-reward";
 	public static final String CLASS_TIER_BACKERS = "span.backers-wrap";
@@ -70,13 +71,14 @@ public class KickstarterResources {
 	/**
 	 * Class of the actual video player. Helps to locate the amazon video stream.
 	 */
-	public static final String CLASS_VIDEOPLAYER = ".video-player";
+	public static final String CLASS_VIDEOPLAYER = "div.video-player";
 	
 	/**
 	 * Attribute of the video section of a project that indicates whether a project
 	 * has a video or not.
 	 */
 	public static final String ATTR_HASVIDEO = "data-has-video";
+	public static final String ATTR_VIDESRC = "data-video";
 	
 	/**
 	 * The actual video player configuration

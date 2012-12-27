@@ -12,6 +12,7 @@ import org.hummer.kickstalker.data.Comment;
 import android.content.Context;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,6 +83,8 @@ public class CommentAdapter extends BaseAdapter {
 		EditText comment = (EditText) convertView.findViewById(R.id.commentContent);
 		Spanned spanned = Html.fromHtml(c.getContent());
 		comment.setText(spanned);
+		comment.setAutoLinkMask(Linkify.WEB_URLS);
+		comment.setLinksClickable(true);
 		
 		return convertView;
 		

@@ -52,7 +52,7 @@ public class KickstarterClient {
 	public static final String BASE_URL = "https://www.kickstarter.com";
 	private HTMLCache htmlCache;
 	private ImageCache imgCache;
-	
+
 	public KickstarterClient(Context context){
 		AppController appC = AppController.getInstance();
 		htmlCache = appC.getHTMLCache(context);
@@ -77,7 +77,7 @@ public class KickstarterClient {
 			Element header = e.select("h2").first();
 			Element headerLink = header.select("a").first();
 			Reference ref = new Reference(headerLink.attr("href"), headerLink.text());
-			
+
 			Element imgtag = e.select(KickstarterResources.CLASS_PROJECTCARD_IMAGE).first();
 			String src = imgtag.attr("src");
 			ref.setImage(extractImage(src));
@@ -90,102 +90,109 @@ public class KickstarterClient {
 	}
 
 	public List<Reference> getBackedProjects(String username) throws IOException{
-		
+
 		List<Reference> projectRefs = new ArrayList<Reference>();
-		
+
 		Document doc = Jsoup.connect(BASE_URL +
 				KickstarterResources.PAGE_PROFILE + "/" + username).get();
-		
+
 		Element list = doc.select(KickstarterResources.ID_BACKED_LIST).first();
 		Elements projects = list.select(KickstarterResources.CLASS_BACKED_PROJECT);
-		
+
 		for(Element project : projects){
 			String link = project.attr("href");
 			String name = project.select(
 					KickstarterResources.CLASS_BACKED_PROJECT_NAME).first().text();
-			
+
 			Reference ref = new Reference(link, name);
 			String src = project.select("img").first().attr("src");
 			ref.setImage(extractImage(src));
 			projectRefs.add(ref);
 		}
-		
+
 		return projectRefs;
-		
+
 	}
-	
+
 	public List<Tier> getTiersFor(Context context, String projectRef) throws IOException{
-		
+
 		if(projectRef.contains("?"))
 			projectRef = projectRef.substring(0, projectRef.indexOf("?"));
 		List<Tier> tiers = new ArrayList<Tier>();
-		
+
 		HTMLCache cache = AppController.getInstance().getHTMLCache(context);
-		
+
 		Document doc = getResource(cache, projectRef, context, true);
-		
+
 		Element list = doc.select(KickstarterResources.ID_TIERS_LIST).first();
 		if(list==null) return tiers;
-		
+
 		Elements entries = list.select("li");
-		
+
 		for(Element entry : entries){
-			
+
 			Tier tier = new Tier();
 			tier.setTitle(entry.select("h3").text());
 			tier.setBackers(entry.select(
 					KickstarterResources.CLASS_TIER_BACKERS).first().text());
-			
+
 			tier.setSelected(entry.select(
 					KickstarterResources.CLASS_TIER_SELECTED).size()>0);
-			
+
 			tier.setBody(entry.select(
 					KickstarterResources.CLASS_TIER_BODY).first().html());
-			
+
 			tiers.add(tier);
-			
+
 		}
-		
+
 		return tiers;
-		
+
 	}
-	
+
 	public List<Update> getUpdatesFor(Context context, String projectRef) 
 			throws IOException{
-		
+
 		if(projectRef.contains("?"))
 			projectRef = projectRef.substring(0, projectRef.indexOf("?"));
 		List<Update> updates = new ArrayList<Update>();
-		
+
 		HTMLCache cache = AppController.getInstance().getHTMLCache(context);
-		
+
 		String ref = projectRef + KickstarterResources.PAGE_UPDATES;
 		Document doc = getResource(cache, ref, context, true);
 		Element list = doc.select(KickstarterResources.ID_UPDATE_LIST).first();
 		if(list==null) return updates;
-		
+
 		Elements entries = list.select(KickstarterResources.CLASS_UPDATE_ENTRY);
 		for(Element entry : entries){
-			
+
 			Update update = new Update();
 			update.setRef(ref);
 			update.setTitle(entry.select(
 					KickstarterResources.CLASS_UPDATE_TITLE).first().text());
-			
+
 			update.setUpdateId(entry.select(
 					KickstarterResources.CLASS_UPDATE_NUMBER).first().text());
-			
-			update.setBody(entry.select(
-					KickstarterResources.CLASS_UPDATE_BODY).first().html());
-			
+
+
+			Element body = entry.select(KickstarterResources.CLASS_UPDATE_BODY).first();
+
+			if(body==null){
+				update.setBody(entry.select(
+						KickstarterResources.CLASS_UPDATE_BACKERSONLY).first().html());
+			} else {
+				update.setBody(body.html());
+			}
+
 			updates.add(update);
-			
+
 		}
-		
+
 		return updates;
-		
+
 	}
-	
+
 	/**
 	 * @param context, Context. The current activity on the front end.
 	 * @param projectRef, String. The referrer on Kickstarter to the project.
@@ -194,37 +201,37 @@ public class KickstarterClient {
 	 */
 	public List<Comment> getCommentsFor(Context context, String projectRef) 
 			throws IOException{
-		
+
 		if(projectRef.contains("?"))
 			projectRef = projectRef.substring(0, projectRef.indexOf("?"));
 		List<Comment> comments = new ArrayList<Comment>();
-		
+
 		HTMLCache cache = AppController.getInstance().getHTMLCache(context);
-		
+
 		Document doc = getResource(cache, projectRef + 
 				KickstarterResources.PAGE_COMMENTS, context, true);
-		
+
 		Element list = doc.select(KickstarterResources.CLASS_RECENT_COMMENTS).first();
-		
+
 		if(list==null) return comments;
 		Elements entries = list.select("li");
-		
+
 		for(Element entry : entries){
 			Comment comment = new Comment();
 			comment.setAuthor(entry.select(
 					KickstarterResources.CLASS_COMMENT_AUTHOR).first().text());
-			
+
 			comment.setDate(entry.select(
 					KickstarterResources.CLASS_COMMENT_DATE).first().text());
-			
+
 			comment.setContent(entry.select(
 					KickstarterResources.TAG_COMMENT_CONTENT).first().html());
-			
+
 			comments.add(comment);
 		}
-		
+
 		return comments;
-		
+
 	}
 
 	/**
@@ -246,7 +253,7 @@ public class KickstarterClient {
 			page.setReference(ref);
 			page.setHTML(doc.html());
 			cache.put(ref, page);
-			
+
 			if(persistImmediately) CacheFactory.store(context, cache);
 			return doc;
 		}
@@ -290,8 +297,8 @@ public class KickstarterClient {
 		project.setTimeLeft(Float.valueOf(timeLeft).intValue());
 
 		String imgRef = meta.select("meta[property=og:image]").first().attr("content");
-		Log.i(TAG, "Requesting image at " + imgRef);
 		project.setImageData(extractImage(imgRef));
+		loadVideoConfig(doc, project);
 		return project;
 
 	}
@@ -302,9 +309,9 @@ public class KickstarterClient {
 	 * @return
 	 */
 	private byte[] extractImage(String ref) {
-		
+
 		if(imgCache.containsKey(ref)) return imgCache.get(ref).getData();
-		
+
 		try {
 			URL url = new URL(ref);
 			InputStream is = url.openStream();
@@ -317,7 +324,7 @@ public class KickstarterClient {
 			byte[] returnVal = baos.toByteArray();
 			baos.close();
 			is.close();
-			
+
 			//cache image
 			CachedImage ci = new CachedImage();
 			ci.setReference(ref);
@@ -332,6 +339,29 @@ public class KickstarterClient {
 
 		return new byte[0];
 	}
+	
+	public void loadVideoConfig(Document doc, Project prj){
+		
+		Element section = doc.select(KickstarterResources.ID_VIDEOSECTION).first();
+		
+		if(section.attr(KickstarterResources.ATTR_HASVIDEO).equals("true")){
+			
+			Element player = section.select(
+					KickstarterResources.CLASS_VIDEOPLAYER).first();
+			
+			prj.setHasVideo(true);
+			Reference videoRef = new Reference(
+					player.attr(KickstarterResources.ATTR_VIDESRC),
+					prj.getTitle());
+			prj.setVideoReference(videoRef);
+			
+		} else {
+			
+			prj.setHasVideo(false);
+			
+		}
+		
+	}
 
 
 	/**
@@ -342,7 +372,7 @@ public class KickstarterClient {
 	public List<Project> getProjectsFromRef(Context context, List<Reference> refs) {
 
 		htmlCache.drop(HTMLCACHE_THRESHOLD);
-		
+
 		List<Project> projects = new ArrayList<Project>();
 
 		try {
@@ -360,11 +390,11 @@ public class KickstarterClient {
 		return projects;
 
 	}
-	
+
 	public Project getProjectFromRef(Activity activity, Reference ref) throws IOException{
 		return getProject(getResource(htmlCache, ref.getRef(), activity, true), ref);
 	}
-	
+
 	public void persistCache(Context context) throws IOException{
 		CacheFactory.store(context, htmlCache);
 		CacheFactory.store(context, imgCache);

@@ -19,20 +19,6 @@ public class Project extends AbstractData implements Serializable {
 	 */
 	private static final long serialVersionUID = 5890355485977036023L;
 	
-	public enum Property{
-		REF,
-		TITLE,
-		SHORTDESCRIPTION,
-		DESCRIPTION,
-		IMAGE,
-		VIDEO,
-		BACKERS,
-		PERCENT,
-		GOAL,
-		TIMELEFT,
-		OWNER
-	}
-	
 	private String ref;
 	private String title;
 	private String shortDescription;

@@ -47,7 +47,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:background="@color/kickstarter_green"
+                android:background="@color/light_gray"
                 android:orientation="horizontal" />
 
             <FrameLayout

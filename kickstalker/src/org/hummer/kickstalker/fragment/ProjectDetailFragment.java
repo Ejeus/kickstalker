@@ -23,7 +23,7 @@ import org.hummer.kickstalker.task.CommentDataLoader;
 import org.hummer.kickstalker.task.TierDataLoader;
 import org.hummer.kickstalker.task.UpdateDataLoader;
 import org.hummer.kickstalker.task.i.TaskCallbackI;
-import org.hummer.kickstalker.util.ImageUtil;
+import org.hummer.kickstalker.util.MediaUtil;
 import org.hummer.kickstalker.util.TimeUtil;
 import org.hummer.kickstalker.util.ViewUtil;
 
@@ -36,9 +36,11 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.util.Linkify;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -132,7 +134,7 @@ public class ProjectDetailFragment extends Fragment implements
 	
 	private void loadValues(View parent){
 		
-		Activity activity = getActivity();
+		final Activity activity = getActivity();
 		int pldg = project.getPledged();
 		int gl = project.getGoal();
 		int prg = pldg > gl ? gl : pldg;
@@ -150,6 +152,16 @@ public class ProjectDetailFragment extends Fragment implements
 		
 		ImageView img = (ImageView) parent.findViewById(R.id.projectImage);
 		img.setImageBitmap(scaleImage());
+		if(project.hasVideo())
+			img.setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View v) {
+					MediaUtil.streamVideo(activity, 
+							project.getVideoReference().getRef());					
+				}
+				
+			});
 		
 		ViewUtil.findAndSetText(activity, R.id.fieldShortDescription, 
 				project.getShortDescription());
@@ -166,6 +178,8 @@ public class ProjectDetailFragment extends Fragment implements
 		TextView description = (TextView) parent.findViewById(R.id.fieldDescription);
 		Spanned spanned = Html.fromHtml(project.getDescription());
 		description.setText(spanned);
+		description.setAutoLinkMask(Linkify.WEB_URLS);
+		description.setLinksClickable(true);
 		
 	}
 
@@ -182,7 +196,7 @@ public class ProjectDetailFragment extends Fragment implements
 		byte[] imgdata = project.getImageData();
 		Bitmap bm = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length);
 		
-		return ImageUtil.scaleImage(bm, size.x, 400);
+		return MediaUtil.scaleImage(bm, size.x, 400);
 		
 	}
 

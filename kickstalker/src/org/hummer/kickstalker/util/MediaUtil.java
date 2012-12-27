@@ -4,10 +4,13 @@
  */
 package org.hummer.kickstalker.util;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.net.Uri;
 
 /**
  * @author gernot.hummer
@@ -15,7 +18,7 @@ import android.graphics.Rect;
  * @version 1.0
  *
  */
-public class ImageUtil {
+public class MediaUtil {
 
 	/**
 	 * @return Bitmap - A scaled image fitting the details image panel.
@@ -34,6 +37,14 @@ public class ImageUtil {
 		c.drawBitmap(bm, source, dest, p);
 		
 		return scaled;
+		
+	}
+	
+	public static void streamVideo(Context context, String ref){
+		
+		Intent i = new Intent(Intent.ACTION_VIEW);
+		i.setDataAndType(Uri.parse(ref), "video/mp4");
+		context.startActivity(i);
 		
 	}
 	
