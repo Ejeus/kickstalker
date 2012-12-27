@@ -78,10 +78,18 @@
                                 android:background="@color/kickstarter_green"
                                 android:orientation="vertical" >
 
-                                <ImageView
+                                <!--
+                                    <ImageView
                                     android:id="@+id/projectImage"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content" />
+                                -->
+
+                                <org.hummer.kickstalker.view.VideoPlayerImageView
+                                    android:id="@+id/projectImage"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0" />
 
                                 <EditText
                                     android:id="@+id/fieldShortDescription"

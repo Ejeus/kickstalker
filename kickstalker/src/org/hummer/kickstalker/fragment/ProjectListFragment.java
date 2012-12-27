@@ -47,10 +47,14 @@ public class ProjectListFragment extends Fragment implements OnItemClickListener
 	public static final String KEY_TYPE = "TYPE";
 	public static final String TYPE_DISCOVER = "DISCOVER";
 	public static final String TYPE_BACKED = "BACKED";
+	
+	static final int PHASE_IDLE = 0;
+	static final int PHASE_BUSY = 1;
 	private ProjectListFragment self;
 	private static final String KEY_PROJECT_LIST = "PROJECTLIST";
 	KickstarterClient client;
 	private List<Reference> projects;
+	private int phase;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Fragment#onCreate(android.os.Bundle)
@@ -138,6 +142,7 @@ public class ProjectListFragment extends Fragment implements OnItemClickListener
 	@Override
 	public void onItemClick(AdapterView<?> parent, View item, int position, long row) {
 		
+		if(phase!=PHASE_IDLE) return;
 		new DetailDataLoader().execute(
 				((ProjectCardView)item).getProjectReference());
 		
@@ -183,6 +188,7 @@ public class ProjectListFragment extends Fragment implements OnItemClickListener
 		@Override
 		protected List<Reference> doInBackground(Void... params) {
 			
+			phase = PHASE_BUSY;
 			Bundle args = getArguments();
 			String type = args.getString(KEY_TYPE);
 			
@@ -206,6 +212,7 @@ public class ProjectListFragment extends Fragment implements OnItemClickListener
 		protected void onPostExecute(List<Reference> result) {
 
 			refreshContent(result);
+			phase = PHASE_IDLE;
 			
 		}
 		
@@ -226,6 +233,7 @@ public class ProjectListFragment extends Fragment implements OnItemClickListener
 		 */
 		@Override
 		protected Project doInBackground(Reference... params) {
+			phase = PHASE_BUSY;
 			try {
 				return client.getProjectFromRef(getActivity(), params[0]);
 			} catch (IOException e) {
@@ -247,6 +255,7 @@ public class ProjectListFragment extends Fragment implements OnItemClickListener
 			ft.addToBackStack(null);
 			ft.setTransitionStyle(R.anim.incoming);
 			
+			phase = PHASE_IDLE;
 			ft.commit();
 			
 		}

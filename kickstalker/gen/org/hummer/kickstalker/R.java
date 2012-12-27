@@ -26,6 +26,7 @@ public final class R {
         public static final int ic_discover=0x7f020001;
         public static final int ic_launcher=0x7f020002;
         public static final int list_tile_highlight=0x7f020003;
+        public static final int videoplayer_play=0x7f020004;
     }
     public static final class id {
         public static final int ac_backed_projects=0x7f09002e;
