@@ -20,6 +20,8 @@ import org.hummer.kickstalker.cache.ImageCache;
 import org.hummer.kickstalker.data.Comment;
 import org.hummer.kickstalker.data.Project;
 import org.hummer.kickstalker.data.Reference;
+import org.hummer.kickstalker.data.Tier;
+import org.hummer.kickstalker.data.Update;
 import org.hummer.kickstalker.factory.CacheFactory;
 import org.hummer.kickstalker.http.KickstarterResources;
 import org.jsoup.Jsoup;
@@ -32,7 +34,8 @@ import android.content.Context;
 import android.util.Log;
 
 /**
- * The main client for content retrieval from Kickstarter.
+ * The main client for content retrieval from Kickstarter. This is the main
+ * logic for querying and caching Kickstarter content.
  * 
  * @author gernot.hummer
  *
@@ -111,24 +114,99 @@ public class KickstarterClient {
 		
 	}
 	
+	public List<Tier> getTiersFor(Context context, String projectRef) throws IOException{
+		
+		if(projectRef.contains("?"))
+			projectRef = projectRef.substring(0, projectRef.indexOf("?"));
+		List<Tier> tiers = new ArrayList<Tier>();
+		
+		HTMLCache cache = AppController.getInstance().getHTMLCache(context);
+		
+		Document doc = getResource(cache, projectRef, context, true);
+		
+		Element list = doc.select(KickstarterResources.ID_TIERS_LIST).first();
+		if(list==null) return tiers;
+		
+		Elements entries = list.select("li");
+		
+		for(Element entry : entries){
+			
+			Tier tier = new Tier();
+			tier.setTitle(entry.select("h3").text());
+			tier.setBackers(entry.select(
+					KickstarterResources.CLASS_TIER_BACKERS).first().text());
+			
+			tier.setSelected(entry.select(
+					KickstarterResources.CLASS_TIER_SELECTED).size()>0);
+			
+			tier.setBody(entry.select(
+					KickstarterResources.CLASS_TIER_BODY).first().html());
+			
+			tiers.add(tier);
+			
+		}
+		
+		return tiers;
+		
+	}
+	
+	public List<Update> getUpdatesFor(Context context, String projectRef) 
+			throws IOException{
+		
+		if(projectRef.contains("?"))
+			projectRef = projectRef.substring(0, projectRef.indexOf("?"));
+		List<Update> updates = new ArrayList<Update>();
+		
+		HTMLCache cache = AppController.getInstance().getHTMLCache(context);
+		
+		String ref = projectRef + KickstarterResources.PAGE_UPDATES;
+		Document doc = getResource(cache, ref, context, true);
+		Element list = doc.select(KickstarterResources.ID_UPDATE_LIST).first();
+		if(list==null) return updates;
+		
+		Elements entries = list.select(KickstarterResources.CLASS_UPDATE_ENTRY);
+		for(Element entry : entries){
+			
+			Update update = new Update();
+			update.setRef(ref);
+			update.setTitle(entry.select(
+					KickstarterResources.CLASS_UPDATE_TITLE).first().text());
+			
+			update.setUpdateId(entry.select(
+					KickstarterResources.CLASS_UPDATE_NUMBER).first().text());
+			
+			update.setBody(entry.select(
+					KickstarterResources.CLASS_UPDATE_BODY).first().html());
+			
+			updates.add(update);
+			
+		}
+		
+		return updates;
+		
+	}
+	
 	/**
-	 * @param activity, Activity. The current activity on the front end.
+	 * @param context, Context. The current activity on the front end.
 	 * @param projectRef, String. The referrer on Kickstarter to the project.
 	 * @return List<Comment>. A list of available recent comments on Kickstarter.
 	 * @throws IOException
 	 */
-	public List<Comment> getCommentsFor(Activity activity, String projectRef) throws IOException{
+	public List<Comment> getCommentsFor(Context context, String projectRef) 
+			throws IOException{
 		
 		if(projectRef.contains("?"))
 			projectRef = projectRef.substring(0, projectRef.indexOf("?"));
 		List<Comment> comments = new ArrayList<Comment>();
 		
-		HTMLCache cache = AppController.getInstance().getHTMLCache(activity);
+		HTMLCache cache = AppController.getInstance().getHTMLCache(context);
 		
 		Document doc = getResource(cache, projectRef + 
-				KickstarterResources.PAGE_COMMENTS, activity, true);
+				KickstarterResources.PAGE_COMMENTS, context, true);
 		
 		Element list = doc.select(KickstarterResources.CLASS_RECENT_COMMENTS).first();
+		
+		if(list==null) return comments;
 		Elements entries = list.select("li");
 		
 		for(Element entry : entries){
@@ -149,8 +227,16 @@ public class KickstarterClient {
 		
 	}
 
+	/**
+	 * @param cache, HTMLCache. Current cache object.
+	 * @param ref, String. The HTTP referred to draw from if necessary.
+	 * @param context, Context. The current context on frontend.
+	 * @param persistImmediately, boolean. State true if result should be hardcached.
+	 * @return Document. The HTML Document that was returned from cache or remotely.
+	 * @throws IOException
+	 */
 	private Document getResource(HTMLCache cache, String ref,
-			Activity activity, boolean persistImmediately) throws IOException{
+			Context context, boolean persistImmediately) throws IOException{
 
 		if(cache.containsKey(ref)){
 			return Jsoup.parse(cache.get(ref).getHTML());
@@ -161,15 +247,15 @@ public class KickstarterClient {
 			page.setHTML(doc.html());
 			cache.put(ref, page);
 			
-			if(persistImmediately) CacheFactory.store(activity, cache);
+			if(persistImmediately) CacheFactory.store(context, cache);
 			return doc;
 		}
 
 	}
 
 	/**
-	 * @param reference
-	 * @return
+	 * @param reference, Reference. The project reference to get full details for.
+	 * @return Project. A full fledged data object for the project reference.
 	 * @throws IOException 
 	 */
 	public Project getProject(Document doc, Reference reference) throws IOException {
@@ -249,11 +335,11 @@ public class KickstarterClient {
 
 
 	/**
-	 * @param activity, BaseActivity - The context to use. 
+	 * @param context, Context - The context to use. 
 	 * @param refs, List<Reference> - The project references to load
 	 * @return List<Project>
 	 */
-	public List<Project> getProjectsFromRef(Activity activity, List<Reference> refs) {
+	public List<Project> getProjectsFromRef(Context context, List<Reference> refs) {
 
 		htmlCache.drop(HTMLCACHE_THRESHOLD);
 		
@@ -262,10 +348,11 @@ public class KickstarterClient {
 		try {
 			for(int i=0, l=refs.size();i<l;i++){
 				Reference ref = refs.get(i);
-				projects.add(getProject(getResource(htmlCache, ref.getRef(), activity, false), ref));
+				projects.add(getProject(getResource(htmlCache, 
+						ref.getRef(), context, false), ref));
 			}
 
-			CacheFactory.store(activity, htmlCache);
+			CacheFactory.store(context, htmlCache);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

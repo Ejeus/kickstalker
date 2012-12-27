@@ -5,10 +5,11 @@
 package org.hummer.kickstalker;
 
 import java.io.IOException;
-import java.io.StreamCorruptedException;
 
 import org.hummer.kickstalker.cache.HTMLCache;
 import org.hummer.kickstalker.cache.ImageCache;
+import org.hummer.kickstalker.data.Configuration;
+import org.hummer.kickstalker.factory.AbstractFactory;
 import org.hummer.kickstalker.factory.CacheFactory;
 
 import android.content.Context;
@@ -21,10 +22,11 @@ import android.content.Context;
  */
 public class AppController {
 
-	public static final String SETTINGS_CREDENTIALS = "SETTINGS_CREDENTIALS";
+	public static final String CONFIGURATION_FILENAME = "appconfig.cfg";
 	private static AppController INSTANCE;
 	private HTMLCache htmlCache;
 	private ImageCache imgCache;
+	private Configuration config;
 	
 	private AppController(){}
 	
@@ -33,36 +35,53 @@ public class AppController {
 		return INSTANCE;
 	}
 	
+	public Configuration getConfig(Context context){
+		
+		if(config==null){
+			try{
+				config = (Configuration) 
+						AbstractFactory.load(context, CONFIGURATION_FILENAME);
+			}catch(Exception e){
+				config = new Configuration();
+			}
+		}
+		
+		return config;
+	}
+	
 	public ImageCache getImageCache(Context context){
+		
 		if(imgCache==null)
 			try {
 				imgCache = CacheFactory.loadImageCache(context);
-			} catch (StreamCorruptedException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				imgCache = new ImageCache();
 			}
 		
-		if(imgCache==null) return new ImageCache();
 		return imgCache;
 	}
 	
 	public HTMLCache getHTMLCache(Context context){
+		
 		if(htmlCache==null)
 			try {
 				htmlCache = CacheFactory.loadHTMLCache(context);
-			} catch (StreamCorruptedException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				htmlCache = new HTMLCache();
 			}
 		
-		if(htmlCache==null) return new HTMLCache();
 		return htmlCache;
+	}
+
+	/**
+	 * 
+	 */
+	public void persistConfig(Context context) {
+		try {
+			AbstractFactory.store(context, config, CONFIGURATION_FILENAME);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
 	}
 
 }

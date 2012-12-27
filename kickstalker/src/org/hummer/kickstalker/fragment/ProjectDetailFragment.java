@@ -4,28 +4,35 @@
  */
 package org.hummer.kickstalker.fragment;
 
-import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import org.hummer.kickstalker.R;
+import org.hummer.kickstalker.action.OpenWebsiteAction;
 import org.hummer.kickstalker.adapter.CommentAdapter;
+import org.hummer.kickstalker.adapter.TierAdapter;
+import org.hummer.kickstalker.adapter.UpdateAdapter;
 import org.hummer.kickstalker.client.KickstarterClient;
 import org.hummer.kickstalker.data.Comment;
 import org.hummer.kickstalker.data.Project;
+import org.hummer.kickstalker.data.Tier;
+import org.hummer.kickstalker.data.Update;
+import org.hummer.kickstalker.task.AbstractTask;
+import org.hummer.kickstalker.task.CommentDataLoader;
+import org.hummer.kickstalker.task.TierDataLoader;
+import org.hummer.kickstalker.task.UpdateDataLoader;
+import org.hummer.kickstalker.task.i.TaskCallbackI;
+import org.hummer.kickstalker.util.ImageUtil;
 import org.hummer.kickstalker.util.TimeUtil;
+import org.hummer.kickstalker.util.ViewUtil;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
@@ -33,13 +40,13 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
-import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 /**
@@ -48,23 +55,25 @@ import android.widget.TextView;
  * @version 1.0
  *
  */
-public class ProjectDetailFragment extends Fragment implements OnTabChangeListener {
+public class ProjectDetailFragment extends Fragment implements 
+	OnTabChangeListener, TaskCallbackI {
 
 	public static final String KEY_PROJECT = "KEY_PROJECT";
 	public static final String TAG = "PRJDTLFR";
 	
 	static final String TAB_DETAILS = "Details";
+	static final String TAB_TIERS = "Tiers";
 	static final String TAB_UPDATES = "Updates";
 	static final String TAB_COMMENTS = "Comments";
 	
 	private KickstarterClient client;
 	private Project project;
 	private CommentAdapter comments;
+	private TierAdapter tiers;
+	private UpdateAdapter updates;
 	private NumberFormat nF;
 	private NumberFormat cF;
 	private NumberFormat pF;
-	boolean updatesLoaded = false;
-	boolean commentsLoaded = false;
 
 	public ProjectDetailFragment(){
 		project = null;
@@ -111,35 +120,27 @@ public class ProjectDetailFragment extends Fragment implements OnTabChangeListen
 		TabHost tabHost = (TabHost) view.findViewById(android.R.id.tabhost);
 		tabHost.setup();
 		
-		TabSpec details = tabHost.newTabSpec(TAB_DETAILS);
-		details.setIndicator("Details");
-		details.setContent(R.id.projectDetailContent);
-		tabHost.addTab(details);
-		
-		TabSpec updates = tabHost.newTabSpec(TAB_UPDATES);
-		updates.setIndicator("Updates");
-		updates.setContent(R.id.projectUpdateContent);
-		tabHost.addTab(updates);
-		
-		TabSpec comments = tabHost.newTabSpec(TAB_COMMENTS);
-		comments.setIndicator("Comments");
-		comments.setContent(R.id.projectCommentContent);
-		tabHost.addTab(comments);
+		ViewUtil.addTabToTabHost(tabHost, TAB_DETAILS, R.id.projectDetailContent);
+		ViewUtil.addTabToTabHost(tabHost, TAB_TIERS, R.id.projectTierContent);
+		ViewUtil.addTabToTabHost(tabHost, TAB_UPDATES, R.id.projectUpdateContent);
+		ViewUtil.addTabToTabHost(tabHost, TAB_COMMENTS, R.id.projectCommentContent);
 		
 		tabHost.setCurrentTab(0);
 		tabHost.setOnTabChangedListener(this);
 		return view;
 	}
-
 	
 	private void loadValues(View parent){
 		
+		Activity activity = getActivity();
 		int pldg = project.getPledged();
 		int gl = project.getGoal();
 		int prg = pldg > gl ? gl : pldg;
 		
-		TextView title = (TextView) parent.findViewById(R.id.fieldTitle);
-		title.setText(project.getTitle());
+		TextView title = ViewUtil.findAndSetText(activity, R.id.fieldTitle, 
+				project.getTitle());
+		title.setOnClickListener(new OpenWebsiteAction(activity, 
+				project.getRef()));
 		
 		ProgressBar progress = (ProgressBar) 
 				parent.findViewById(R.id.progressFunding);
@@ -150,24 +151,17 @@ public class ProjectDetailFragment extends Fragment implements OnTabChangeListen
 		ImageView img = (ImageView) parent.findViewById(R.id.projectImage);
 		img.setImageBitmap(scaleImage());
 		
-		TextView shortDescription = (TextView) parent.findViewById(
-				R.id.fieldShortDescription);
-		shortDescription.setText(project.getShortDescription());
-		
-		TextView backers = (TextView) parent.findViewById(R.id.fieldBackers);
-		backers.setText(nF.format(project.getBackers()));
-		
-		TextView pledged = (TextView) parent.findViewById(R.id.fieldPledged);
-		pledged.setText(cF.format(pldg));
-		
-		TextView percent = (TextView) parent.findViewById(R.id.fieldPercent);
-		percent.setText(" (" + pF.format(project.getPercent()) + ")");
-		
-		TextView goal = (TextView) parent.findViewById(R.id.fieldGoal);
-		goal.setText(cF.format(gl));
-		
-		TextView timeLeft = (TextView) parent.findViewById(R.id.fieldTimeLeft);
-		timeLeft.setText(TimeUtil.hoursToReadable(project.getTimeLeft()));
+		ViewUtil.findAndSetText(activity, R.id.fieldShortDescription, 
+				project.getShortDescription());
+		ViewUtil.findAndSetText(activity, R.id.fieldBackers, 
+				nF.format(project.getBackers()));
+		ViewUtil.findAndSetText(activity, R.id.fieldPledged, 
+				cF.format(pldg));
+		ViewUtil.findAndSetText(activity, R.id.fieldPercent,
+				" (" + pF.format(project.getPercent()) + ")");
+		ViewUtil.findAndSetText(activity, R.id.fieldGoal, cF.format(gl));
+		ViewUtil.findAndSetText(activity, R.id.fieldTimeLeft,
+				TimeUtil.hoursToReadable(project.getTimeLeft()));
 		
 		TextView description = (TextView) parent.findViewById(R.id.fieldDescription);
 		Spanned spanned = Html.fromHtml(project.getDescription());
@@ -188,20 +182,7 @@ public class ProjectDetailFragment extends Fragment implements OnTabChangeListen
 		byte[] imgdata = project.getImageData();
 		Bitmap bm = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length);
 		
-		int tw = size.x;
-		int th = 400;
-		float factor = ((float)bm.getWidth() / tw);
-		
-		Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
-		Bitmap scaled = Bitmap.createBitmap(tw, th, Bitmap.Config.ARGB_8888);
-		Canvas c = new Canvas(scaled);
-		Rect source = new Rect(0, 0, bm.getWidth(), 
-				Float.valueOf(th * factor).intValue());
-		Rect dest = new Rect(0, 0, tw, th);
-		
-		c.drawBitmap(bm, source, dest, p);
-		
-		return scaled;
+		return ImageUtil.scaleImage(bm, size.x, 400);
 		
 	}
 
@@ -210,16 +191,38 @@ public class ProjectDetailFragment extends Fragment implements OnTabChangeListen
 		Context context = getActivity();
 		this.comments = new CommentAdapter();
 		this.comments.setData(context, comments);
+		refresh(context, this.comments, R.id.projectCommentContent);
+		
+		
+	}
+	
+	public void refreshTiers(List<Tier> tiers){
+		
+		Context context = getActivity();
+		this.tiers = new TierAdapter();
+		this.tiers.setData(context, tiers);
+		refresh(context, this.tiers, R.id.projectTierContent);
+		
+	}
+	
+	public void refreshUpdates(List<Update> updates){
+		Context context = getActivity();
+		this.updates = new UpdateAdapter();
+		this.updates.setData(context, updates);
+		refresh(context, this.updates, R.id.projectUpdateContent);
+		
+	}
+	
+	public void refresh(Context context, BaseAdapter adapter, int parentId){
 		
 		ListView list = new ListView(context);
-		list.setAdapter(this.comments);
+		list.setAdapter(adapter);
 		
-		LinearLayout parent = (LinearLayout) 
-				getView().findViewById(R.id.projectCommentContent);
+		LinearLayout parent = (LinearLayout)
+				getView().findViewById(parentId);
 		
 		parent.removeAllViews();
 		parent.addView(list);
-		
 		
 	}
 
@@ -229,34 +232,33 @@ public class ProjectDetailFragment extends Fragment implements OnTabChangeListen
 	@Override
 	public void onTabChanged(String tabId) {
 		
-		if(tabId.equals(TAB_COMMENTS) && !commentsLoaded){
-			new CommentsDataLoader().execute();
+		if(tabId.equals(TAB_COMMENTS)){
+			new CommentDataLoader(getActivity(), client, this, project.getRef()).execute();
+		}else if(tabId.equals(TAB_TIERS)){
+			new TierDataLoader(getActivity(), client, this, project.getRef()).execute();
+		}else if(tabId.equals(TAB_UPDATES)){
+			new UpdateDataLoader(getActivity(), client, this, project.getRef()).execute();
+		}
+		
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see org.hummer.kickstalker.task.i.TaskCallbackI#onTaskFinished(android.os.AsyncTask, java.lang.Object)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public void onTaskFinished(AbstractTask<?, ?, ?> task, Object result) {
+		
+		if(task.getName().equals(CommentDataLoader.TASKNAME)){
+			refreshComments((List<Comment>) result);
+		}else if(task.getName().equals(TierDataLoader.TASKNAME)){
+			refreshTiers((List<Tier>) result);
+		}else if(task.getName().equals(UpdateDataLoader.TASKNAME)){
+			refreshUpdates((List<Update>) result);
 		}
 		
 	}
 	
-	private class CommentsDataLoader extends AsyncTask<Void, Void, List<Comment>>{
-
-		/* (non-Javadoc)
-		 * @see android.os.AsyncTask#doInBackground(Params[])
-		 */
-		@Override
-		protected List<Comment> doInBackground(Void... params) {
-			try {
-				return client.getCommentsFor(getActivity(), project.getRef());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			return new ArrayList<Comment>();
-		}
-
-		@Override
-		protected void onPostExecute(List<Comment> result) {
-			refreshComments(result);
-		}
-		
-		
-		
-	}
 }

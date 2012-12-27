@@ -4,6 +4,7 @@
  */
 package org.hummer.kickstalker.view;
 
+import org.hummer.kickstalker.R;
 import org.hummer.kickstalker.data.Reference;
 
 import android.content.Context;
@@ -42,6 +43,7 @@ public class ProjectCardView extends View {
 	Paint shadowPaint;
 	Bitmap image;
 	Bitmap text;
+	Bitmap highlight;
 	RectF imgScaleTarget;
 	private StaticLayout titleLayout;
 	private Rect titleRect;
@@ -100,6 +102,9 @@ public class ProjectCardView extends View {
 		shadowPaint.setMaskFilter(new BlurMaskFilter(4, Blur.NORMAL));
 		shadowPaint.setStyle(Style.FILL_AND_STROKE);
 		
+		highlight = BitmapFactory.decodeResource(getResources(), 
+				R.drawable.list_tile_highlight);
+		
 		titleRect = new Rect(paddingLeft, paddingTop, width-paddingRight, 100);
 		shadowRect = new Rect(paddingLeft+1, paddingTop+1, 
 				width-paddingRight+1, height-paddingBottom+1);
@@ -132,6 +137,7 @@ public class ProjectCardView extends View {
 		
 		canvas.drawRect(titleRect, translucentPaint);
 		canvas.drawBitmap(text, paddingLeft + textPadding, 0, paint);
+		canvas.drawBitmap(highlight, 0, 0, translucentPaint);
 		canvas.drawRect(paddingLeft, paddingTop, width-paddingRight, 
 				height-paddingBottom, borderPaint);
 		

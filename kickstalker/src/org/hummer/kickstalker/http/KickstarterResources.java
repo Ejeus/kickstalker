@@ -30,6 +30,9 @@ public class KickstarterResources {
 	public static final String ID_PROJECT_VIDEOSECTION = "#video-section";
 	public static final String ID_BACKED_LIST = "#list";
 	
+	public static final String ID_UPDATE_LIST = "#main";
+	public static final String ID_TIERS_LIST = "#what-you-get";
+	
 	/**
 	 * A handle for a typical project card on kickstarter.
 	 */
@@ -42,6 +45,16 @@ public class KickstarterResources {
 	public static final String CLASS_RECENT_COMMENTS = "ol.comments";
 	public static final String CLASS_COMMENT_AUTHOR = "a.author";
 	public static final String CLASS_COMMENT_DATE = "span.date";
+	
+	public static final String CLASS_UPDATE_ENTRY = "div.blogentry";
+	public static final String CLASS_UPDATE_TITLE = "h2.title";
+	public static final String CLASS_UPDATE_NUMBER = "span.update-number";
+	public static final String CLASS_UPDATE_BODY = "div.body";
+	
+	public static final String CLASS_TIER = "div.NS-projects-reward";
+	public static final String CLASS_TIER_BACKERS = "span.backers-wrap";
+	public static final String CLASS_TIER_BODY = "div.desc";
+	public static final String CLASS_TIER_SELECTED = "span.you-selected";
 	
 	
 	/**
@@ -73,5 +86,6 @@ public class KickstarterResources {
 	public static final String PAGE_DISCOVER = "/discover";
 	public static final String PAGE_PROFILE = "/profile";
 	public static final String PAGE_COMMENTS = "/comments";
+	public static final String PAGE_UPDATES = "/posts";
 	
 }

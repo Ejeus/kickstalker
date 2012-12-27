@@ -4,6 +4,7 @@
  */
 package org.hummer.kickstalker.data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,8 +13,12 @@ import java.util.Date;
  * @version 1.0
  *
  */
-public class AbstractData {
+public class AbstractData implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7678646852127405345L;
 	private long stamp;
 	
 	public AbstractData(){

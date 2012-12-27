@@ -18,5 +18,8 @@
     <string name="project_detail_label_goal">Goal:</string>
     <string name="ac_backed_projects">Backed Projects</string>
     <string name="ac_discover_projects">Discover Projects</string>
+    <string name="label_save">Save</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_config">Settings</string>
 
 </resources>

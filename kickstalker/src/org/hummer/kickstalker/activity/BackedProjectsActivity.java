@@ -36,7 +36,8 @@ public class BackedProjectsActivity extends BaseActivity {
 		args.putString(ProjectListFragment.KEY_TYPE, 
 				ProjectListFragment.TYPE_BACKED);
 		
-		args.putString(ProjectListFragment.KEY_USERNAME, "charnode");
+		String username = appC.getConfig(this).getUsername();
+		args.putString(ProjectListFragment.KEY_USERNAME, username);
 		args.putString(ProjectListFragment.KEY_TITLE, "Backed projects");
 		
 		fragment.setArguments(args);
@@ -58,10 +59,15 @@ public class BackedProjectsActivity extends BaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
+		Intent i;
 		switch(item.getItemId()){
 		
 		case R.id.ac_discover_projects:
-			Intent i = new Intent(this, DiscoverProjectsActivity.class);
+			i = new Intent(this, DiscoverProjectsActivity.class);
+			startActivity(i);
+			return true;
+		case R.id.ac_config:
+			i = new Intent(this, ConfigurationActivity.class);
 			startActivity(i);
 			return true;
 		default:

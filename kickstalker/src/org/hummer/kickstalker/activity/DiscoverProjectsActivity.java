@@ -55,10 +55,15 @@ public class DiscoverProjectsActivity extends BaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
+		Intent i;
 		switch(item.getItemId()){
 		
 		case R.id.ac_backed_projects:
-			Intent i = new Intent(this, BackedProjectsActivity.class);
+			i = new Intent(this, BackedProjectsActivity.class);
+			startActivity(i);
+			return true;
+		case R.id.ac_config:
+			i = new Intent(this, ConfigurationActivity.class);
 			startActivity(i);
 			return true;
 		default:

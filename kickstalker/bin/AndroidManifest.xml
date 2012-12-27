@@ -29,6 +29,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.BackedProjectsActivity" android:theme="@style/AppTheme"></activity>
+        <activity android:name=".activity.ConfigurationActivity" android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

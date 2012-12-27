@@ -6,5 +6,11 @@
         android:icon="@drawable/ic_discover"
         android:showAsAction="ifRoom"
         android:title="@string/ac_discover_projects" />
+    
+    <item
+        android:id="@+id/ac_config"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:showAsAction="ifRoom"
+        android:title="@string/label_config" />
 
 </menu>
