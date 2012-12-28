@@ -53,7 +53,7 @@ public class ViewUtil {
 		if(view!=null){
 			view.setText(value);
 			view.setClickable(true);
-			view.setAutoLinkMask(Linkify.WEB_URLS);
+			view.setAutoLinkMask(Linkify.ALL);
 		}
 		return view;
 

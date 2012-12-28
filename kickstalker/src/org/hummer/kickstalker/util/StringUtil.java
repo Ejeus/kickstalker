@@ -14,9 +14,13 @@ public class StringUtil {
 
 	public static String getOwnership(String username){
 		
-		char c = username.charAt(username.length()-1);
+		String lastTwo = username.substring(username.length()-3,
+				username.length()-1);
+		String last = username.substring(username.length()-1);
 		
-		if("s".equals(c) || "S".equals(c))
+		if(lastTwo.equals("'s") || lastTwo.equals("'S")){
+			return username;
+		} else if("s".equals(last) || "S".equals(last))
 			return username + "'";
 		else
 			return username + "'s";

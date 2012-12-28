@@ -10,6 +10,7 @@ import org.hummer.kickstalker.fragment.KickstarterListFragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ViewGroup;
 
 /**
  * @author gernot.hummer
@@ -39,6 +40,7 @@ public class ProjectListActivity extends BaseActivity {
 		}
 		
 		listFragment.setArguments(args);
+		((ViewGroup)findViewById(R.id.appContent)).removeAllViews();
 		fmgr.beginTransaction().
 			add(R.id.appContent, listFragment, KickstarterListFragment.TAG).commit();
 		

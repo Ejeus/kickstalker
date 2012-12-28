@@ -12,14 +12,18 @@ package org.hummer.kickstalker.data;
  */
 public class Comment extends AbstractData {
 
-	private String author;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7880214282533796883L;
+	private Reference author;
 	private String date;
 	private String content;
 	
-	public String getAuthor() {
+	public Reference getAuthor() {
 		return author;
 	}
-	public void setAuthor(String author) {
+	public void setAuthor(Reference author) {
 		this.author = author;
 	}
 	public String getDate() {

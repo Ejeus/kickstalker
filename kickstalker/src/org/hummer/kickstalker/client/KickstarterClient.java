@@ -248,8 +248,13 @@ public class KickstarterClient {
 
 		for(Element entry : entries){
 			Comment comment = new Comment();
-			comment.setAuthor(entry.select(
-					KickstarterResources.CLASS_COMMENT_AUTHOR).first().text());
+			Element author = entry.select(
+					KickstarterResources.CLASS_COMMENT_AUTHOR).first();
+			
+			String href = author.attr("href");
+			String username = href.substring(href.lastIndexOf("/"), href.length());
+			Reference authorRef = new Reference(username, author.text());
+			comment.setAuthor(authorRef);
 
 			comment.setDate(entry.select(
 					KickstarterResources.CLASS_COMMENT_DATE).first().text());

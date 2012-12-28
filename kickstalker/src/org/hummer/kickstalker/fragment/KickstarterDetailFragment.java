@@ -7,6 +7,7 @@ package org.hummer.kickstalker.fragment;
 import java.util.List;
 
 import org.hummer.kickstalker.R;
+import org.hummer.kickstalker.activity.BaseActivity.Phase;
 import org.hummer.kickstalker.activity.ProjectListActivity;
 import org.hummer.kickstalker.adapter.CommentAdapter;
 import org.hummer.kickstalker.adapter.TierAdapter;
@@ -35,7 +36,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -53,15 +53,14 @@ public class KickstarterDetailFragment extends Fragment implements
 	OnTabChangeListener, TaskCallbackI {
 
 	public static final String TAG = "KICKSTARTERDETAILFRAGMENT";
-	public static final int PHASE_IDLE = 0;
-	public static final int PHASE_BUSY = 1;
 	
 	private Context context;
 	private KickstarterClient client;
 	private Project project;
 	private ImageView imageView;
 	private int screenWidth;
-	int phase;
+	private Phase phase;
+	AbstractTask<?,?,?> currentTask;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -74,7 +73,7 @@ public class KickstarterDetailFragment extends Fragment implements
 		getActivity().getWindowManager().getDefaultDisplay().getSize(p);
 		screenWidth = p.x;
 		
-		phase = PHASE_IDLE;
+		phase = Phase.IDLE;
 		
 	}
 
@@ -163,11 +162,16 @@ public class KickstarterDetailFragment extends Fragment implements
 		}
 		
 	}
+	
+	
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
-		return super.onOptionsItemSelected(item);
+	public void onStop() {
+		super.onStop();
+		if(phase==Phase.BUSY)
+			currentTask.cancel(true);
+		
+		phase = Phase.STOPPED;
 	}
 
 	/* (non-Javadoc)
@@ -175,7 +179,8 @@ public class KickstarterDetailFragment extends Fragment implements
 	 */
 	@Override
 	public void onTaskStarted(AbstractTask<?, ?, ?> task) {
-		phase = PHASE_BUSY;		
+		currentTask = task;
+		phase = Phase.BUSY;		
 	}
 
 	/* (non-Javadoc)
@@ -185,6 +190,7 @@ public class KickstarterDetailFragment extends Fragment implements
 	@Override
 	public void onTaskFinished(AbstractTask<?, ?, ?> task, Object result) {
 		
+		if(phase==Phase.STOPPED) return;
 		View view = getView();
 		if(task.getName().equals(TierDataLoader.TASKNAME)){
 			TierAdapter adapter = new TierAdapter();
@@ -203,7 +209,8 @@ public class KickstarterDetailFragment extends Fragment implements
 					(ViewGroup) view.findViewById(R.id.projectCommentContent), adapter);
 		}
 		
-		phase = PHASE_IDLE;		
+		phase = Phase.IDLE;	
+		currentTask = null;
 	}
 
 	/* (non-Javadoc)
@@ -211,7 +218,8 @@ public class KickstarterDetailFragment extends Fragment implements
 	 */
 	@Override
 	public void onTaskCancelled(AbstractTask<?, ?, ?> task) {
-		phase = PHASE_IDLE;		
+		phase = Phase.IDLE;	
+		currentTask = null;
 	}
 
 	/* (non-Javadoc)

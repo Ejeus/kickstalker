@@ -25,6 +25,13 @@ public class BaseActivity extends Activity {
 
 	public static final String RETURN_TO = "NAV_RETURNTO";
 	protected AppController appC;
+	protected Phase phase;
+	
+	public enum Phase{
+		IDLE,
+		BUSY,
+		STOPPED
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,7 @@ public class BaseActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		appC = AppController.getInstance();
 		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		phase = Phase.IDLE;
 		
 	}
 	

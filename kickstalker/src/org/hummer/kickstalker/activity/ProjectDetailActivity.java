@@ -17,6 +17,7 @@ import org.hummer.kickstalker.task.i.TaskCallbackI;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ViewGroup;
 
 /**
  * @author gernot.hummer
@@ -28,6 +29,7 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 
 	public static final String KEY_PRJREF = "PRJREF";
 	private KickstarterDetailFragment detailFragment;
+	private AbstractTask<?,?,?> currentTask;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +43,28 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 		}
 		
 	}
+	
+	
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if(phase==Phase.BUSY)
+			currentTask.cancel(true);
+		
+		phase=Phase.STOPPED;
+	}
+
+
 
 	/* (non-Javadoc)
 	 * @see org.hummer.kickstalker.task.i.TaskCallbackI#onTaskStarted(org.hummer.kickstalker.task.AbstractTask)
 	 */
 	@Override
-	public void onTaskStarted(AbstractTask<?, ?, ?> task) {}
+	public void onTaskStarted(AbstractTask<?, ?, ?> task) {
+		currentTask = task;
+		phase = Phase.BUSY;
+	}
 
 	/* (non-Javadoc)
 	 * @see org.hummer.kickstalker.task.i.TaskCallbackI#onTaskFinished(org.hummer.kickstalker.task.AbstractTask, java.lang.Object)
@@ -54,15 +72,19 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 	@Override
 	public void onTaskFinished(AbstractTask<?, ?, ?> task, Object result) {
 		
+		if(phase==Phase.STOPPED) return;
 		FragmentManager fmgr = getFragmentManager();
 		setContentView(R.layout.activity_main);
 		detailFragment = new KickstarterDetailFragment();
 		
+		((ViewGroup)findViewById(R.id.appContent)).removeAllViews();
 		fmgr.beginTransaction().
 			add(R.id.appContent, detailFragment, 
 					KickstarterListFragment.TAG).commit();
 		
 		detailFragment.setData((Project) result);
+		phase = Phase.IDLE;
+		currentTask = null;
 		
 	}
 
@@ -70,6 +92,9 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 	 * @see org.hummer.kickstalker.task.i.TaskCallbackI#onTaskCancelled(org.hummer.kickstalker.task.AbstractTask)
 	 */
 	@Override
-	public void onTaskCancelled(AbstractTask<?, ?, ?> task) {}
+	public void onTaskCancelled(AbstractTask<?, ?, ?> task) {
+		phase = Phase.IDLE;
+		currentTask = null;
+	}
 	
 }

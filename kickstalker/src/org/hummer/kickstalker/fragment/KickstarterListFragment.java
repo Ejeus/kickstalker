@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.hummer.kickstalker.AppController;
 import org.hummer.kickstalker.R;
+import org.hummer.kickstalker.activity.BaseActivity.Phase;
 import org.hummer.kickstalker.activity.ProjectDetailActivity;
 import org.hummer.kickstalker.activity.ProjectListActivity;
 import org.hummer.kickstalker.adapter.ProjectCardAdapter;
@@ -21,6 +22,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,10 +50,9 @@ public class KickstarterListFragment extends Fragment implements TaskCallbackI {
 	public static final String KEY_TYPE = "TYPE";
 	public static final String KEY_USERNAME = "USERNAME";
 	public static final String KEY_TITLE = "TITLE";
-	static final int PHASE_IDLE = 0;
-	static final int PHASE_BUSY = 1;
 	
-	private int phase;
+	private Phase phase;
+	private AbstractTask<?, ?, ?> currentTask;
 	private Context context;
 	private KickstarterClient client;
 	private GridView listView;
@@ -68,6 +69,7 @@ public class KickstarterListFragment extends Fragment implements TaskCallbackI {
 		
 		listView = new GridView(getActivity());
 		listView.setNumColumns(2);
+		listView.setGravity(Gravity.TOP);
 		listAttached = false;
 		
 		View view = inflater.inflate(R.layout.fragment_list_general, container, false);
@@ -109,6 +111,7 @@ public class KickstarterListFragment extends Fragment implements TaskCallbackI {
 			title = getResources().getString(
 					R.string.fragment_caption_discover);
 		
+		phase = Phase.IDLE;
 		dispatchRequest(type, username);
 		
 	}
@@ -135,7 +138,7 @@ public class KickstarterListFragment extends Fragment implements TaskCallbackI {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
-		if(phase==PHASE_IDLE){
+		if(phase==Phase.IDLE){
 			Intent i;
 			switch(item.getItemId()){
 			
@@ -159,13 +162,25 @@ public class KickstarterListFragment extends Fragment implements TaskCallbackI {
 		
 		return false;
 	}
+	
+	
+
+	@Override
+	public void onStop() {
+
+		super.onStop();
+		
+		if(phase==Phase.BUSY)
+			currentTask.cancel(true);
+	}
 
 	/* (non-Javadoc)
 	 * @see org.hummer.kickstalker.task.i.TaskCallbackI#onTaskStarted(org.hummer.kickstalker.task.AbstractTask)
 	 */
 	@Override
 	public void onTaskStarted(AbstractTask<?, ?, ?> task) {
-		phase = PHASE_BUSY;		
+		currentTask = task;
+		phase = Phase.BUSY;		
 	}
 
 	/* (non-Javadoc)
@@ -202,7 +217,8 @@ public class KickstarterListFragment extends Fragment implements TaskCallbackI {
 				content.invalidate();
 			}
 		}
-		phase = PHASE_IDLE;		
+		phase = Phase.IDLE;	
+		currentTask = null;
 	}
 
 	/* (non-Javadoc)
@@ -210,7 +226,8 @@ public class KickstarterListFragment extends Fragment implements TaskCallbackI {
 	 */
 	@Override
 	public void onTaskCancelled(AbstractTask<?, ?, ?> task) {
-		phase = PHASE_IDLE;		
+		phase = Phase.IDLE;
+		currentTask = null;
 	}
 	
 }
