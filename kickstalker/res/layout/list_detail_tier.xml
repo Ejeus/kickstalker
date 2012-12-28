@@ -21,17 +21,13 @@
         android:text="Small Text"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <EditText
+    <TextView
         android:id="@+id/tierBody"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:enabled="false"
-        android:inputType="textMultiLine"
+        android:paddingBottom="5dp"
         android:paddingLeft="5dp"
-        android:paddingRight="5dp" >
-
-        <requestFocus />
-    </EditText>
+        android:paddingRight="5dp"
+        android:paddingTop="5dp" />
 
 </LinearLayout>

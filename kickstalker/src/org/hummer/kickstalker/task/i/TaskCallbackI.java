@@ -14,6 +14,10 @@ import org.hummer.kickstalker.task.AbstractTask;
  */
 public interface TaskCallbackI {
 
+	public void onTaskStarted(AbstractTask<?, ?, ?> task);
+	
 	public void onTaskFinished(AbstractTask<?, ?, ?> task, Object result);
+	
+	public void onTaskCancelled(AbstractTask<?, ?, ?> task);
 	
 }

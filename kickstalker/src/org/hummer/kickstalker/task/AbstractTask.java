@@ -30,5 +30,14 @@ public abstract class AbstractTask<Params, Progress, Result> extends AsyncTask<P
 	public String getName(){
 		return name;
 	}
+
+	@Override
+	protected void onCancelled() {
+		super.onCancelled();
+		
+		callback.onTaskCancelled(this);
+	}
+	
+	
 	
 }

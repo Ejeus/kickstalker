@@ -38,7 +38,8 @@ public class ProjectCardView extends View {
 	static final int PREFERRED_HEIGHT = 305;
 	Reference project;
 	TextPaint paint;
-	Paint translucentPaint;
+	Paint titlePaint;
+	Paint highlightPaint;
 	Paint borderPaint;
 	Paint shadowPaint;
 	Bitmap image;
@@ -88,10 +89,13 @@ public class ProjectCardView extends View {
 		paint.setTextSize(28);
 		paint.setTypeface(Typeface.create("Helvetica", Typeface.BOLD));
 		
-		translucentPaint = new Paint();
-		translucentPaint.setColor(Color.WHITE);
-		translucentPaint.setAlpha(196);
-		translucentPaint.setStyle(Style.FILL);
+		titlePaint = new Paint();
+		titlePaint.setColor(Color.WHITE);
+		titlePaint.setAlpha(196);
+		titlePaint.setStyle(Style.FILL);
+		
+		highlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		highlightPaint.setAlpha(96);
 		
 		borderPaint = new Paint();
 		borderPaint.setColor(Color.LTGRAY);
@@ -135,9 +139,9 @@ public class ProjectCardView extends View {
 		canvas.drawRect(shadowRect, shadowPaint);
 		canvas.drawBitmap(image, null, imgScaleTarget, paint);
 		
-		canvas.drawRect(titleRect, translucentPaint);
+		canvas.drawRect(titleRect, titlePaint);
 		canvas.drawBitmap(text, paddingLeft + textPadding, 0, paint);
-		canvas.drawBitmap(highlight, 0, 0, translucentPaint);
+		canvas.drawBitmap(highlight, 0, 0, highlightPaint);
 		canvas.drawRect(paddingLeft, paddingTop, width-paddingRight, 
 				height-paddingBottom, borderPaint);
 		

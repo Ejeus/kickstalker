@@ -38,6 +38,8 @@ public class CommentDataLoader extends AbstractTask<Void, Void, List<Comment>>{
 	 */
 	@Override
 	protected List<Comment> doInBackground(Void... params) {
+		
+		callback.onTaskStarted(this);
 		try {
 			return client.getCommentsFor(context, ref);
 		} catch (IOException e) {

@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.TextView;
 
 /**
@@ -80,7 +79,7 @@ public class CommentAdapter extends BaseAdapter {
 		TextView date = (TextView) convertView.findViewById(R.id.commentDate);
 		date.setText(c.getDate());
 		
-		EditText comment = (EditText) convertView.findViewById(R.id.commentContent);
+		TextView comment = (TextView) convertView.findViewById(R.id.commentContent);
 		Spanned spanned = Html.fromHtml(c.getContent());
 		comment.setText(spanned);
 		comment.setAutoLinkMask(Linkify.WEB_URLS);

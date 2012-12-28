@@ -38,6 +38,8 @@ public class UpdateDataLoader extends AbstractTask<Void, Void, List<Update>>{
 	 */
 	@Override
 	protected List<Update> doInBackground(Void... params) {
+		
+		callback.onTaskStarted(this);
 		try {
 			return client.getUpdatesFor(context, ref);
 		} catch (IOException e) {

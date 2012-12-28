@@ -21,5 +21,6 @@
     <string name="label_save">Save</string>
     <string name="label_cancel">Cancel</string>
     <string name="label_config">Settings</string>
+    <string name="project_detail_label_creator">Creator</string>
 
 </resources>

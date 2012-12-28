@@ -31,7 +31,7 @@ public class Project extends AbstractData implements Serializable {
 	private float percent;
 	private int goal;
 	private int timeLeft;
-	private String owner;
+	private Reference owner;
 	
 	public Project(String ref){
 		super();
@@ -103,10 +103,10 @@ public class Project extends AbstractData implements Serializable {
 	public void setTimeLeft(int timeLeft) {
 		this.timeLeft = timeLeft;
 	}
-	public String getOwner() {
+	public Reference getOwner() {
 		return owner;
 	}
-	public void setOwner(String owner) {
+	public void setOwner(Reference owner) {
 		this.owner = owner;
 	}
 	public float getPercent() {

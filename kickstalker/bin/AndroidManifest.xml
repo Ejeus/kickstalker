@@ -20,16 +20,19 @@
         android:logo="@drawable/ic_launcher"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".activity.DiscoverProjectsActivity"
+            android:name=".activity.ConfigurationActivity"
             android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="org.hummer.kickstalker.activity.ProjectListActivity"
+            android:theme="@style/AppTheme" >
+            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.BackedProjectsActivity" android:theme="@style/AppTheme"></activity>
-        <activity android:name=".activity.ConfigurationActivity" android:theme="@style/AppTheme"></activity>
+        <activity android:theme="@style/AppTheme" android:name=".activity.ProjectDetailActivity"></activity>
     </application>
 
 </manifest>

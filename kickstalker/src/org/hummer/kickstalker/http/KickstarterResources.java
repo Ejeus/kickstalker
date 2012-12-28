@@ -24,6 +24,8 @@ public class KickstarterResources {
 	public static final String ID_PROJECT_PLEDGED = "#pledged";	
 	public static final String ID_PROJECT_TIMELEFT = "#project_duration_data";
 	
+	public static final String ID_PROJECT_CREATOR = "div#creator-name";
+	
 	/**
 	 * This is the id of the video area within a specific project page. 
 	 */
@@ -56,6 +58,9 @@ public class KickstarterResources {
 	public static final String CLASS_TIER_BACKERS = "span.backers-wrap";
 	public static final String CLASS_TIER_BODY = "div.desc";
 	public static final String CLASS_TIER_SELECTED = "span.you-selected";
+	
+	public static final String CLASS_PROJECT_RELATED = "ol.projects";
+	public static final String CLASS_PROJECT_PAGING = "li.page";
 	
 	
 	/**

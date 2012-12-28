@@ -5,10 +5,15 @@
 package org.hummer.kickstalker.activity;
 
 import org.hummer.kickstalker.AppController;
+import org.hummer.kickstalker.R;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 /**
  * @author gernot.hummer
@@ -32,6 +37,30 @@ public class BaseActivity extends Activity {
 	
 	public AppController getAppController(){
 		return appC;
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		boolean returnVal = super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.options_app, menu);
+		return returnVal;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		boolean returnVal = super.onOptionsItemSelected(item);
+		
+		if(!returnVal){
+			switch(item.getItemId()){
+			case R.id.ac_config:
+				Intent i = new Intent(this, ConfigurationActivity.class);
+				startActivity(i);
+				return true;
+			}
+		}
+		
+		return returnVal;
 	}
 	
 }

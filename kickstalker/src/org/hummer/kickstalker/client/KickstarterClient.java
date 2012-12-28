@@ -29,7 +29,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -97,6 +96,8 @@ public class KickstarterClient {
 				KickstarterResources.PAGE_PROFILE + "/" + username).get();
 
 		Element list = doc.select(KickstarterResources.ID_BACKED_LIST).first();
+		if(list==null) return projectRefs;
+		
 		Elements projects = list.select(KickstarterResources.CLASS_BACKED_PROJECT);
 
 		for(Element project : projects){
@@ -112,6 +113,35 @@ public class KickstarterClient {
 
 		return projectRefs;
 
+	}
+	
+	public List<Reference> getRelatedProjects(Context context, String projectRef) throws IOException{
+		
+		if(projectRef.contains("?"))
+			projectRef = projectRef.substring(0, projectRef.indexOf("?"));
+		List<Reference> refs = new ArrayList<Reference>();
+		
+		HTMLCache cache = AppController.getInstance().getHTMLCache(context);
+		Document doc = getResource(cache, projectRef, context, true);
+		
+		Element list = doc.select(KickstarterResources.CLASS_PROJECT_RELATED).first();
+		Elements pages = list.select(KickstarterResources.CLASS_PROJECT_PAGING);
+		
+		for(Element page : pages){
+			Elements projects = page.select("li");
+			for(Element project : projects){
+				Element link = project.select("a").first();
+				if(link==null) continue;
+				Reference ref = new Reference(link.attr("href"), link.text());
+				ref.setImage(extractImage(link.select("img").first().attr("src")));
+				
+				refs.add(ref);
+			}
+			
+		}
+		
+		return refs;
+		
 	}
 
 	public List<Tier> getTiersFor(Context context, String projectRef) throws IOException{
@@ -290,6 +320,10 @@ public class KickstarterClient {
 		project.setPledged(Float.valueOf(pledged.attr("data-pledged")).intValue());
 		project.setPercent(Float.valueOf(pledged.attr("data-percent-raised")));
 		project.setGoal(Float.valueOf(pledged.attr("data-goal")).intValue());
+		
+		Element creator = doc.select(KickstarterResources.ID_PROJECT_CREATOR).first().
+				select("a").first();
+		project.setOwner(createOwnerReference(creator));
 
 		String timeLeft = doc.select(
 				KickstarterResources.ID_PROJECT_TIMELEFT).
@@ -303,6 +337,18 @@ public class KickstarterClient {
 
 	}
 
+
+	/**
+	 * @param creator
+	 * @return
+	 */
+	private Reference createOwnerReference(Element creator) {
+		
+		String label = creator.text();
+		String ref = creator.attr("href").split("/")[2];
+		return new Reference(ref, label);
+		
+	}
 
 	/**
 	 * @param first
@@ -391,8 +437,8 @@ public class KickstarterClient {
 
 	}
 
-	public Project getProjectFromRef(Activity activity, Reference ref) throws IOException{
-		return getProject(getResource(htmlCache, ref.getRef(), activity, true), ref);
+	public Project getProjectFromRef(Context context, Reference ref) throws IOException{
+		return getProject(getResource(htmlCache, ref.getRef(), context, true), ref);
 	}
 
 	public void persistCache(Context context) throws IOException{

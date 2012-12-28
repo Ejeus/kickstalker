@@ -36,13 +36,9 @@
         </TableLayout>
     </LinearLayout>
 
-    <EditText
+    <TextView
         android:id="@+id/commentContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:enabled="false"
-        android:inputType="textMultiLine"
-        android:text="Comment" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

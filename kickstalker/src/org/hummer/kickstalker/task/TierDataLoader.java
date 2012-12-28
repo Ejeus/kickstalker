@@ -38,6 +38,8 @@ public class TierDataLoader extends AbstractTask<Void, Void, List<Tier>>{
 	 */
 	@Override
 	protected List<Tier> doInBackground(Void... params) {
+		
+		callback.onTaskStarted(this);
 		try {
 			return client.getTiersFor(context, ref);
 		} catch (IOException e) {
