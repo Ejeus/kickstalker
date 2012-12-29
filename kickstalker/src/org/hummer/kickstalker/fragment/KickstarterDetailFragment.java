@@ -4,9 +4,12 @@
  */
 package org.hummer.kickstalker.fragment;
 
+import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import org.hummer.kickstalker.R;
+import org.hummer.kickstalker.activity.BaseActivity;
 import org.hummer.kickstalker.activity.BaseActivity.Phase;
 import org.hummer.kickstalker.activity.ProjectListActivity;
 import org.hummer.kickstalker.adapter.CommentAdapter;
@@ -14,11 +17,13 @@ import org.hummer.kickstalker.adapter.TierAdapter;
 import org.hummer.kickstalker.adapter.UpdateAdapter;
 import org.hummer.kickstalker.builder.DetailFragmentBuilder;
 import org.hummer.kickstalker.client.KickstarterClient;
+import org.hummer.kickstalker.data.BookmarkBundle;
 import org.hummer.kickstalker.data.Comment;
 import org.hummer.kickstalker.data.Project;
 import org.hummer.kickstalker.data.Reference;
 import org.hummer.kickstalker.data.Tier;
 import org.hummer.kickstalker.data.Update;
+import org.hummer.kickstalker.factory.BookmarkFactory;
 import org.hummer.kickstalker.task.AbstractTask;
 import org.hummer.kickstalker.task.CommentDataLoader;
 import org.hummer.kickstalker.task.TierDataLoader;
@@ -36,9 +41,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -61,11 +68,20 @@ public class KickstarterDetailFragment extends Fragment implements
 	private int screenWidth;
 	private Phase phase;
 	AbstractTask<?,?,?> currentTask;
+	private BookmarkBundle projectBookmarks;
+	private ArrayAdapter<Reference> starredProjects;
+	private MenuItem ac_bookmark;
+	private boolean isBookmark = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		context = getActivity();
+		BaseActivity activity = ((BaseActivity)context);
+		projectBookmarks = activity.getProjectBookmarks();
+		starredProjects = activity.getStarredProjects();
+		setHasOptionsMenu(true);
+		
 		super.onCreate(savedInstanceState);
 		client = new KickstarterClient(context);
 		
@@ -79,8 +95,11 @@ public class KickstarterDetailFragment extends Fragment implements
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		// TODO Auto-generated method stub
-		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.options_kickstarterdetailfragment, menu);
+		
+		ac_bookmark = menu.findItem(R.id.ac_bookmark);
+		initBookmarkState();
+		
 	}
 
 	@Override
@@ -157,6 +176,9 @@ public class KickstarterDetailFragment extends Fragment implements
 				}
 				
 			});
+			
+			initBookmarkState();
+			
 		} else if(view!=null) {
 			DetailFragmentBuilder.clearAll(context, view, allIds);
 		}
@@ -165,6 +187,57 @@ public class KickstarterDetailFragment extends Fragment implements
 	
 	
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+		if(phase==Phase.BUSY) return false;
+		
+		switch(item.getItemId()){
+		case R.id.ac_bookmark:
+			toggleBookmark();
+			return true;
+		}
+		
+		return false;
+	}
+
+	private void initBookmarkState(){
+		if(ac_bookmark==null || project==null) return;
+		if(projectBookmarks.contains(project.asReference())){
+			ac_bookmark.setIcon(R.drawable.fav_on);
+			isBookmark = true;
+		} else {
+			ac_bookmark.setIcon(R.drawable.fav_non);
+			isBookmark = false;
+		}
+	}
+	
+	private void toggleBookmark(){
+		Reference ref = new Reference(project.getRef(), project.getTitle());
+		
+		if(isBookmark){
+			int i = projectBookmarks.indexOf(ref);
+			if(i>=0){ 
+				starredProjects.remove(projectBookmarks.get(i));
+				starredProjects.notifyDataSetChanged();
+			}
+			isBookmark = false;
+			ac_bookmark.setIcon(R.drawable.fav_non);
+		} else {
+			starredProjects.add(ref);
+			Collections.sort(projectBookmarks);
+			starredProjects.notifyDataSetChanged();
+			isBookmark = true;
+			ac_bookmark.setIcon(R.drawable.fav_on);
+		}
+		
+		try {
+			BookmarkFactory.store(context, projectBookmarks);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void onStop() {
 		super.onStop();

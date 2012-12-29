@@ -22,18 +22,23 @@ public final class R {
         public static final int white=0x7f050002;
     }
     public static final class drawable {
-        public static final int ic_backed=0x7f020000;
-        public static final int ic_discover=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
-        public static final int list_tile_highlight=0x7f020003;
-        public static final int videoplayer_play=0x7f020004;
+        public static final int fav_non=0x7f020000;
+        public static final int fav_on=0x7f020001;
+        public static final int fav_projects=0x7f020002;
+        public static final int ic_backed=0x7f020003;
+        public static final int ic_discover=0x7f020004;
+        public static final int ic_launcher=0x7f020005;
+        public static final int list_tile_highlight=0x7f020006;
+        public static final int videoplayer_play=0x7f020007;
     }
     public static final class id {
-        public static final int ac_cancel=0x7f090031;
-        public static final int ac_config=0x7f09002f;
-        public static final int ac_projects_backed=0x7f090033;
-        public static final int ac_projects_discover=0x7f090032;
-        public static final int ac_save=0x7f090030;
+        public static final int ac_bookmark=0x7f090034;
+        public static final int ac_cancel=0x7f090033;
+        public static final int ac_config=0x7f090030;
+        public static final int ac_favorite_projects=0x7f090031;
+        public static final int ac_projects_backed=0x7f090036;
+        public static final int ac_projects_discover=0x7f090035;
+        public static final int ac_save=0x7f090032;
         public static final int appContent=0x7f090003;
         public static final int commentAuthor=0x7f090026;
         public static final int commentContent=0x7f090028;
@@ -73,14 +78,15 @@ public final class R {
         public static final int tableRow3=0x7f090011;
         public static final int tableRow4=0x7f090015;
         public static final int tableRow5=0x7f090018;
-        public static final int tierBackers=0x7f09002a;
-        public static final int tierBody=0x7f09002b;
+        public static final int textView1=0x7f090029;
+        public static final int tierBackers=0x7f09002b;
+        public static final int tierBody=0x7f09002c;
         public static final int tierProgressBar=0x7f09001d;
-        public static final int tierTitle=0x7f090029;
-        public static final int updateBody=0x7f09002e;
-        public static final int updateId=0x7f09002d;
+        public static final int tierTitle=0x7f09002a;
+        public static final int updateBody=0x7f09002f;
+        public static final int updateId=0x7f09002e;
         public static final int updateProgressBar=0x7f09001f;
-        public static final int updateTitle=0x7f09002c;
+        public static final int updateTitle=0x7f09002d;
     }
     public static final class layout {
         public static final int activity_configuration=0x7f030000;
@@ -88,17 +94,21 @@ public final class R {
         public static final int fragment_detail_project=0x7f030002;
         public static final int fragment_list_general=0x7f030003;
         public static final int list_detail_comment=0x7f030004;
-        public static final int list_detail_tier=0x7f030005;
-        public static final int list_detail_update=0x7f030006;
+        public static final int list_detail_reference=0x7f030005;
+        public static final int list_detail_tier=0x7f030006;
+        public static final int list_detail_update=0x7f030007;
     }
     public static final class menu {
         public static final int options_app=0x7f080000;
         public static final int options_config=0x7f080001;
-        public static final int options_kickstarterlistfragment=0x7f080002;
+        public static final int options_kickstarterdetailfragment=0x7f080002;
+        public static final int options_kickstarterlistfragment=0x7f080003;
     }
     public static final class string {
         public static final int ac_backed_projects=0x7f06000d;
+        public static final int ac_bookmark=0x7f060013;
         public static final int ac_discover_projects=0x7f06000e;
+        public static final int ac_favorite_projects=0x7f060014;
         public static final int app_name=0x7f060000;
         public static final int configuration_activity_button_ok=0x7f060006;
         public static final int configuration_activity_label_password=0x7f060003;
@@ -115,6 +125,7 @@ public final class R {
         public static final int project_detail_label_goal=0x7f06000c;
         public static final int project_detail_label_pledged=0x7f06000a;
         public static final int project_detail_label_timeleft=0x7f06000b;
+        public static final int starred_projects=0x7f060015;
         public static final int title_project_detail=0x7f060001;
     }
     public static final class style {

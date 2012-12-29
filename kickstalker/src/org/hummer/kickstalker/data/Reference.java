@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @version 1.0
  *
  */
-public class Reference implements Serializable {
+public class Reference implements Serializable, Comparable<Reference>{
 
 	/**
 	 * 
@@ -34,18 +34,34 @@ public class Reference implements Serializable {
 	public String getLabel() {
 		return label;
 	}
-	
+
 	public void setImage(byte[] image){
 		this.image = image;
 	}
-	
+
 	public byte[] getImageData(){
 		return image;
 	}
-	
+
 	@Override
 	public String toString(){
 		return label;
 	}
-	
+
+	@Override
+	public boolean equals(Object other){
+		if(Reference.class.isInstance(other)){
+			return ref.equals(((Reference)other).getRef());
+		} else
+			return super.equals(other);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(Reference another) {
+		return label.compareTo(another.getLabel());
+	}
+
 }

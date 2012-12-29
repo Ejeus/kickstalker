@@ -6,5 +6,11 @@
         android:icon="@android:drawable/ic_menu_preferences"
         android:showAsAction="ifRoom"
         android:title="@string/label_config"/>
+    
+    <item
+        android:id="@+id/ac_favorite_projects"
+        android:icon="@drawable/fav_projects"
+        android:showAsAction="ifRoom"
+        android:title="@string/ac_favorite_projects"/>
 
 </menu>

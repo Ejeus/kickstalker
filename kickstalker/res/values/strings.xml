@@ -22,5 +22,8 @@
     <string name="label_cancel">Cancel</string>
     <string name="label_config">Settings</string>
     <string name="project_detail_label_creator">Creator</string>
+    <string name="ac_bookmark">Bookmark</string>
+    <string name="ac_favorite_projects">Starred projects</string>
+    <string name="starred_projects">Starred projects</string>
 
 </resources>

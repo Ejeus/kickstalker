@@ -14,8 +14,6 @@ import org.hummer.kickstalker.util.TimeUtil;
 import org.hummer.kickstalker.util.ViewUtil;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +31,7 @@ import android.widget.TabHost;
  */
 public class DetailFragmentBuilder {
 
+	public static final String TAG = "DTLFRGBLDR";
 	public static final String TAB_DETAILS = "Details";
 	public static final String TAB_TIERS = "Tiers";
 	public static final String TAB_UPDATES = "Updates";
@@ -83,10 +82,9 @@ public class DetailFragmentBuilder {
 		NumberFormat pF = NumberFormat.getPercentInstance();
 		
 		byte[] imgdata = project.getImageData();
-		Bitmap bm = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length);
-		int th = bm.getHeight() * tw / bm.getWidth();
-		imageView.setImageBitmap(
-				MediaUtil.scaleImage(bm, tw, th));
+		if(imgdata!=null && imgdata.length > 0){
+			imageView.setImageBitmap(MediaUtil.createBitmap(imgdata, tw, 0));
+		}
 		
 		ViewUtil.findAndSetText(view, R.id.fieldTitle, project.getTitle());
 		ViewUtil.findAndSetText(view, R.id.fieldCreator, project.getOwner().getLabel());
@@ -98,10 +96,14 @@ public class DetailFragmentBuilder {
 		ViewUtil.findAndSetText(view, R.id.fieldTimeLeft, TimeUtil.hoursToReadable(project.getTimeLeft()));
 		ViewUtil.findAndSetText(view, R.id.fieldDescription, Html.fromHtml(project.getDescription()));
 		
+		ProgressBar prg = (ProgressBar) view.findViewById(R.id.progressFunding);
+		prg.setMax(project.getGoal());
+		prg.setProgress(project.getPledged());
+		
 		view.invalidate();
 		
 	}
-	
+
 	public static void buildListAndAttach(Context context, ViewGroup parent, 
 			BaseAdapter adapter){
 		

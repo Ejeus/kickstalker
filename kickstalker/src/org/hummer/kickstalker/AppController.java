@@ -5,11 +5,15 @@
 package org.hummer.kickstalker;
 
 import java.io.IOException;
+import java.io.StreamCorruptedException;
 
 import org.hummer.kickstalker.cache.HTMLCache;
 import org.hummer.kickstalker.cache.ImageCache;
+import org.hummer.kickstalker.data.BookmarkBundle;
+import org.hummer.kickstalker.data.BookmarkBundle.BookmarkType;
 import org.hummer.kickstalker.data.Configuration;
-import org.hummer.kickstalker.factory.AbstractFactory;
+import org.hummer.kickstalker.factory.BaseFactory;
+import org.hummer.kickstalker.factory.BookmarkFactory;
 import org.hummer.kickstalker.factory.CacheFactory;
 
 import android.content.Context;
@@ -40,7 +44,7 @@ public class AppController {
 		if(config==null){
 			try{
 				config = (Configuration) 
-						AbstractFactory.load(context, CONFIGURATION_FILENAME);
+						BaseFactory.load(context, CONFIGURATION_FILENAME);
 			}catch(Exception e){
 				config = new Configuration();
 			}
@@ -72,13 +76,35 @@ public class AppController {
 		
 		return htmlCache;
 	}
+	
+	public BookmarkBundle getBookmarks(Context context, BookmarkType type){
+		
+		BookmarkBundle bmb=null;
+		try {
+			bmb = BookmarkFactory.load(context, type);
+		} catch (StreamCorruptedException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		if(bmb==null){ 
+			bmb = new BookmarkBundle();
+			bmb.setBookmarkType(type);
+		}
+
+		return bmb;
+		
+	}
 
 	/**
 	 * 
 	 */
 	public void persistConfig(Context context) {
 		try {
-			AbstractFactory.store(context, config, CONFIGURATION_FILENAME);
+			BaseFactory.store(context, config, CONFIGURATION_FILENAME);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		

@@ -115,4 +115,7 @@ public class Project extends AbstractData implements Serializable {
 	public void setPercent(float percent) {
 		this.percent = percent;
 	}
+	public Reference asReference(){
+		return new Reference(ref, title);
+	}
 }

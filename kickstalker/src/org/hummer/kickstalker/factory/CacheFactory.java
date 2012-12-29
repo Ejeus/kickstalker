@@ -32,7 +32,7 @@ public class CacheFactory {
 	 * @throws IOException
 	 */
 	public static void store(Context context, HTMLCache cache) throws IOException{
-		AbstractFactory.store(context, cache, FILENAME_CACHE_HTML);
+		BaseFactory.store(context, cache, FILENAME_CACHE_HTML);
 	}
 	
 	/**
@@ -41,7 +41,7 @@ public class CacheFactory {
 	 * @throws IOException
 	 */
 	public static void store(Context context, ImageCache cache) throws IOException{
-		AbstractFactory.store(context, cache, FILENAME_CACHE_IMAGE);
+		BaseFactory.store(context, cache, FILENAME_CACHE_IMAGE);
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class CacheFactory {
 		HTMLCache htmlCache = new HTMLCache();
 
 		try{
-			return (HTMLCache) AbstractFactory.load(context, FILENAME_CACHE_HTML);
+			return (HTMLCache) BaseFactory.load(context, FILENAME_CACHE_HTML);
 		}catch(FileNotFoundException e){
 			Log.i(TAG, "Creating fresh HTML Cache instance.");
 		}
@@ -79,7 +79,7 @@ public class CacheFactory {
 		ImageCache imgCache = new ImageCache();
 
 		try{
-			return (ImageCache) AbstractFactory.load(context, FILENAME_CACHE_IMAGE);
+			return (ImageCache) BaseFactory.load(context, FILENAME_CACHE_IMAGE);
 		}catch(FileNotFoundException e){
 			Log.i(TAG, "Creating fresh Image Cache instance.");
 		}

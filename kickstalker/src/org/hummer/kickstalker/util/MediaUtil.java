@@ -7,10 +7,9 @@ package org.hummer.kickstalker.util;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.widget.Toast;
 
 /**
  * @author gernot.hummer
@@ -21,22 +20,54 @@ import android.net.Uri;
 public class MediaUtil {
 
 	/**
+	 * @param imgdata
+	 * @return
+	 */
+	public static Bitmap createBitmap(byte[] imgdata, int reqWidth, int reqHeight) {
+		
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length, options);
+		int height = options.outHeight;
+		int width = options.outWidth;
+		if(reqHeight==0) reqHeight = height * reqWidth / width;
+		int inSampleSize = 1;
+		
+		if (height > reqHeight || width > reqWidth) {
+	        if (width > height) {
+	            inSampleSize = Math.round((float)height / (float)reqHeight);
+	        } else {
+	            inSampleSize = Math.round((float)width / (float)reqWidth);
+	        }
+	    }
+		
+		options.inSampleSize = inSampleSize;
+		options.inJustDecodeBounds = false;
+		
+		Bitmap bm = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length, options);
+		if(inSampleSize==1)
+			return Bitmap.createScaledBitmap(bm, reqWidth, reqHeight, true);
+		else
+			return bm;
+		
+	}
+	
+	/**
+	 * @return Bitmap - A scaled image fitting the details image panel.
+	 */
+	public static Bitmap scaleImage(Bitmap bm, int tw) {
+		
+		int th = bm.getHeight() / tw * bm.getWidth();
+		return Bitmap.createScaledBitmap(bm, tw, th, true);
+		
+	}
+	
+	/**
 	 * @return Bitmap - A scaled image fitting the details image panel.
 	 */
 	public static Bitmap scaleImage(Bitmap bm, int tw, int th) {
 		
-		float factor = ((float)bm.getWidth() / tw);
-		
-		Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
-		Bitmap scaled = Bitmap.createBitmap(tw, th, Bitmap.Config.ARGB_8888);
-		Canvas c = new Canvas(scaled);
-		Rect source = new Rect(0, 0, bm.getWidth(), 
-				Float.valueOf(th * factor).intValue());
-		Rect dest = new Rect(0, 0, tw, th);
-		
-		c.drawBitmap(bm, source, dest, p);
-		
-		return scaled;
+		return Bitmap.createScaledBitmap(bm, tw, th, true);
 		
 	}
 	
@@ -46,6 +77,11 @@ public class MediaUtil {
 		i.setDataAndType(Uri.parse(ref), "video/mp4");
 		context.startActivity(i);
 		
+	}
+	
+	public static void showToast(Context context, int msgId, int duration){
+		Toast toast = Toast.makeText(context, msgId, duration);
+		toast.show();
 	}
 	
 }

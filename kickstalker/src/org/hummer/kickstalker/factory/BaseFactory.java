@@ -23,7 +23,7 @@ import android.content.Context;
  * @version 1.0
  *
  */
-public class AbstractFactory {
+public class BaseFactory {
 
 	/**
 	 * @param context, Context. The current context.

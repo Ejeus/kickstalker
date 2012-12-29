@@ -6,6 +6,7 @@ package org.hummer.kickstalker.view;
 
 import org.hummer.kickstalker.R;
 import org.hummer.kickstalker.data.Reference;
+import org.hummer.kickstalker.util.MediaUtil;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -17,7 +18,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.text.Layout.Alignment;
 import android.text.StaticLayout;
@@ -44,8 +44,8 @@ public class ProjectCardView extends View {
 	Paint shadowPaint;
 	Bitmap image;
 	Bitmap text;
-	Bitmap highlight;
-	RectF imgScaleTarget;
+	static Bitmap highlight;
+	//RectF imgScaleTarget;
 	private StaticLayout titleLayout;
 	private Rect titleRect;
 	private Rect shadowRect;
@@ -106,19 +106,19 @@ public class ProjectCardView extends View {
 		shadowPaint.setMaskFilter(new BlurMaskFilter(4, Blur.NORMAL));
 		shadowPaint.setStyle(Style.FILL_AND_STROKE);
 		
-		highlight = BitmapFactory.decodeResource(getResources(), 
-				R.drawable.list_tile_highlight);
+		if(highlight==null) highlight = BitmapFactory.decodeResource(getResources(), 
+				R.drawable.list_tile_highlight);;
 		
 		titleRect = new Rect(paddingLeft, paddingTop, width-paddingRight, 100);
 		shadowRect = new Rect(paddingLeft+1, paddingTop+1, 
 				width-paddingRight+1, height-paddingBottom+1);
-		imgScaleTarget = new RectF(paddingLeft, 40, width-paddingRight, 300);
+		//imgScaleTarget = new RectF(paddingLeft, 40, width-paddingRight, 300);
 		
 	}
 	
 	private void prepareContent(){
 		byte[] imgdata = project.getImageData();
-		image = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length);
+		image = MediaUtil.createBitmap(imgdata, width-paddingLeft-paddingRight, 260);
 		
 		int titlePadding = paddingLeft + paddingRight + textPadding * 2;
 		titleLayout = new StaticLayout(project.getLabel(), paint, width-titlePadding, 
@@ -137,7 +137,7 @@ public class ProjectCardView extends View {
 		
 		if(isInEditMode()) return;
 		canvas.drawRect(shadowRect, shadowPaint);
-		canvas.drawBitmap(image, null, imgScaleTarget, paint);
+		canvas.drawBitmap(image, paddingLeft, 40, paint);
 		
 		canvas.drawRect(titleRect, titlePaint);
 		canvas.drawBitmap(text, paddingLeft + textPadding, 0, paint);
