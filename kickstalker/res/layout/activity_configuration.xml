@@ -17,7 +17,7 @@
             android:id="@+id/fieldTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Project Title"
+            android:text="@string/label_config"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/kickstarter_green" />
     </LinearLayout>
@@ -28,12 +28,22 @@
         android:orientation="vertical" >
 
         <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="10dp"
+            android:text="@string/description_username"
+            android:textSize="16sp" />
+
+        <TextView
             android:id="@+id/labelUsername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
             android:paddingLeft="5dp"
-            android:paddingTop="5dp"
+            android:paddingTop="25dp"
             android:text="@string/configuration_activity_label_username"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 

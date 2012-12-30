@@ -3,12 +3,9 @@
 
     <string name="app_name">Kickstalker</string>
     <string name="title_project_detail">A tool to watch the kickstarter projects
-        	you have backed. Also helps you to keep an eye on bookmarked project.s
-        	</string>
-    <string name="configuration_activity_label_username">Username</string>
-    <string name="configuration_activity_label_password">Password</string>
+        	you have backed. Also helps you to keep an eye on bookmarked project.s</string>
+    <string name="configuration_activity_label_username">Username:</string>
     <string name="configuration_activity_username_hint">Your Kickstarter username</string>
-    <string name="configuration_activity_password_hint">Your Kickstarter password</string>
     <string name="configuration_activity_button_ok">Save</string>
     <string name="label_project_name">Project name</string>
     <string name="fragment_caption_discover">Discover</string>
@@ -21,9 +18,21 @@
     <string name="label_save">Save</string>
     <string name="label_cancel">Cancel</string>
     <string name="label_config">Settings</string>
-    <string name="project_detail_label_creator">Creator</string>
+    <string name="project_detail_label_creator">Creator:</string>
     <string name="ac_bookmark">Bookmark</string>
     <string name="ac_favorite_projects">Starred projects</string>
     <string name="starred_projects">Starred projects</string>
-
+    <string name="description_username">Every Kickstarter user has a so called
+        vanity url that directs to his/her profile. When you go to your profile
+        on Kickstarter and take a look at the address bar of your browser, you
+        should see a linke ending with \"&#8230;/profile/[yourusername]\", where the
+        value in brackets represents your username (or userid). Use this very
+        value here and you can navigate your backed projects from the 
+        \"My Backed Projects\" view.</string>    
+    <string name="license_own">Kickstalker is licensed under the creativecommons
+        Attribution-ShareAlike 3.0 Unported License: http://creativecommons.org/licenses/by-sa/3.0/</string>
+    <string name="license_icons">Kickstalker uses the TWG Retina Icons Set, published
+        under the creativecommons Attribution-ShareAlike 3.0 Unported License: 
+        http://creativecommons.org/licenses/by-sa/3.0/</string>
+    <string name="label_about">About Kickstalker</string>
 </resources>

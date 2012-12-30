@@ -72,6 +72,8 @@ public class KickstarterDetailFragment extends Fragment implements
 	private ArrayAdapter<Reference> starredProjects;
 	private MenuItem ac_bookmark;
 	private boolean isBookmark = false;
+	int ac_bookmark_non;
+	int ac_bookmark_on;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,8 @@ public class KickstarterDetailFragment extends Fragment implements
 		Point p = new Point();
 		getActivity().getWindowManager().getDefaultDisplay().getSize(p);
 		screenWidth = p.x;
+		ac_bookmark_non = R.drawable.ac_fav_non;
+		ac_bookmark_on = R.drawable.ac_fav_on;
 		
 		phase = Phase.IDLE;
 		
@@ -204,10 +208,10 @@ public class KickstarterDetailFragment extends Fragment implements
 	private void initBookmarkState(){
 		if(ac_bookmark==null || project==null) return;
 		if(projectBookmarks.contains(project.asReference())){
-			ac_bookmark.setIcon(R.drawable.fav_on);
+			ac_bookmark.setIcon(ac_bookmark_on);
 			isBookmark = true;
 		} else {
-			ac_bookmark.setIcon(R.drawable.fav_non);
+			ac_bookmark.setIcon(ac_bookmark_non);
 			isBookmark = false;
 		}
 	}
@@ -222,13 +226,13 @@ public class KickstarterDetailFragment extends Fragment implements
 				starredProjects.notifyDataSetChanged();
 			}
 			isBookmark = false;
-			ac_bookmark.setIcon(R.drawable.fav_non);
+			ac_bookmark.setIcon(ac_bookmark_non);
 		} else {
 			starredProjects.add(ref);
 			Collections.sort(projectBookmarks);
 			starredProjects.notifyDataSetChanged();
 			isBookmark = true;
-			ac_bookmark.setIcon(R.drawable.fav_on);
+			ac_bookmark.setIcon(ac_bookmark_on);
 		}
 		
 		try {

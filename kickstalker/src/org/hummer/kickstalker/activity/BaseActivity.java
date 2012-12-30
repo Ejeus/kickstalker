@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 
 /**
@@ -106,7 +107,9 @@ public class BaseActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		boolean returnVal = super.onOptionsItemSelected(item);
+		
 		Intent i;
+		AlertDialog.Builder builder;
 		
 		if(!returnVal){
 			switch(item.getItemId()){
@@ -115,7 +118,7 @@ public class BaseActivity extends Activity {
 				startActivity(i);
 				return true;
 			case R.id.ac_favorite_projects:
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder = new AlertDialog.Builder(this);
 				builder.setTitle(R.string.starred_projects)
 				.setAdapter(starredProjects, new OnClickListener(){
 
@@ -126,6 +129,14 @@ public class BaseActivity extends Activity {
 					}
 					
 				}).create().show();
+				return true;
+			case R.id.ac_about:
+				View view = getWindow().getLayoutInflater()
+					.inflate(R.layout.layout_license, null);
+				builder = new AlertDialog.Builder(this);
+				builder.setTitle(R.string.label_about)
+				.setView(view)
+				.create().show();
 			}
 		}
 		

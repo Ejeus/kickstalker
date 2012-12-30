@@ -3,14 +3,18 @@
 
     <item
         android:id="@+id/ac_config"
-        android:icon="@android:drawable/ic_menu_preferences"
+        android:icon="@drawable/ac_settings"
         android:showAsAction="ifRoom"
         android:title="@string/label_config"/>
-    
     <item
         android:id="@+id/ac_favorite_projects"
-        android:icon="@drawable/fav_projects"
+        android:icon="@drawable/ac_fav_projects"
         android:showAsAction="ifRoom"
         android:title="@string/ac_favorite_projects"/>
+    <item
+        android:id="@+id/ac_about"
+        android:icon="@drawable/ac_about"
+        android:showAsAction="never"
+        android:title="@string/label_about"/>
 
 </menu>
