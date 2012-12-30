@@ -35,4 +35,6 @@
         under the creativecommons Attribution-ShareAlike 3.0 Unported License: 
         http://creativecommons.org/licenses/by-sa/3.0/</string>
     <string name="label_about">About Kickstalker</string>
+    <string name="widget_project_title">Kickstalker Project Widget</string>
+    <string name="label_pickproject">Pick a project:</string>
 </resources>

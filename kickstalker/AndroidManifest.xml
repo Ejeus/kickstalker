@@ -12,7 +12,6 @@
 
     <application
         android:allowBackup="true"
-        android:backupAgent=".factory.BackupController"
         android:description="@string/title_project_detail"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
@@ -26,13 +25,36 @@
         <activity
             android:name="org.hummer.kickstalker.activity.ProjectListActivity"
             android:theme="@style/AppTheme" >
-            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:theme="@style/AppTheme" android:name=".activity.ProjectDetailActivity"></activity>
+        <activity
+            android:name=".activity.ProjectDetailActivity"
+            android:theme="@style/AppTheme" >
+        </activity>
+
+        <receiver
+            android:name="org.hummer.kickstalker.widget.ProjectWidgetProvider"
+            android:label="@string/widget_project_title" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_project" />
+        </receiver>
+
+        <activity
+            android:name=".activity.WidgetProjectConfigurationActivity"
+            android:theme="@style/AppTheme" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
