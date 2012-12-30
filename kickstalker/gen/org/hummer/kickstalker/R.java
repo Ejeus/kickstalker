@@ -59,7 +59,6 @@ public final class R {
         public static final int fieldBackers=0x7f0b0011;
         public static final int fieldCreator=0x7f0b000e;
         public static final int fieldDescription=0x7f0b001c;
-        public static final int fieldFunding=0x7f0b0032;
         public static final int fieldGoal=0x7f0b0018;
         public static final int fieldIconLicense=0x7f0b0028;
         public static final int fieldOwnLicense=0x7f0b0027;
@@ -69,6 +68,7 @@ public final class R {
         public static final int fieldTimeLeft=0x7f0b001b;
         public static final int fieldTitle=0x7f0b0000;
         public static final int fieldUsername=0x7f0b0003;
+        public static final int fieldWidgetText=0x7f0b0032;
         public static final int labelBackers=0x7f0b0010;
         public static final int labelCreator=0x7f0b000d;
         public static final int labelGoal=0x7f0b0017;
