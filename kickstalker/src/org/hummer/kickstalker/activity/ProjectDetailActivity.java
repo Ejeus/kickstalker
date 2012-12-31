@@ -27,6 +27,7 @@ import android.view.ViewGroup;
  */
 public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI {
 
+	public static final String TAG = "PRJDTLAC";
 	public static final String KEY_PRJREF = "PRJREF";
 	private KickstarterDetailFragment detailFragment;
 	private AbstractTask<?,?,?> currentTask;

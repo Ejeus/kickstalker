@@ -121,10 +121,11 @@ public class WidgetProjectConfigurationActivity extends ListActivity implements 
 			e.printStackTrace();
 		}
 		
-		Log.i(TAG, "Updating widget now.");
+		Log.i(TAG, "Updating widget with id " + widgetId + " now.");
 		AppWidgetManager awM = AppWidgetManager.getInstance(this);
 		
-		RemoteViews views = ProjectWidgetProvider.buildRemoteViews(this, project);
+		RemoteViews views = ProjectWidgetProvider.buildRemoteViews(this, project,
+				widgetId);
 		awM.updateAppWidget(widgetId, views);
 		
 		Intent result = new Intent();

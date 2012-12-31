@@ -85,11 +85,12 @@ public class ProjectWidgetProvider extends AppWidgetProvider /*implements TaskCa
 	}
 	
 	public void update(Project project, int widgetId){
-		RemoteViews views = buildRemoteViews(context, project);
+		RemoteViews views = buildRemoteViews(context, project, widgetId);
 		appWidgetManager.updateAppWidget(widgetId, views);
 	}
 	
-	public static RemoteViews buildRemoteViews(Context context, Project project){
+	public static RemoteViews buildRemoteViews(Context context, Project project,
+			int widgetId){
 		RemoteViews views = new RemoteViews(context.getPackageName(),
 				R.layout.widget_project);
 		
@@ -101,8 +102,10 @@ public class ProjectWidgetProvider extends AppWidgetProvider /*implements TaskCa
 		views.setTextViewText(R.id.fieldWidgetText, textWidget(project));
 		
 		Intent i = new Intent(context, ProjectDetailActivity.class);
+		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		i.putExtra(ProjectDetailActivity.KEY_PRJREF, project.asReference());
-		PendingIntent pi = PendingIntent.getActivity(context, 0, i, 0);
+		PendingIntent pi = PendingIntent.getActivity(context, widgetId, i, 
+				PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		views.setOnClickPendingIntent(R.id.projectImage, pi);
 		
