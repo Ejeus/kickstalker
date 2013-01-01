@@ -108,14 +108,16 @@ public final class R {
         public static final int activity_configuration=0x7f030000;
         public static final int activity_main=0x7f030001;
         public static final int fragment_detail_project=0x7f030002;
-        public static final int fragment_list_general=0x7f030003;
-        public static final int layout_license=0x7f030004;
-        public static final int list_detail_comment=0x7f030005;
-        public static final int list_detail_reference=0x7f030006;
-        public static final int list_detail_tier=0x7f030007;
-        public static final int list_detail_update=0x7f030008;
-        public static final int widget_project=0x7f030009;
-        public static final int widget_project_config=0x7f03000a;
+        public static final int fragment_detail_project_old=0x7f030003;
+        public static final int fragment_list_general=0x7f030004;
+        public static final int layout_license=0x7f030005;
+        public static final int list_detail_comment=0x7f030006;
+        public static final int list_detail_reference=0x7f030007;
+        public static final int list_detail_tier=0x7f030008;
+        public static final int list_detail_update=0x7f030009;
+        public static final int widget_project=0x7f03000a;
+        public static final int widget_project_config=0x7f03000b;
+        public static final int widget_project_loader=0x7f03000c;
     }
     public static final class menu {
         public static final int options_app=0x7f0a0000;

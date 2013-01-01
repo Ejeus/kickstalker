@@ -4,7 +4,7 @@
     android:minHeight="40dp"
     android:updatePeriodMillis="3600000"
     android:previewImage="@drawable/ic_launcher"
-    android:initialLayout="@layout/widget_project"
+    android:initialLayout="@layout/widget_project_loader"
     android:configure="org.hummer.kickstalker.activity.WidgetProjectConfigurationActivity" 
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen">

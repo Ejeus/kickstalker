@@ -124,8 +124,8 @@ public class WidgetProjectConfigurationActivity extends ListActivity implements 
 		Log.i(TAG, "Updating widget with id " + widgetId + " now.");
 		AppWidgetManager awM = AppWidgetManager.getInstance(this);
 		
-		RemoteViews views = ProjectWidgetProvider.buildRemoteViews(this, project,
-				widgetId);
+		RemoteViews views = new ProjectWidgetProvider().buildRemoteViews(this, 
+				getPackageName(), project, widgetId);
 		awM.updateAppWidget(widgetId, views);
 		
 		Intent result = new Intent();

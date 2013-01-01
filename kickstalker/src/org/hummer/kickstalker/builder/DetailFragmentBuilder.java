@@ -8,15 +8,16 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import org.hummer.kickstalker.R;
+import org.hummer.kickstalker.client.KickstarterClient;
 import org.hummer.kickstalker.data.Project;
 import org.hummer.kickstalker.util.MediaUtil;
 import org.hummer.kickstalker.util.TimeUtil;
 import org.hummer.kickstalker.util.ViewUtil;
 
 import android.content.Context;
-import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -94,7 +95,11 @@ public class DetailFragmentBuilder {
 		ViewUtil.findAndSetText(view, R.id.fieldPledged, cF.format(project.getPledged()));
 		ViewUtil.findAndSetText(view, R.id.fieldShortDescription, project.getShortDescription());
 		ViewUtil.findAndSetText(view, R.id.fieldTimeLeft, TimeUtil.hoursToReadable(project.getTimeLeft()));
-		ViewUtil.findAndSetText(view, R.id.fieldDescription, Html.fromHtml(project.getDescription()));
+		
+		WebView description = (WebView) view.findViewById(R.id.fieldDescription);
+		description.loadDataWithBaseURL(
+				KickstarterClient.BASE_URL, project.getDescription(), 
+				"text/html", "UTF-8", "");
 		
 		ProgressBar prg = (ProgressBar) view.findViewById(R.id.progressFunding);
 		prg.setMax(project.getGoal());

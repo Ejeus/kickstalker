@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hummer.kickstalker.AppController;
@@ -255,7 +256,8 @@ public class KickstarterClient {
 	private Document getResource(HTMLCache cache, String ref,
 			Context context, boolean persistImmediately) throws IOException{
 
-		if(cache.containsKey(ref)){
+		long checkstamp = new Date().getTime() - HTMLCACHE_THRESHOLD;
+		if(cache.containsKey(ref) && cache.get(ref).getCacheStamp()>=checkstamp){
 			return Jsoup.parse(cache.get(ref).getHTML());
 		} else {
 			Document doc = Jsoup.connect(BASE_URL + ref).
@@ -265,7 +267,7 @@ public class KickstarterClient {
 			
 			CachedPage page = new CachedPage();
 			page.setReference(ref);
-			page.setHTML(doc.html());
+			page.setHTML(optimizeContent(doc));
 			cache.put(ref, page);
 
 			if(persistImmediately) CacheFactory.store(context, cache);
@@ -368,6 +370,19 @@ public class KickstarterClient {
 		}
 
 		return new byte[0];
+	}
+	
+	protected String optimizeContent(Document doc){
+		
+		doc.select("iframe").remove();
+		
+		Elements imgs = doc.select("img");
+		for(Element img : imgs){
+			img.attr("height", "");
+			img.attr("width", "300");
+		}
+		
+		return doc.html();
 	}
 	
 	public void loadVideoConfig(Document doc, Project prj){
