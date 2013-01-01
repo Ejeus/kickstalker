@@ -200,6 +200,9 @@ public class KickstarterDetailFragment extends Fragment implements
 		case R.id.ac_bookmark:
 			toggleBookmark();
 			return true;
+		case R.id.ac_share:
+			share();
+			return true;
 		}
 		
 		return false;
@@ -240,6 +243,15 @@ public class KickstarterDetailFragment extends Fragment implements
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void share(){
+		Intent i = new Intent(Intent.ACTION_SEND);
+		i.setType("text/plain");
+		i.putExtra(Intent.EXTRA_SUBJECT, project.getTitle());
+		i.putExtra(Intent.EXTRA_TEXT, KickstarterClient.BASE_URL + "/" + 
+				project.getRef());
+		startActivity(i);
 	}
 	
 	@Override

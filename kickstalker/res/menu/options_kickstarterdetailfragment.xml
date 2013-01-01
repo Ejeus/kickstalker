@@ -5,5 +5,11 @@
         android:id="@+id/ac_bookmark"
         android:showAsAction="always"
         android:title="@string/ac_bookmark"/>
+    
+    <item 
+        android:id="@+id/ac_share"
+        android:showAsAction="always"
+        android:icon="@drawable/ac_share"
+        android:title="@string/label_share"/>
 
 </menu>
