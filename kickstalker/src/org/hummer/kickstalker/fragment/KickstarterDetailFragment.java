@@ -205,7 +205,7 @@ public class KickstarterDetailFragment extends Fragment implements
 			return true;
 		}
 		
-		return false;
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void initBookmarkState(){

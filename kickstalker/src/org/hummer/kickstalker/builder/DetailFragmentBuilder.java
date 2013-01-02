@@ -11,6 +11,7 @@ import org.hummer.kickstalker.R;
 import org.hummer.kickstalker.client.KickstarterClient;
 import org.hummer.kickstalker.data.Project;
 import org.hummer.kickstalker.util.MediaUtil;
+import org.hummer.kickstalker.util.StringUtil;
 import org.hummer.kickstalker.util.TimeUtil;
 import org.hummer.kickstalker.util.ViewUtil;
 
@@ -88,7 +89,8 @@ public class DetailFragmentBuilder {
 		}
 		
 		ViewUtil.findAndSetText(view, R.id.fieldTitle, project.getTitle());
-		ViewUtil.findAndSetText(view, R.id.fieldCreator, project.getOwner().getLabel());
+		ViewUtil.findAndSetText(view, R.id.fieldCreator, 
+				StringUtil.shorten(project.getOwner().getLabel(), 30));
 		ViewUtil.findAndSetText(view, R.id.fieldBackers, nF.format(project.getBackers()));
 		ViewUtil.findAndSetText(view, R.id.fieldGoal, cF.format(project.getGoal()));
 		ViewUtil.findAndSetText(view, R.id.fieldPercent, pF.format(project.getPercent()));

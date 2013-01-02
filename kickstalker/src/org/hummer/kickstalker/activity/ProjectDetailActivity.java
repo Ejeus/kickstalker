@@ -17,6 +17,7 @@ import org.hummer.kickstalker.task.i.TaskCallbackI;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
 /**
@@ -37,6 +38,8 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		Intent i = getIntent();
 		if(i!=null && i.hasExtra(KEY_PRJREF)){
 			Reference ref = (Reference) i.getExtras().getSerializable(KEY_PRJREF);
@@ -45,7 +48,21 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 		
 	}
 	
-	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item){
+		switch(item.getItemId()){
+		case android.R.id.home:
+			Intent i = new Intent(this, ProjectListActivity.class);
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+					Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(i);
+			finish();
+			return true;
+					
+		}
+		
+		return super.onOptionsItemSelected(item);
+	}
 
 	@Override
 	protected void onStop() {
