@@ -5,6 +5,7 @@
 package org.hummer.kickstalker.activity;
 
 import org.hummer.kickstalker.R;
+import org.hummer.kickstalker.client.KickstarterClient;
 import org.hummer.kickstalker.data.Configuration;
 import org.hummer.kickstalker.util.ViewUtil;
 
@@ -26,6 +27,12 @@ public class ConfigurationActivity extends BaseActivity {
 
 	private Configuration config;
 	private TextView username;
+	private KickstarterClient client;
+	
+	@Override
+	public KickstarterClient getClient(){
+		return client;
+	}
 	
 	/* (non-Javadoc)
 	 * @see org.hummer.kickstalker.activity.BaseActivity#onCreate(android.os.Bundle)
@@ -34,6 +41,7 @@ public class ConfigurationActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
+		client = new KickstarterClient(this);
 		setContentView(R.layout.activity_configuration);
 		config = appC.getConfig(this);
 		

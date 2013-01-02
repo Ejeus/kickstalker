@@ -66,7 +66,7 @@ public class Reference implements Serializable, Comparable<Reference>{
 		}
 
 		new RemoteImageDataLoader(null, callback, 
-				AppController.getInstance().getImageCache(context)).execute(imageRef);
+				AppController.getInstance().getImageCache(context), context).execute(imageRef);
 		
 	}
 

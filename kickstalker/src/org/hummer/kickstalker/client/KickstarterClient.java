@@ -45,12 +45,14 @@ public class KickstarterClient {
 	//10 days cache for images (better have them local, real bottleneck)
 	public static final long IMGCACHE_THRESHOLD = 864000000;
 	public static final String BASE_URL = "https://www.kickstarter.com";
+	private SearchBroker searchBroker;
 	private Context context;
 	private HTMLCache htmlCache;
 	private ImageCache imgCache;
 
 	public KickstarterClient(Context context){
 		AppController appC = AppController.getInstance();
+		searchBroker = new SearchBroker();
 		this.context = context;
 		htmlCache = appC.getHTMLCache(context);
 		imgCache = appC.getImageCache(context);
@@ -69,17 +71,7 @@ public class KickstarterClient {
 				KickstarterResources.PAGE_DISCOVER).get();
 
 		Elements elements = doc.select(KickstarterResources.CLASS_PROJECT_CARD);
-		for(Element e : elements){
-
-			Element header = e.select("h2").first();
-			Element headerLink = header.select("a").first();
-			Reference ref = new Reference(headerLink.attr("href"), headerLink.text());
-
-			Element imgtag = e.select(KickstarterResources.CLASS_PROJECTCARD_IMAGE).first();
-			String src = imgtag.attr("src");
-			ref.setImageRef(src);
-			projectRefs.add(ref);
-		}
+		buildProjectsFromCard(projectRefs, elements);
 
 		CacheFactory.store(context, imgCache);
 		return projectRefs;
@@ -109,9 +101,34 @@ public class KickstarterClient {
 			projectRefs.add(ref);
 		}
 
-		CacheFactory.store(context, imgCache);
 		return projectRefs;
 
+	}
+	
+	public List<Reference> getProjectsFor(String searchTerm) throws IOException{
+		
+		List<Reference> projects = new ArrayList<Reference>();
+		
+		Document doc = searchBroker.search(searchTerm);
+		Elements elements = doc.select(KickstarterResources.CLASS_PROJECT_CARD);
+		buildProjectsFromCard(projects, elements);
+		
+		return projects;
+		
+	}
+	
+	protected void buildProjectsFromCard(List<Reference> projectRefs, Elements elements){
+		for(Element e : elements){
+
+			Element header = e.select("h2").first();
+			Element headerLink = header.select("a").first();
+			Reference ref = new Reference(headerLink.attr("href"), headerLink.text());
+
+			Element imgtag = e.select(KickstarterResources.CLASS_PROJECTCARD_IMAGE).first();
+			String src = imgtag.attr("src");
+			ref.setImageRef(src);
+			projectRefs.add(ref);
+		}
 	}
 
 	public List<Tier> getTiersFor(Context context, String projectRef) throws IOException{
@@ -312,7 +329,7 @@ public class KickstarterClient {
 		project.setTimeLeft(Float.valueOf(timeLeft).intValue());
 
 		String imgRef = meta.select("meta[property=og:image]").first().attr("content");
-		project.setImageData(MediaUtil.extractImage(imgRef, imgCache));
+		project.setImageData(MediaUtil.extractImage(context, imgRef, imgCache));
 		loadVideoConfig(doc, project);
 		//CacheFactory.store(context, imgCache);
 		return project;

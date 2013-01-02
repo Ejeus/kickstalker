@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.hummer.kickstalker.client.KickstarterClient;
 import org.hummer.kickstalker.data.Reference;
+import org.hummer.kickstalker.fragment.KickstarterListFragment;
 import org.hummer.kickstalker.task.i.TaskCallbackI;
 
 /**
@@ -23,12 +24,10 @@ import org.hummer.kickstalker.task.i.TaskCallbackI;
 public class ListDataLoader extends AbstractTask<Void, Void, List<Reference>>{
 
 	public static final String KEY_USERNAME = "USERNAME";
-	public static final String TYPE_DISCOVER = "DISCOVER";
-	public static final String TYPE_BACKED = "BACKED";
 	public static final String TASKNAME = "LISTDATALOADER";
 	
 	String type;
-	String username;
+	String filterParam;
 	
 	/**
 	 * @param name
@@ -36,10 +35,10 @@ public class ListDataLoader extends AbstractTask<Void, Void, List<Reference>>{
 	 * @param callback
 	 */
 	public ListDataLoader(KickstarterClient client,
-			TaskCallbackI callback, String type, String username) {
+			TaskCallbackI callback, String type, String filterParam) {
 		super(TASKNAME, client, callback);
 		this.type = type;
-		this.username = username;
+		this.filterParam = filterParam;
 	}
 
 	/* (non-Javadoc)
@@ -50,8 +49,10 @@ public class ListDataLoader extends AbstractTask<Void, Void, List<Reference>>{
 		
 		callback.onTaskStarted(this);;
 		try {
-			if(type.equals(TYPE_BACKED)){
-				return client.getBackedProjects(username);
+			if(type.equals(KickstarterListFragment.TYPE_SEARCH)){
+				return client.getProjectsFor(filterParam);
+			} else if(type.equals(KickstarterListFragment.TYPE_BACKED)){
+				return client.getBackedProjects(filterParam);
 			}else{
 				return client.getDiscoverProjects();
 			}

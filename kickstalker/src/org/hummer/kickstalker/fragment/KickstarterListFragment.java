@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.hummer.kickstalker.AppController;
 import org.hummer.kickstalker.R;
+import org.hummer.kickstalker.activity.BaseActivity;
 import org.hummer.kickstalker.activity.BaseActivity.Phase;
 import org.hummer.kickstalker.activity.ProjectDetailActivity;
 import org.hummer.kickstalker.activity.ProjectListActivity;
@@ -46,10 +47,12 @@ public class KickstarterListFragment extends Fragment implements TaskCallbackI {
 	public static final String TAG = "KICKSTARTERLISTFRAGMENT";
 	public static final String TYPE_DISCOVER = "DISCOVER";
 	public static final String TYPE_BACKED = "BACKED";
+	public static final String TYPE_SEARCH = "SEARCH";
 	
 	public static final String KEY_TYPE = "TYPE";
 	public static final String KEY_USERNAME = "USERNAME";
 	public static final String KEY_TITLE = "TITLE";
+	public static final String KEY_SEARCHTERM = "SEARCHTERM";
 	
 	private Phase phase;
 	private AbstractTask<?, ?, ?> currentTask;
@@ -59,6 +62,7 @@ public class KickstarterListFragment extends Fragment implements TaskCallbackI {
 	private TextView titleView;
 	private String type;
 	private String username;
+	private String searchTerm;
 	private String title;
 	private boolean listAttached;
 	private List<Reference> data;
@@ -86,7 +90,7 @@ public class KickstarterListFragment extends Fragment implements TaskCallbackI {
 		super.onCreate(savedInstanceState);
 		
 		setHasOptionsMenu(true);
-		client = new KickstarterClient(context);
+		client = ((BaseActivity)getActivity()).getClient();
 		Bundle args = getArguments();
 		if(args!=null){
 			
@@ -98,6 +102,10 @@ public class KickstarterListFragment extends Fragment implements TaskCallbackI {
 					username = AppController.getInstance().
 							getConfig(context).getUsername();
 				}
+				
+				if(args.containsKey(KEY_SEARCHTERM)){
+					searchTerm = args.getString(KEY_SEARCHTERM);
+				} else searchTerm = "";
 			}else{
 				type = TYPE_DISCOVER;
 			}
@@ -107,12 +115,16 @@ public class KickstarterListFragment extends Fragment implements TaskCallbackI {
 			
 		} else type = TYPE_DISCOVER;
 		
+		if(type.equals(TYPE_BACKED)){
+			getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+		}
+		
 		if(title==null || title.equals(""))
 			title = getResources().getString(
 					R.string.fragment_caption_discover);
 		
 		phase = Phase.IDLE;
-		dispatchRequest(type, username);
+		dispatchRequest(type, username, searchTerm);
 		
 	}
 	
@@ -126,8 +138,11 @@ public class KickstarterListFragment extends Fragment implements TaskCallbackI {
 	 * The latter parameter only needs to be set, if the handed in type is
 	 * <code>TYPE_BACKED</code>.
 	 */
-	public void dispatchRequest(String type, String username){
-		new ListDataLoader(client, this, type, username).execute();
+	public void dispatchRequest(String type, String username, String searchTerm){
+		if(type.equals(TYPE_SEARCH)){
+			new ListDataLoader(client, this, type, searchTerm).execute();
+		} else
+			new ListDataLoader(client, this, type, username).execute();
 	}
 
 	@Override
@@ -157,6 +172,8 @@ public class KickstarterListFragment extends Fragment implements TaskCallbackI {
 				i = new Intent(context, ProjectListActivity.class);
 				startActivity(i);
 				return true;
+			case android.R.id.home:
+				((BaseActivity)context).home();
 			}
 		}
 		

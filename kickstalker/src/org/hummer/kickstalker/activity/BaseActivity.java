@@ -9,6 +9,8 @@ import java.util.Collections;
 
 import org.hummer.kickstalker.AppController;
 import org.hummer.kickstalker.R;
+import org.hummer.kickstalker.action.SearchAction;
+import org.hummer.kickstalker.client.KickstarterClient;
 import org.hummer.kickstalker.data.BookmarkBundle;
 import org.hummer.kickstalker.data.BookmarkBundle.BookmarkType;
 import org.hummer.kickstalker.data.Reference;
@@ -21,11 +23,13 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 /**
  * Basic core Activity functionality for this app.
@@ -35,7 +39,7 @@ import android.widget.ArrayAdapter;
  * @version 1.0
  *
  */
-public class BaseActivity extends Activity {
+public abstract class BaseActivity extends Activity {
 
 	public static final String RETURN_TO = "NAV_RETURNTO";
 	protected AppController appC;
@@ -64,6 +68,8 @@ public class BaseActivity extends Activity {
 		phase = Phase.IDLE;
 		
 	}
+	
+	public abstract KickstarterClient getClient();
 	
 	/**
 	 * @return AppController. Current instance of AppController.
@@ -139,6 +145,7 @@ public class BaseActivity extends Activity {
 		
 		Intent i;
 		AlertDialog.Builder builder;
+		View view;
 		
 		if(!returnVal){
 			switch(item.getItemId()){
@@ -159,13 +166,27 @@ public class BaseActivity extends Activity {
 					
 				}).create().show();
 				return true;
+			case R.id.ac_search:
+				SearchAction searchAction = new SearchAction(this);
+				view = LayoutInflater.from(this)
+					.inflate(R.layout.dialog_search, null);
+				((TextView)view.findViewById(R.id.fieldSearchTerm))
+					.addTextChangedListener(searchAction);
+				view.findViewById(R.id.buttonSearch)
+					.setOnClickListener(searchAction);
+				builder = new AlertDialog.Builder(this);
+				builder.setTitle(R.string.label_search)
+					.setView(view)
+					.create().show();
+				return true;
 			case R.id.ac_about:
-				View view = getWindow().getLayoutInflater()
+				view = getWindow().getLayoutInflater()
 					.inflate(R.layout.layout_license, null);
 				builder = new AlertDialog.Builder(this);
 				builder.setTitle(R.string.label_about)
 				.setView(view)
 				.create().show();
+				return true;
 			}
 		}
 		
@@ -196,6 +217,18 @@ public class BaseActivity extends Activity {
 		Intent i = new Intent(this, ProjectDetailActivity.class);
 		i.putExtra(ProjectDetailActivity.KEY_PRJREF, ref);
 		startActivity(i);
+	}
+	
+
+	/**
+	 * Call this if you want to return back to the main apps home page.
+	 */
+	public void home(){
+		Intent i = new Intent(this, ProjectListActivity.class);
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+				Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(i);
+		finish();
 	}
 	
 }

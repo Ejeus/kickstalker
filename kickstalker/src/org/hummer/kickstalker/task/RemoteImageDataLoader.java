@@ -11,6 +11,8 @@ import org.hummer.kickstalker.client.KickstarterClient;
 import org.hummer.kickstalker.task.i.TaskCallbackI;
 import org.hummer.kickstalker.util.MediaUtil;
 
+import android.content.Context;
+
 /**
  * @author gernot.hummer
  *
@@ -21,6 +23,7 @@ public class RemoteImageDataLoader extends
 		AbstractTask<String, Void, byte[]> {
 
 	private static final String TASKNAME = "REMOTEIMAGEDATALOADER";
+	private Context context;
 	private ImageCache cache;
 	private String ref="";
 
@@ -30,9 +33,10 @@ public class RemoteImageDataLoader extends
 	 * @param callback
 	 */
 	public RemoteImageDataLoader(KickstarterClient client,
-			TaskCallbackI callback, ImageCache cache) {
+			TaskCallbackI callback, ImageCache cache, Context context) {
 		super(TASKNAME, client, callback);
 		this.cache = cache;
+		this.context = context;
 	}
 
 	/* (non-Javadoc)
@@ -44,7 +48,7 @@ public class RemoteImageDataLoader extends
 		ref = params[0];
 		
 		try {
-			return MediaUtil.extractImage(params[0], cache);
+			return MediaUtil.extractImage(context, params[0], cache);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

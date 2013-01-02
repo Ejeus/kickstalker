@@ -12,6 +12,7 @@ import java.net.URL;
 
 import org.hummer.kickstalker.cache.CachedImage;
 import org.hummer.kickstalker.cache.ImageCache;
+import org.hummer.kickstalker.factory.CacheFactory;
 
 import android.content.Context;
 import android.content.Intent;
@@ -35,7 +36,7 @@ public class MediaUtil {
 	 * @return
 	 * @throws IOException 
 	 */
-	public static byte[] extractImage(String ref, ImageCache imgCache) throws IOException {
+	public static byte[] extractImage(Context context, String ref, ImageCache imgCache) throws IOException {
 
 		if(imgCache.containsKey(ref)) return imgCache.get(ref).getData();
 
@@ -57,6 +58,9 @@ public class MediaUtil {
 			ci.setReference(ref);
 			ci.setData(returnVal);
 			imgCache.put(ref, ci);
+			synchronized(imgCache){
+				CacheFactory.store(context, imgCache);
+			}
 			return returnVal;
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

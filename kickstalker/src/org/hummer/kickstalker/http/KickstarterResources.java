@@ -94,5 +94,6 @@ public class KickstarterResources {
 	public static final String PAGE_PROFILE = "/profile";
 	public static final String PAGE_COMMENTS = "/comments";
 	public static final String PAGE_UPDATES = "/posts";
+	public static final String PAGE_SEARCH = "/projects/search.json?term=";
 	
 }

@@ -32,8 +32,14 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 
 	public static final String TAG = "PRJDTLAC";
 	public static final String KEY_PRJREF = "PRJREF";
+	private KickstarterClient client;
 	private KickstarterDetailFragment detailFragment;
 	private AbstractTask<?,?,?> currentTask;
+	
+	@Override
+	public KickstarterClient getClient(){
+		return client;
+	}
 	
 	/* (non-Javadoc)
 	 * @see org.hummer.kickstalker.activity.BaseActivity#onCreate(android.os.Bundle)
@@ -41,6 +47,7 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		client = new KickstarterClient(this);
 		setContentView(R.layout.activity_main);
 		
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -48,7 +55,7 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 		Intent i = getIntent();
 		if(i!=null && i.hasExtra(KEY_PRJREF)){
 			Reference ref = (Reference) i.getExtras().getSerializable(KEY_PRJREF);
-			new DetailDataLoader(this, new KickstarterClient(this), this).execute(ref);
+			new DetailDataLoader(this, client, this).execute(ref);
 		}
 		
 	}
@@ -60,12 +67,8 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 	public boolean onOptionsItemSelected(MenuItem item){
 		switch(item.getItemId()){
 		case android.R.id.home:
-			Intent i = new Intent(this, ProjectListActivity.class);
-			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-					Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(i);
-			finish();
-			return true;
+			home();
+			return false;
 					
 		}
 		

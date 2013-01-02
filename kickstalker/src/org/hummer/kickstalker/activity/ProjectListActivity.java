@@ -5,6 +5,7 @@
 package org.hummer.kickstalker.activity;
 
 import org.hummer.kickstalker.R;
+import org.hummer.kickstalker.client.KickstarterClient;
 import org.hummer.kickstalker.fragment.KickstarterListFragment;
 
 import android.app.FragmentManager;
@@ -23,6 +24,13 @@ import android.view.ViewGroup;
 public class ProjectListActivity extends BaseActivity {
 
 	private KickstarterListFragment listFragment;
+	private KickstarterClient client;
+	
+	
+	@Override
+	public KickstarterClient getClient(){
+		return client;
+	}
 	
 	/* (non-Javadoc)
 	 * @see org.hummer.kickstalker.activity.BaseActivity#onCreate(android.os.Bundle)
@@ -31,6 +39,7 @@ public class ProjectListActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		client = new KickstarterClient(this);
 		FragmentManager fmgr = getFragmentManager();
 		setContentView(R.layout.activity_main);
 		listFragment = new KickstarterListFragment();
