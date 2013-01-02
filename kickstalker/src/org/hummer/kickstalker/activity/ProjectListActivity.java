@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 
 /**
+ * A list view for showing Kickstarter projects.
+ * 
  * @author gernot.hummer
  *
  * @version 1.0
@@ -22,6 +24,9 @@ public class ProjectListActivity extends BaseActivity {
 
 	private KickstarterListFragment listFragment;
 	
+	/* (non-Javadoc)
+	 * @see org.hummer.kickstalker.activity.BaseActivity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

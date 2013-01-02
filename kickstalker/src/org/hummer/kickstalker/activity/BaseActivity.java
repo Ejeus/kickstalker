@@ -28,6 +28,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 
 /**
+ * Basic core Activity functionality for this app.
+ * 
  * @author gernot.hummer
  *
  * @version 1.0
@@ -49,6 +51,9 @@ public class BaseActivity extends Activity {
 		STOPPED
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -60,28 +65,46 @@ public class BaseActivity extends Activity {
 		
 	}
 	
+	/**
+	 * @return AppController. Current instance of AppController.
+	 */
 	public AppController getAppController(){
 		return appC;
 	}
 	
+	/**
+	 * @return BookmarkBundle. All bookmarked projects.
+	 */
 	public BookmarkBundle getProjectBookmarks(){
 		return projectBookmarks;
 	}
 	
+	/**
+	 * @return ArrayAdapter. An adapter for visually presenting starred projects.
+	 */
 	public ArrayAdapter<Reference> getStarredProjects(){
 		return starredProjects;
 	}
 	
+	/**
+	 * @return BookmarkBundle. All bookmarked people.
+	 */
 	public BookmarkBundle getPeopleBookmarks(){
 		return peopleBookmarks;
 	}
 	
+	/**
+	 * @return ArrayAdapter. An adapter for visually presenting starred people.
+	 */
 	public ArrayAdapter<Reference> getStarredPeople(){
 		return starredPeople;
 	}
 	
 	
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -96,6 +119,9 @@ public class BaseActivity extends Activity {
 				R.layout.list_detail_reference, peopleBookmarks);
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		boolean returnVal = super.onCreateOptionsMenu(menu);
@@ -104,6 +130,9 @@ public class BaseActivity extends Activity {
 		return returnVal;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		boolean returnVal = super.onOptionsItemSelected(item);
@@ -145,6 +174,9 @@ public class BaseActivity extends Activity {
 	
 	
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onStop()
+	 */
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -157,6 +189,9 @@ public class BaseActivity extends Activity {
 		}
 	}
 
+	/**
+	 * @param ref, Reference. The reference of a project to show details for.
+	 */
 	protected void startActivityForProjectRef(Reference ref){
 		Intent i = new Intent(this, ProjectDetailActivity.class);
 		i.putExtra(ProjectDetailActivity.KEY_PRJREF, ref);

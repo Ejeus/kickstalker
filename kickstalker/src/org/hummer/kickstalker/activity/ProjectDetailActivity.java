@@ -21,6 +21,8 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 /**
+ * A detailed view for projects on Kickstarter.
+ * 
  * @author gernot.hummer
  *
  * @version 1.0
@@ -33,6 +35,9 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 	private KickstarterDetailFragment detailFragment;
 	private AbstractTask<?,?,?> currentTask;
 	
+	/* (non-Javadoc)
+	 * @see org.hummer.kickstalker.activity.BaseActivity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,6 +53,9 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.hummer.kickstalker.activity.BaseActivity#onOptionsItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
 		switch(item.getItemId()){
@@ -64,6 +72,9 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 		return super.onOptionsItemSelected(item);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.hummer.kickstalker.activity.BaseActivity#onStop()
+	 */
 	@Override
 	protected void onStop() {
 		super.onStop();

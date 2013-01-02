@@ -6,6 +6,12 @@ package org.hummer.kickstalker.data;
 
 import java.io.Serializable;
 
+import org.hummer.kickstalker.AppController;
+import org.hummer.kickstalker.task.RemoteImageDataLoader;
+import org.hummer.kickstalker.task.i.TaskCallbackI;
+
+import android.content.Context;
+
 /**
  * @author gernot.hummer
  *
@@ -21,10 +27,14 @@ public class Reference implements Serializable, Comparable<Reference>{
 	private String ref;
 	private byte[] image;
 	private String label;
+	private String imageRef;
+	private boolean imageData;
 
 	public Reference(String ref, String label){
 		this.ref = ref;
 		this.label = label;
+		imageData = false;
+		imageRef = "";
 	}
 
 	public String getRef() {
@@ -34,13 +44,30 @@ public class Reference implements Serializable, Comparable<Reference>{
 	public String getLabel() {
 		return label;
 	}
-
+	
+	public void setImageRef(String ref){
+		imageRef = ref;
+	}
+	
+	public String getImageRef(){
+		return imageRef;
+	}
+	
 	public void setImage(byte[] image){
 		this.image = image;
 	}
 
-	public byte[] getImageData(){
-		return image;
+	public void getImageData(Context context, TaskCallbackI callback){
+		
+		
+		if(imageData){
+			callback.onTaskFinished(null, image);
+			return;
+		}
+
+		new RemoteImageDataLoader(null, callback, 
+				AppController.getInstance().getImageCache(context)).execute(imageRef);
+		
 	}
 
 	@Override

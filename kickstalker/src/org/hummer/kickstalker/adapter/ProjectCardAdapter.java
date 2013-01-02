@@ -15,6 +15,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 /**
+ * An adapter to display project info cards. Use with a 
+ * GridView to get good visual results.
+ * 
  * @author gernot.hummer
  *
  * @version 1.0
@@ -25,6 +28,10 @@ public class ProjectCardAdapter extends BaseAdapter {
 	private Context context;
 	private List<Reference> projects;
 	
+	/**
+	 * @param context, Context. The current context.
+	 * @param projects, List. The list of project <code>Reference</code>s to show.
+	 */
 	public void setData(Context context, List<Reference> projects){
 		this.context = context;
 		this.projects = projects;

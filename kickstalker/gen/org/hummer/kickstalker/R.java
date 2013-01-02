@@ -40,7 +40,8 @@ public final class R {
         public static final int ic_launcher=0x7f02000c;
         public static final int kick_progressbar=0x7f02000d;
         public static final int list_tile_highlight=0x7f02000e;
-        public static final int videoplayer_play=0x7f02000f;
+        public static final int project_image_template=0x7f02000f;
+        public static final int videoplayer_play=0x7f020010;
     }
     public static final class id {
         public static final int ac_about=0x7f0b0038;

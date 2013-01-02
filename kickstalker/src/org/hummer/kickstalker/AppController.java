@@ -19,6 +19,9 @@ import org.hummer.kickstalker.factory.CacheFactory;
 import android.content.Context;
 
 /**
+ * Central application controller core that provides hooks to 
+ * root elements of the application
+ * 
  * @author gernot.hummer
  *
  * @version 1.0
@@ -39,6 +42,10 @@ public class AppController {
 		return INSTANCE;
 	}
 	
+	/**
+	 * @param context, Context. Current context to draw config for.
+	 * @return Configuration. This apps base configuration.
+	 */
 	public Configuration getConfig(Context context){
 		
 		if(config==null){
@@ -53,6 +60,10 @@ public class AppController {
 		return config;
 	}
 	
+	/**
+	 * @param context, Context. Current context to ImageCache for.
+	 * @return ImageCache.
+	 */
 	public ImageCache getImageCache(Context context){
 		
 		if(imgCache==null)
@@ -65,6 +76,10 @@ public class AppController {
 		return imgCache;
 	}
 	
+	/**
+	 * @param context, Context. Current context to draw HTMLCache for.
+	 * @return HTMLCache.
+	 */
 	public HTMLCache getHTMLCache(Context context){
 		
 		if(htmlCache==null)
@@ -77,6 +92,11 @@ public class AppController {
 		return htmlCache;
 	}
 	
+	/**
+	 * @param context, Context. Current context to draw bookmarks for
+	 * @param type, BookmarkType. The type of bookmarks to load.
+	 * @return BookmarkBundle.
+	 */
 	public BookmarkBundle getBookmarks(Context context, BookmarkType type){
 		
 		BookmarkBundle bmb=null;
@@ -100,7 +120,9 @@ public class AppController {
 	}
 
 	/**
+	 * This action is mainly used by the ConfigurationActivity
 	 * 
+	 * @param context, Context. The current context to persist config for.
 	 */
 	public void persistConfig(Context context) {
 		try {

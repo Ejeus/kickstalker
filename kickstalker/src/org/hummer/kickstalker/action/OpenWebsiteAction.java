@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 /**
+ * A basic action to open a website for a specific url.
+ * 
  * @author gernot.hummer
  *
  * @version 1.0
@@ -23,6 +25,10 @@ public class OpenWebsiteAction implements OnClickListener {
 	private Context context;
 	private String ref;
 
+	/**
+	 * @param context, Context. The current context.
+	 * @param ref, String. The http referrer to open.
+	 */
 	public OpenWebsiteAction(Context context, String ref){
 		this.context = context;
 		this.ref = KickstarterClient.BASE_URL + "/" + ref;

@@ -4,17 +4,12 @@
  */
 package org.hummer.kickstalker.client;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.hummer.kickstalker.AppController;
-import org.hummer.kickstalker.cache.CachedImage;
 import org.hummer.kickstalker.cache.CachedPage;
 import org.hummer.kickstalker.cache.HTMLCache;
 import org.hummer.kickstalker.cache.ImageCache;
@@ -25,13 +20,13 @@ import org.hummer.kickstalker.data.Tier;
 import org.hummer.kickstalker.data.Update;
 import org.hummer.kickstalker.factory.CacheFactory;
 import org.hummer.kickstalker.http.KickstarterResources;
+import org.hummer.kickstalker.util.MediaUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import android.content.Context;
-import android.util.Log;
 
 /**
  * The main client for content retrieval from Kickstarter. This is the main
@@ -82,8 +77,7 @@ public class KickstarterClient {
 
 			Element imgtag = e.select(KickstarterResources.CLASS_PROJECTCARD_IMAGE).first();
 			String src = imgtag.attr("src");
-			ref.setImage(extractImage(src));
-			Log.i(TAG, "Loading " + ref.getRef() + ".");
+			ref.setImageRef(src);
 			projectRefs.add(ref);
 		}
 
@@ -111,7 +105,7 @@ public class KickstarterClient {
 
 			Reference ref = new Reference(link, name);
 			String src = project.select("img").first().attr("src");
-			ref.setImage(extractImage(src));
+			ref.setImageRef(src);
 			projectRefs.add(ref);
 		}
 
@@ -317,7 +311,7 @@ public class KickstarterClient {
 		project.setTimeLeft(Float.valueOf(timeLeft).intValue());
 
 		String imgRef = meta.select("meta[property=og:image]").first().attr("content");
-		project.setImageData(extractImage(imgRef));
+		project.setImageData(MediaUtil.extractImage(imgRef, imgCache));
 		loadVideoConfig(doc, project);
 		//CacheFactory.store(context, imgCache);
 		return project;
@@ -335,41 +329,6 @@ public class KickstarterClient {
 		String ref = creator.attr("href").split("/")[2];
 		return new Reference(ref, label);
 		
-	}
-
-	/**
-	 * @param first
-	 * @return
-	 * @throws IOException 
-	 */
-	private byte[] extractImage(String ref) throws IOException {
-
-		if(imgCache.containsKey(ref)) return imgCache.get(ref).getData();
-
-		try {
-			URL url = new URL(ref);
-			InputStream is = url.openStream();
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-			for(int b; (b = is.read()) != -1;){
-				baos.write(b);
-			}
-
-			byte[] returnVal = baos.toByteArray();
-			baos.close();
-			is.close();
-
-			//cache image
-			CachedImage ci = new CachedImage();
-			ci.setReference(ref);
-			ci.setData(returnVal);
-			imgCache.put(ref, ci);
-			return returnVal;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-
-		return new byte[0];
 	}
 	
 	protected String optimizeContent(Document doc){

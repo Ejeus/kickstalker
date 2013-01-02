@@ -25,6 +25,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 /**
+ * An adapter for showing comments on a project.
+ * 
  * @author gernot.hummer
  *
  * @version 1.0
@@ -35,6 +37,10 @@ public class CommentAdapter extends BaseAdapter {
 	Context context;
 	List<Comment> comments;
 	
+	/**
+	 * @param context, Context. The current context.
+	 * @param comments. List. The list of remotely retrieved comments.
+	 */
 	public void setData(Context context, List<Comment> comments){
 		this.context = context;
 		this.comments = comments;
@@ -72,17 +78,26 @@ public class CommentAdapter extends BaseAdapter {
 		Comment c = comments.get(position);
 		final String displayname = c.getAuthor().getLabel();
 		final String username = c.getAuthor().getRef();
+		CommentViewHolder viewHolder;
 		
 		if(convertView==null){
 			LayoutInflater inflater = (LayoutInflater) 
 					context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			
+			viewHolder = new CommentViewHolder();
 			convertView = inflater.inflate(R.layout.list_detail_comment, parent, false);
-		}
+			viewHolder.author = (TextView) convertView.findViewById(R.id.commentAuthor);
+			viewHolder.date = (TextView) convertView.findViewById(R.id.commentDate);
+			viewHolder.comment = (TextView) convertView.findViewById(R.id.commentContent);
+			viewHolder.comment.setAutoLinkMask(Linkify.WEB_URLS);
+			viewHolder.comment.setLinksClickable(true);
+			
+			convertView.setTag(viewHolder);
+			
+		} else viewHolder = (CommentViewHolder) convertView.getTag();
 		
-		TextView author = (TextView) convertView.findViewById(R.id.commentAuthor);
-		author.setText(displayname);
-		author.setOnClickListener(new OnClickListener(){
+		viewHolder.author.setText(displayname);
+		viewHolder.author.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -99,17 +114,19 @@ public class CommentAdapter extends BaseAdapter {
 			
 		});
 		
-		TextView date = (TextView) convertView.findViewById(R.id.commentDate);
-		date.setText(c.getDate());
-		
-		TextView comment = (TextView) convertView.findViewById(R.id.commentContent);
+		viewHolder.date.setText(c.getDate());
 		Spanned spanned = Html.fromHtml(c.getContent());
-		comment.setText(spanned);
-		comment.setAutoLinkMask(Linkify.WEB_URLS);
-		comment.setLinksClickable(true);
+		viewHolder.comment.setText(spanned);
+
 		
 		return convertView;
 		
+	}
+	
+	static class CommentViewHolder {
+		TextView author;
+		TextView date;
+		TextView comment;
 	}
 
 }

@@ -26,7 +26,6 @@ import android.app.ListActivity;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -42,7 +41,7 @@ import android.widget.RemoteViews;
  */
 public class WidgetProjectConfigurationActivity extends ListActivity implements TaskCallbackI {
 
-	private static final String TAG = "WPCA";
+	public static final String TAG = "WPCA";
 	
 	private KickstarterClient client;
 	private Intent origin;
@@ -52,6 +51,9 @@ public class WidgetProjectConfigurationActivity extends ListActivity implements 
 	private WidgetDataMap wdm;
 	private Phase phase;
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -70,7 +72,8 @@ public class WidgetProjectConfigurationActivity extends ListActivity implements 
 		
 		origin = getIntent();
 		extras = origin.getExtras();
-		widgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID,
+		widgetId = extras.getInt(
+				AppWidgetManager.EXTRA_APPWIDGET_ID,
 				AppWidgetManager.INVALID_APPWIDGET_ID);
 		
 		projectBookmarks = AppController.getInstance().
@@ -95,6 +98,9 @@ public class WidgetProjectConfigurationActivity extends ListActivity implements 
 	
 	
 	
+	/* (non-Javadoc)
+	 * @see android.app.ListActivity#onListItemClick(android.widget.ListView, android.view.View, int, long)
+	 */
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		if(phase!=Phase.IDLE) return;
@@ -104,6 +110,9 @@ public class WidgetProjectConfigurationActivity extends ListActivity implements 
 		new DetailDataLoader(this, client, this).execute(ref);
 	}
 	
+	/**
+	 * If user cancelled adding of a widget by not selecting a list value.
+	 */
 	protected void onCancel(){
 		Intent result = new Intent();
 		result.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
@@ -113,6 +122,9 @@ public class WidgetProjectConfigurationActivity extends ListActivity implements 
 
 
 
+	/**
+	 * @param project, Project. The project to create a widget from.
+	 */
 	protected void updateWidget(Project project){
 		
 		try {
@@ -121,7 +133,6 @@ public class WidgetProjectConfigurationActivity extends ListActivity implements 
 			e.printStackTrace();
 		}
 		
-		Log.i(TAG, "Updating widget with id " + widgetId + " now.");
 		AppWidgetManager awM = AppWidgetManager.getInstance(this);
 		
 		RemoteViews views = new ProjectWidgetProvider().buildRemoteViews(this, 

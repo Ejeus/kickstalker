@@ -4,6 +4,15 @@
  */
 package org.hummer.kickstalker.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.hummer.kickstalker.cache.CachedImage;
+import org.hummer.kickstalker.cache.ImageCache;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,6 +28,41 @@ import android.widget.Toast;
  */
 public class MediaUtil {
 
+	/**
+	 * @param first
+	 * @return
+	 * @throws IOException 
+	 */
+	public static byte[] extractImage(String ref, ImageCache imgCache) throws IOException {
+
+		if(imgCache.containsKey(ref)) return imgCache.get(ref).getData();
+
+		try {
+			URL url = new URL(ref);
+			InputStream is = url.openStream();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+			for(int b; (b = is.read()) != -1;){
+				baos.write(b);
+			}
+
+			byte[] returnVal = baos.toByteArray();
+			baos.close();
+			is.close();
+
+			//cache image
+			CachedImage ci = new CachedImage();
+			ci.setReference(ref);
+			ci.setData(returnVal);
+			imgCache.put(ref, ci);
+			return returnVal;
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+
+		return new byte[0];
+	}
+	
 	/**
 	 * @param imgdata
 	 * @return

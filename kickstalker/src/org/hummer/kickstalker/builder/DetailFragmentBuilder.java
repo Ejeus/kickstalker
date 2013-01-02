@@ -26,6 +26,9 @@ import android.widget.ProgressBar;
 import android.widget.TabHost;
 
 /**
+ * Externalized infrastructure for building the detail view
+ * of a project to not clutter the Fragment too much.
+ * 
  * @author gernot.hummer
  *
  * @version 1.0
@@ -39,8 +42,10 @@ public class DetailFragmentBuilder {
 	public static final String TAB_UPDATES = "Updates";
 	public static final String TAB_COMMENTS = "Comments";
 	
+
 	/**
-	 * @param view
+	 * @param context, Context. The current context.
+	 * @param view, View. The top level view structure to use.
 	 */
 	public static void initialize(Context context, View view) {
 		
@@ -61,6 +66,11 @@ public class DetailFragmentBuilder {
 		
 	}
 	
+	/**
+	 * @param context, Context. The current context.
+	 * @param view, View. A view to search for handed in ids.
+	 * @param ids, int[]. The ids to search for an clear if found.
+	 */
 	public static void clearAll(Context context, View view, int[] ids){
 		
 		for(int i=0;i<ids.length;i++)
@@ -68,6 +78,10 @@ public class DetailFragmentBuilder {
 		
 	}
 	
+	/**
+	 * @param context, Context. The current context.
+	 * @param container, ViewGroup. The container to clear out.
+	 */
 	public static void clear(Context context, ViewGroup container){
 		
 		container.removeAllViews();
@@ -77,6 +91,12 @@ public class DetailFragmentBuilder {
 		
 	}
 	
+	/**
+	 * @param view, View. The top level view structure to use for building.
+	 * @param imageView, ImageView. The view to draw the video image in.
+	 * @param tw, int. The preferred width to optimize for.
+	 * @param project, Project. The project data to use.
+	 */
 	public static void buildDetails(View view, ImageView imageView, int tw, Project project){
 		
 		NumberFormat nF = NumberFormat.getInstance();
@@ -111,6 +131,11 @@ public class DetailFragmentBuilder {
 		
 	}
 
+	/**
+	 * @param context, Context. The current context.
+	 * @param parent, ViewGroup. The view to attach the list to.
+	 * @param adapter, BaseAdapter. The adapter to build the list with.
+	 */
 	public static void buildListAndAttach(Context context, ViewGroup parent, 
 			BaseAdapter adapter){
 		
