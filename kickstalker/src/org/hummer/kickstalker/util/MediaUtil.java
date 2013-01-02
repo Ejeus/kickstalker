@@ -28,6 +28,8 @@ import android.widget.Toast;
  */
 public class MediaUtil {
 
+	public static final String TAG = "MEDIAUTIL";
+
 	/**
 	 * @param first
 	 * @return
@@ -89,11 +91,18 @@ public class MediaUtil {
 		options.inJustDecodeBounds = false;
 		
 		Bitmap bm = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length, options);
-		if(inSampleSize==1)
-			return Bitmap.createScaledBitmap(bm, reqWidth, reqHeight, true);
-		else
-			return bm;
+		return Bitmap.createScaledBitmap(bm, reqWidth, reqHeight, true);
 		
+	}
+	
+	public static Bitmap createBitmap(byte[] imgdata, int reqWidth){
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length, options);
+		int height = options.outHeight;
+		int width = options.outWidth;
+		int reqHeight = Math.round(((float)reqWidth) / width * height);
+		return createBitmap(imgdata, reqWidth, reqHeight);
 	}
 	
 	/**

@@ -301,6 +301,7 @@ public class KickstarterClient {
 		project.setPercent(Float.valueOf(pledged.attr("data-percent-raised")));
 		project.setGoal(Float.valueOf(pledged.attr("data-goal")).intValue());
 		
+		project.setCurrency(pledged.select("data").first().attr("data-currency"));
 		Element creator = doc.select(KickstarterResources.ID_PROJECT_CREATOR).first().
 				select("a").first();
 		project.setOwner(createOwnerReference(creator));

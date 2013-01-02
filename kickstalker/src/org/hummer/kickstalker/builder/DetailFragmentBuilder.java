@@ -5,7 +5,7 @@
 package org.hummer.kickstalker.builder;
 
 import java.text.NumberFormat;
-import java.util.Locale;
+import java.util.Currency;
 
 import org.hummer.kickstalker.R;
 import org.hummer.kickstalker.client.KickstarterClient;
@@ -100,7 +100,9 @@ public class DetailFragmentBuilder {
 	public static void buildDetails(View view, ImageView imageView, int tw, Project project){
 		
 		NumberFormat nF = NumberFormat.getInstance();
-		NumberFormat cF = NumberFormat.getCurrencyInstance(Locale.US);
+		Currency curr = Currency.getInstance(project.getCurrency());
+		NumberFormat cF = NumberFormat.getCurrencyInstance();
+		cF.setCurrency(curr);
 		NumberFormat pF = NumberFormat.getPercentInstance();
 		
 		byte[] imgdata = project.getImageData();

@@ -40,11 +40,11 @@ public class ProjectCardView extends View implements TaskCallbackI {
 	static final int PREFERRED_HEIGHT = 305;
 	private Context context;
 	private Reference project;
-	private TextPaint paint;
-	private Paint titlePaint;
-	private Paint highlightPaint;
-	private Paint borderPaint;
-	private Paint shadowPaint;
+	private static TextPaint paint;
+	private static Paint titlePaint;
+	private static Paint highlightPaint;
+	private static Paint borderPaint;
+	private static Paint shadowPaint;
 	private Bitmap image;
 	private Bitmap text;
 
@@ -53,8 +53,8 @@ public class ProjectCardView extends View implements TaskCallbackI {
 	private boolean imageAvailable = false;
 
 	private StaticLayout titleLayout;
-	private Rect titleRect;
-	private Rect shadowRect;
+	private static Rect titleRect;
+	private static Rect shadowRect;
 	private int width = PREFERRED_WIDTH;
 	private int height = PREFERRED_HEIGHT;
 	private int paddingLeft=5, paddingTop=5, paddingBottom=5, paddingRight=5;
@@ -86,33 +86,46 @@ public class ProjectCardView extends View implements TaskCallbackI {
 		return project;
 	}
 
+	/**
+	 * Initial construction of necessary components for drawing this View
+	 */
 	private void construct(){
 
 		/*
 		 * Paint initializiation for text drawing font is Helvetica, bold
 		 * 34 point in size, the text color is black. 
 		 */
-		paint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
-		paint.setColor(Color.BLACK);
-		paint.setTextSize(28);
-		paint.setTypeface(Typeface.create("Helvetica", Typeface.BOLD));
+		if(paint==null){
+			paint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
+			paint.setColor(Color.BLACK);
+			paint.setTextSize(28);
+			paint.setTypeface(Typeface.create("Helvetica", Typeface.BOLD));
+		}
 
-		titlePaint = new Paint();
-		titlePaint.setColor(Color.WHITE);
-		titlePaint.setAlpha(196);
-		titlePaint.setStyle(Style.FILL);
+		if(titlePaint==null){
+			titlePaint = new Paint();
+			titlePaint.setColor(Color.WHITE);
+			titlePaint.setAlpha(196);
+			titlePaint.setStyle(Style.FILL);
+		}
 
-		highlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		highlightPaint.setAlpha(96);
+		if(highlightPaint==null){
+			highlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+			highlightPaint.setAlpha(96);
+		}
 
-		borderPaint = new Paint();
-		borderPaint.setColor(Color.LTGRAY);
-		borderPaint.setStyle(Style.STROKE);
+		if(borderPaint==null){
+			borderPaint = new Paint();
+			borderPaint.setColor(Color.LTGRAY);
+			borderPaint.setStyle(Style.STROKE);
+		}
 
-		shadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		shadowPaint.setColor(Color.LTGRAY);
-		shadowPaint.setMaskFilter(new BlurMaskFilter(4, Blur.NORMAL));
-		shadowPaint.setStyle(Style.FILL_AND_STROKE);
+		if(shadowPaint==null){
+			shadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+			shadowPaint.setColor(Color.LTGRAY);
+			shadowPaint.setMaskFilter(new BlurMaskFilter(4, Blur.NORMAL));
+			shadowPaint.setStyle(Style.FILL_AND_STROKE);
+		}
 
 		if(template==null) template = BitmapFactory.decodeResource(getResources(), 
 				R.drawable.project_image_template);
@@ -120,15 +133,21 @@ public class ProjectCardView extends View implements TaskCallbackI {
 		if(highlight==null) highlight = BitmapFactory.decodeResource(getResources(), 
 				R.drawable.list_tile_highlight);
 
-		titleRect = new Rect(paddingLeft, paddingTop, width-paddingRight, 100);
-		shadowRect = new Rect(paddingLeft+1, paddingTop+1, 
-				width-paddingRight+1, height-paddingBottom+1);
+		if(titleRect==null)
+			titleRect = new Rect(paddingLeft, paddingTop, width-paddingRight, 100);
+
+		if(shadowRect==null)
+			shadowRect = new Rect(paddingLeft+1, paddingTop+1, 
+					width-paddingRight+1, height-paddingBottom+1);
 
 
 	}
 
+	/**
+	 * Preparation of data to be drawn on screen.
+	 */
 	private void prepareContent(){
-		
+
 		recycle();
 		project.getImageData(context, this);
 		int titlePadding = paddingLeft + paddingRight + textPadding * 2;
@@ -173,10 +192,10 @@ public class ProjectCardView extends View implements TaskCallbackI {
 
 		int w = resolveSizeAndState(width, widthMeasureSpec, 1);
 		int h = resolveSizeAndState(height, heightMeasureSpec, 1);
-		setMeasuredDimension(w, h);
-
+		setMeasuredDimension(w, h); 
+		
 	}
-	
+
 	public void recycle(){
 		imageAvailable = false;
 		image = null;
@@ -193,12 +212,12 @@ public class ProjectCardView extends View implements TaskCallbackI {
 	 */
 	@Override
 	public void onTaskFinished(AbstractTask<?, ?, ?> task, Object result) {
-		
+
 		if(task==null || ((RemoteImageDataLoader)task).getRef()
 				.equals(project.getImageRef())){
 			image = MediaUtil.createBitmap((byte[]) result, 
-					width-paddingLeft-paddingRight, 260);
-			
+					width-paddingLeft-paddingRight);
+
 			imageAvailable = true;
 			invalidate();
 		}

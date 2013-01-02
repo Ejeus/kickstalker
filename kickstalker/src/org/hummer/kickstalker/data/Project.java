@@ -32,9 +32,11 @@ public class Project extends AbstractData implements Serializable {
 	private int goal;
 	private int timeLeft;
 	private Reference owner;
+	private String currency;
 	
 	public Project(String ref){
 		super();
+		currency = "USD";
 		this.ref = ref;
 	}
 	public String getRef(){
@@ -117,5 +119,11 @@ public class Project extends AbstractData implements Serializable {
 	}
 	public Reference asReference(){
 		return new Reference(ref, title);
+	}
+	public void setCurrency(String currency){
+		this.currency = currency;
+	}
+	public String getCurrency(){
+		return currency;
 	}
 }
