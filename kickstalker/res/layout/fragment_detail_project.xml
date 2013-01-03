@@ -30,7 +30,7 @@
         android:background="@color/background_subheading"
         android:maxHeight="8dp"
         android:minHeight="8dp"
-        android:progressDrawable="@drawable/kick_progressbar" />
+        android:progressDrawable="@drawable/kick_progressbar_running" />
 
     <TabHost
         android:id="@android:id/tabhost"

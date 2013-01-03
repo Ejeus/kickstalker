@@ -57,10 +57,10 @@ import android.widget.TabHost.OnTabChangeListener;
  *
  */
 public class KickstarterDetailFragment extends Fragment implements 
-	OnTabChangeListener, TaskCallbackI {
+OnTabChangeListener, TaskCallbackI {
 
 	public static final String TAG = "KICKSTARTERDETAILFRAGMENT";
-	
+
 	private Context context;
 	private KickstarterClient client;
 	private Project project;
@@ -77,81 +77,83 @@ public class KickstarterDetailFragment extends Fragment implements
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
+
 		context = getActivity();
 		BaseActivity activity = ((BaseActivity)context);
 		projectBookmarks = activity.getProjectBookmarks();
 		starredProjects = activity.getStarredProjects();
 		setHasOptionsMenu(true);
-		
+
 		super.onCreate(savedInstanceState);
 		client = new KickstarterClient(context);
-		
+
 		Point p = new Point();
 		getActivity().getWindowManager().getDefaultDisplay().getSize(p);
 		screenWidth = p.x;
 		ac_bookmark_non = R.drawable.ac_fav_non;
 		ac_bookmark_on = R.drawable.ac_fav_on;
-		
+
 		phase = Phase.IDLE;
-		
+
 	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.options_kickstarterdetailfragment, menu);
-		
+
 		ac_bookmark = menu.findItem(R.id.ac_bookmark);
 		initBookmarkState();
-		
+
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+
 		View view = inflater.inflate(
 				R.layout.fragment_detail_project, container, false);
-		
+
 		imageView = (ImageView) view.findViewById(R.id.projectImage);
 		DetailFragmentBuilder.initialize(getActivity(), view);
-		
+
 		((TabHost)view.findViewById(android.R.id.tabhost)).
-			setOnTabChangedListener(this);
-		
+		setOnTabChangedListener(this);
+
 		refresh(view, project);
 		return view;
-		
+
 	}
-	
+
 	public void setData(Project project){
-		
+
 		if(project==null || !project.equals(this.project))
 			refresh(getView(), project);
-		
+
 		this.project = project;
 	}
-	
+
 	private void refresh(View view, final Project project){
-		
+
 		final Context context = getActivity();
 		int[] allIds = {
 				R.id.projectTierContent,
 				R.id.projectUpdateContent,
 				R.id.projectUpdateContent
 		};
-		
-		if(view!=null && project!=null){
-			DetailFragmentBuilder.buildDetails(view, imageView, screenWidth, project);
-			imageView.setOnClickListener(new OnClickListener(){
 
-				@Override
-				public void onClick(View v) {
-					MediaUtil.streamVideo(context, project.getVideoReference().getRef());				
-				}
-				
-			});
-			
+		if(view!=null && project!=null){
+			DetailFragmentBuilder.buildDetails(context, view, imageView, 
+					screenWidth, project);
+			if(project.hasVideo())
+				imageView.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View v) {
+						MediaUtil.streamVideo(context, project.getVideoReference().getRef());				
+					}
+
+				});
+
 			view.findViewById(R.id.fieldTitle).setOnClickListener(new OnClickListener(){
 
 				@Override
@@ -161,9 +163,9 @@ public class KickstarterDetailFragment extends Fragment implements
 							KickstarterClient.BASE_URL + "/" + project.getRef()));
 					startActivity(i);
 				}
-				
+
 			});
-			
+
 			view.findViewById(R.id.fieldCreator).setOnClickListener(new OnClickListener(){
 
 				@Override
@@ -171,31 +173,31 @@ public class KickstarterDetailFragment extends Fragment implements
 					Reference user = project.getOwner();
 					String title = StringUtil.getOwnership(user.getLabel()) + " " +
 							getResources().getString(R.string.ac_backed_projects);
-					
+
 					Intent i = new Intent(context, ProjectListActivity.class);
 					i.putExtra(KickstarterListFragment.KEY_TITLE, title);
 					i.putExtra(KickstarterListFragment.KEY_TYPE, KickstarterListFragment.TYPE_BACKED);
 					i.putExtra(KickstarterListFragment.KEY_USERNAME, user.getRef());
 					startActivity(i);
 				}
-				
+
 			});
-			
+
 			initBookmarkState();
-			
+
 		} else if(view!=null) {
 			DetailFragmentBuilder.clearAll(context, view, allIds);
 		}
-		
+
 	}
-	
-	
+
+
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
+
 		if(phase==Phase.BUSY) return false;
-		
+
 		switch(item.getItemId()){
 		case R.id.ac_bookmark:
 			toggleBookmark();
@@ -204,7 +206,7 @@ public class KickstarterDetailFragment extends Fragment implements
 			share();
 			return true;
 		}
-		
+
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -218,10 +220,10 @@ public class KickstarterDetailFragment extends Fragment implements
 			isBookmark = false;
 		}
 	}
-	
+
 	private void toggleBookmark(){
 		Reference ref = new Reference(project.getRef(), project.getTitle());
-		
+
 		if(isBookmark){
 			int i = projectBookmarks.indexOf(ref);
 			if(i>=0){ 
@@ -237,14 +239,14 @@ public class KickstarterDetailFragment extends Fragment implements
 			isBookmark = true;
 			ac_bookmark.setIcon(ac_bookmark_on);
 		}
-		
+
 		try {
 			BookmarkFactory.store(context, projectBookmarks);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void share(){
 		Intent i = new Intent(Intent.ACTION_SEND);
 		i.setType("text/plain");
@@ -253,13 +255,13 @@ public class KickstarterDetailFragment extends Fragment implements
 				project.getRef());
 		startActivity(i);
 	}
-	
+
 	@Override
 	public void onStop() {
 		super.onStop();
 		if(phase==Phase.BUSY)
 			currentTask.cancel(true);
-		
+
 		phase = Phase.STOPPED;
 	}
 
@@ -278,7 +280,7 @@ public class KickstarterDetailFragment extends Fragment implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onTaskFinished(AbstractTask<?, ?, ?> task, Object result) {
-		
+
 		if(phase==Phase.STOPPED) return;
 		View view = getView();
 		if(task.getName().equals(TierDataLoader.TASKNAME)){
@@ -297,7 +299,7 @@ public class KickstarterDetailFragment extends Fragment implements
 			DetailFragmentBuilder.buildListAndAttach(context, 
 					(ViewGroup) view.findViewById(R.id.projectCommentContent), adapter);
 		}
-		
+
 		phase = Phase.IDLE;	
 		currentTask = null;
 	}
@@ -316,11 +318,12 @@ public class KickstarterDetailFragment extends Fragment implements
 	 */
 	@Override
 	public void onTabChanged(String tabId) {
-		
+
 		if(project==null) return;
-		
+
 		if(tabId.equals(DetailFragmentBuilder.TAB_DETAILS)){
-			DetailFragmentBuilder.buildDetails(getView(), imageView, screenWidth, project);
+			DetailFragmentBuilder.buildDetails(context, getView(), imageView, 
+					screenWidth, project);
 		}else if(tabId.equals(DetailFragmentBuilder.TAB_TIERS)){
 			new TierDataLoader(context, client, this, project.getRef()).execute();
 		}else if(tabId.equals(DetailFragmentBuilder.TAB_UPDATES)){
@@ -328,7 +331,7 @@ public class KickstarterDetailFragment extends Fragment implements
 		}else if(tabId.equals(DetailFragmentBuilder.TAB_COMMENTS)){
 			new CommentDataLoader(context, client, this, project.getRef()).execute();
 		}
-		
+
 	}
 
 }

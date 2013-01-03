@@ -2,25 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/ac_config"
-        android:icon="@drawable/ac_settings"
+        android:id="@+id/ac_search"
+        android:icon="@drawable/ac_search"
         android:showAsAction="ifRoom"
-        android:title="@string/label_config"/>
+        android:title="@string/title_search"/>
     <item
         android:id="@+id/ac_favorite_projects"
         android:icon="@drawable/ac_fav_projects"
         android:showAsAction="ifRoom"
         android:title="@string/ac_favorite_projects"/>
     <item
+        android:id="@+id/ac_config"
+        android:icon="@drawable/ac_settings"
+        android:showAsAction="ifRoom"
+        android:title="@string/label_config"/>
+    <item
         android:id="@+id/ac_about"
         android:icon="@drawable/ac_about"
         android:showAsAction="never"
         android:title="@string/label_about"/>
-    
-    <item
-        android:id="@+id/ac_search"
-        android:icon="@drawable/ac_search"
-        android:showAsAction="ifRoom"
-        android:title="@string/label_search"/>
 
 </menu>

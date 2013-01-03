@@ -23,6 +23,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.view.View;
 import android.widget.RemoteViews;
 
 public class ProjectWidgetProvider extends AppWidgetProvider implements TaskCallbackI {
@@ -119,8 +120,7 @@ public class ProjectWidgetProvider extends AppWidgetProvider implements TaskCall
 		Bitmap bm = MediaUtil.createBitmap(project.getImageData(), 
 				WIDGET_SIZE, WIDGET_SIZE);
 		views.setImageViewBitmap(R.id.projectImage, bm);
-		views.setProgressBar(R.id.progressFunding, project.getGoal(), 
-				project.getPledged(), false);
+		setupProgressBar(views, project);
 		views.setTextViewText(R.id.fieldWidgetText, textWidget(project));
 
 		Intent i = new Intent(context, ProjectDetailActivity.class);
@@ -134,6 +134,36 @@ public class ProjectWidgetProvider extends AppWidgetProvider implements TaskCall
 		return views;
 	}
 
+	private void setupProgressBar(RemoteViews views, Project project){
+		
+		int[] progressIds = new int[]{
+				R.id.progressFundingRunning,
+				R.id.progressFundingCompleted,
+				R.id.progressFundingFailed
+		};
+		
+		int relevantId;
+		switch(project.getStatus()){
+		case RUNNING:
+			relevantId = R.id.progressFundingRunning;
+			break;
+		case COMPLETED:
+			relevantId = R.id.progressFundingCompleted;
+			break;
+		default:
+			relevantId = R.id.progressFundingFailed;
+		}
+		
+		for(int i=0;i<progressIds.length;i++){
+			int id = progressIds[i];
+			if(id!=relevantId) views.setViewVisibility(id, View.GONE);
+		}
+		
+		views.setProgressBar(relevantId, project.getGoal(), 
+				project.getPledged(), false);
+		
+	}
+	
 	public static String textWidget(Project project){
 		return project.getTitle();
 	}

@@ -6,6 +6,8 @@ package org.hummer.kickstalker.data;
 
 import java.io.Serializable;
 
+import org.hummer.kickstalker.R;
+
 /**
  * @author gernot.hummer
  *
@@ -33,6 +35,12 @@ public class Project extends AbstractData implements Serializable {
 	private int timeLeft;
 	private Reference owner;
 	private String currency;
+	
+	public static enum Status {
+		RUNNING,
+		COMPLETED,
+		FAILED
+	}
 	
 	public Project(String ref){
 		super();
@@ -125,5 +133,22 @@ public class Project extends AbstractData implements Serializable {
 	}
 	public String getCurrency(){
 		return currency;
+	}
+	public Status getStatus(){
+		if(pledged >= goal)
+			return Status.COMPLETED;
+		else if(timeLeft > 0)
+			return Status.RUNNING;
+		else
+			return Status.FAILED;
+	}
+	public int getProgressDrawable(){
+		Status status = getStatus();
+		if(status==Status.RUNNING)
+			return R.drawable.kick_progressbar_running;
+		else if(status==Status.COMPLETED)
+			return R.drawable.kick_progressbar_completed;
+		else
+			return R.drawable.kick_progressbar_failed;
 	}
 }

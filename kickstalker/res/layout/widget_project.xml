@@ -28,7 +28,7 @@
           android:scaleType="centerCrop" />
 
       <ProgressBar
-          android:id="@+id/progressFunding"
+          android:id="@+id/progressFundingRunning"
           style="?android:attr/progressBarStyleHorizontal"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -38,7 +38,33 @@
           android:paddingLeft="0dp"
           android:paddingRight="0dp"
           android:paddingTop="0dp"
-          android:progressDrawable="@drawable/kick_progressbar" />
+          android:progressDrawable="@drawable/kick_progressbar_running" />
+      
+      <ProgressBar
+          android:id="@+id/progressFundingCompleted"
+          style="?android:attr/progressBarStyleHorizontal"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:minHeight="6dp"
+          android:maxHeight="6dp"
+          android:paddingBottom="0dp"
+          android:paddingLeft="0dp"
+          android:paddingRight="0dp"
+          android:paddingTop="0dp"
+          android:progressDrawable="@drawable/kick_progressbar_completed" />
+      
+      <ProgressBar
+          android:id="@+id/progressFundingFailed"
+          style="?android:attr/progressBarStyleHorizontal"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:minHeight="6dp"
+          android:maxHeight="6dp"
+          android:paddingBottom="0dp"
+          android:paddingLeft="0dp"
+          android:paddingRight="0dp"
+          android:paddingTop="0dp"
+          android:progressDrawable="@drawable/kick_progressbar_failed" />
 
       <TextView
           android:id="@+id/fieldWidgetText"

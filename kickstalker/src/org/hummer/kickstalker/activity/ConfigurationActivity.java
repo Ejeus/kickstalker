@@ -4,11 +4,12 @@
  */
 package org.hummer.kickstalker.activity;
 
+import org.hummer.kickstalker.AppController;
 import org.hummer.kickstalker.R;
-import org.hummer.kickstalker.client.KickstarterClient;
 import org.hummer.kickstalker.data.Configuration;
 import org.hummer.kickstalker.util.ViewUtil;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,16 +24,11 @@ import android.widget.TextView;
  * @version 1.0
  *
  */
-public class ConfigurationActivity extends BaseActivity {
+public class ConfigurationActivity extends Activity {
 
+	private AppController appC;
 	private Configuration config;
 	private TextView username;
-	private KickstarterClient client;
-	
-	@Override
-	public KickstarterClient getClient(){
-		return client;
-	}
 	
 	/* (non-Javadoc)
 	 * @see org.hummer.kickstalker.activity.BaseActivity#onCreate(android.os.Bundle)
@@ -41,8 +37,8 @@ public class ConfigurationActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
-		client = new KickstarterClient(this);
 		setContentView(R.layout.activity_configuration);
+		appC = AppController.getInstance();
 		config = appC.getConfig(this);
 		
 		username = ViewUtil.findAndSetText(this, 

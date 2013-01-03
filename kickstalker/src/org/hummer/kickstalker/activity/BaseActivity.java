@@ -48,13 +48,13 @@ public abstract class BaseActivity extends Activity {
 	private BookmarkBundle peopleBookmarks;
 	private ArrayAdapter<Reference> starredPeople;
 	protected Phase phase;
-	
+
 	public enum Phase{
 		IDLE,
 		BUSY,
 		STOPPED
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -64,57 +64,57 @@ public abstract class BaseActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		appC = AppController.getInstance();
 		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		
+
 		phase = Phase.IDLE;
-		
+
 	}
-	
+
 	public abstract KickstarterClient getClient();
-	
+
 	/**
 	 * @return AppController. Current instance of AppController.
 	 */
 	public AppController getAppController(){
 		return appC;
 	}
-	
+
 	/**
 	 * @return BookmarkBundle. All bookmarked projects.
 	 */
 	public BookmarkBundle getProjectBookmarks(){
 		return projectBookmarks;
 	}
-	
+
 	/**
 	 * @return ArrayAdapter. An adapter for visually presenting starred projects.
 	 */
 	public ArrayAdapter<Reference> getStarredProjects(){
 		return starredProjects;
 	}
-	
+
 	/**
 	 * @return BookmarkBundle. All bookmarked people.
 	 */
 	public BookmarkBundle getPeopleBookmarks(){
 		return peopleBookmarks;
 	}
-	
+
 	/**
 	 * @return ArrayAdapter. An adapter for visually presenting starred people.
 	 */
 	public ArrayAdapter<Reference> getStarredPeople(){
 		return starredPeople;
 	}
-	
-	
-	
+
+
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onResume()
 	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		projectBookmarks = appC.getBookmarks(this, BookmarkType.PROJECT);
 		Collections.sort(projectBookmarks);
 		starredProjects = new ArrayAdapter<Reference>(this, 
@@ -142,11 +142,11 @@ public abstract class BaseActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		boolean returnVal = super.onOptionsItemSelected(item);
-		
+
 		Intent i;
 		AlertDialog.Builder builder;
 		View view;
-		
+
 		if(!returnVal){
 			switch(item.getItemId()){
 			case R.id.ac_config:
@@ -160,28 +160,30 @@ public abstract class BaseActivity extends Activity {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-								startActivityForProjectRef(
-										projectBookmarks.get(which));			
+						startActivityForProjectRef(
+								projectBookmarks.get(which));			
 					}
-					
+
 				}).create().show();
 				return true;
 			case R.id.ac_search:
 				SearchAction searchAction = new SearchAction(this);
 				view = LayoutInflater.from(this)
-					.inflate(R.layout.dialog_search, null);
+						.inflate(R.layout.dialog_search, null);
 				((TextView)view.findViewById(R.id.fieldSearchTerm))
 					.addTextChangedListener(searchAction);
 				view.findViewById(R.id.buttonSearch)
 					.setOnClickListener(searchAction);
 				builder = new AlertDialog.Builder(this);
-				builder.setTitle(R.string.label_search)
-					.setView(view)
-					.create().show();
+				AlertDialog dialog = builder.setTitle(R.string.title_search)
+						.setView(view).create();
+				
+				searchAction.setDialog(dialog);
+				dialog.show();
 				return true;
 			case R.id.ac_about:
 				view = getWindow().getLayoutInflater()
-					.inflate(R.layout.layout_license, null);
+				.inflate(R.layout.layout_license, null);
 				builder = new AlertDialog.Builder(this);
 				builder.setTitle(R.string.label_about)
 				.setView(view)
@@ -189,19 +191,19 @@ public abstract class BaseActivity extends Activity {
 				return true;
 			}
 		}
-		
+
 		return returnVal;
 	}
-	
-	
-	
+
+
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onStop()
 	 */
 	@Override
 	protected void onStop() {
 		super.onStop();
-		
+
 		try {
 			BookmarkFactory.store(this, projectBookmarks);
 			BookmarkFactory.store(this, peopleBookmarks);
@@ -218,7 +220,7 @@ public abstract class BaseActivity extends Activity {
 		i.putExtra(ProjectDetailActivity.KEY_PRJREF, ref);
 		startActivity(i);
 	}
-	
+
 
 	/**
 	 * Call this if you want to return back to the main apps home page.
@@ -230,5 +232,5 @@ public abstract class BaseActivity extends Activity {
 		startActivity(i);
 		finish();
 	}
-	
+
 }
