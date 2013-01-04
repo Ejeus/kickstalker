@@ -62,6 +62,11 @@ public class CommentAdapter extends BaseAdapter {
 		return comments.get(position);
 	}
 
+	@Override
+	public boolean isEnabled(int position){
+		return false;
+	}
+	
 	/* (non-Javadoc)
 	 * @see android.widget.Adapter#getItemId(int)
 	 */

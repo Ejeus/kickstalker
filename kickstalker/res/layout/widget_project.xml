@@ -7,8 +7,8 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:alpha="128"
-      android:background="@color/background_subheading"
+      android:alpha="96"
+      android:background="@drawable/kick_widget_background"
       android:orientation="vertical"
       android:paddingBottom="0dp"
       android:paddingLeft="0dp"
@@ -22,11 +22,12 @@
           android:minHeight="34dp"
           android:maxHeight="34dp"
           android:paddingBottom="0dp"
-          android:paddingLeft="0dp"
-          android:paddingRight="0dp"
-          android:paddingTop="0dp"
+          android:paddingLeft="1dp"
+          android:paddingRight="1dp"
+          android:paddingTop="1dp"
+          android:background="@drawable/kick_widget_image"
           android:scaleType="centerCrop" />
-
+      
       <ProgressBar
           android:id="@+id/progressFundingRunning"
           style="?android:attr/progressBarStyleHorizontal"
@@ -70,8 +71,10 @@
           android:id="@+id/fieldWidgetText"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:paddingBottom="3dp"
           android:paddingLeft="5dp"
           android:paddingRight="5dp"
+          android:paddingTop="3dp"
           android:text="TextView"
           android:textColor="@color/white"
           android:textSize="10sp" />

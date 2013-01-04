@@ -16,6 +16,7 @@ import org.hummer.kickstalker.task.AbstractTask;
 import org.hummer.kickstalker.task.DetailDataLoader;
 import org.hummer.kickstalker.task.i.TaskCallbackI;
 import org.hummer.kickstalker.util.MediaUtil;
+import org.hummer.kickstalker.util.StringUtil;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -29,7 +30,7 @@ import android.widget.RemoteViews;
 public class ProjectWidgetProvider extends AppWidgetProvider implements TaskCallbackI {
 
 	public static final String TAG = "PRJWDGTPRV";
-	private static final int WIDGET_SIZE = 110;
+	private static final int WIDGET_SIZE = 108;
 	private Context context;
 	private AppWidgetManager appWidgetManager;
 	private WidgetDataMap data;
@@ -165,7 +166,7 @@ public class ProjectWidgetProvider extends AppWidgetProvider implements TaskCall
 	}
 	
 	public static String textWidget(Project project){
-		return project.getTitle();
+		return StringUtil.shorten(project.getTitle(), 25);
 	}
 
 	/* (non-Javadoc)

@@ -34,6 +34,11 @@
     <string name="license_icons">Kickstalker uses the TWG Retina Icons Set, published
         under the creativecommons Attribution-ShareAlike 3.0 Unported License: 
         http://creativecommons.org/licenses/by-sa/3.0/</string>
+    <string name="license_libs">
+        Kickstalker also uses Jsoup library for html querying, which was published 
+        under the MIT License: http://jsoup.org/license. Gson is used for
+        JSON handling, which was published under the Apache License, Version 2.0:
+        http://www.apache.org/licenses/LICENSE-2.0</string>
     <string name="label_about">About Kickstalker</string>
     <string name="widget_project_title">Kickstalker Project Widget</string>
     <string name="label_pickproject">Pick a project:</string>
@@ -41,4 +46,6 @@
     <string name="title_search">Quicksearch</string>
     <string name="label_search">search</string>
     <string name="dialog_label_search">Enter term to search for:</string>
+    
+    <string name="error_no_videoplayer">No player for MP4 videos found.</string>
 </resources>

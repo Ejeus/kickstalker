@@ -35,6 +35,7 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 	private KickstarterClient client;
 	private KickstarterDetailFragment detailFragment;
 	private AbstractTask<?,?,?> currentTask;
+//	private TouchHandler touchHandler;
 	
 	@Override
 	public KickstarterClient getClient(){
@@ -48,6 +49,7 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		client = new KickstarterClient(this);
+//		touchHandler = new TouchHandler();
 		setContentView(R.layout.activity_main);
 		
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -89,6 +91,25 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 
 
 
+//	@Override
+//	public boolean onTouchEvent(MotionEvent event) {
+//
+//		switch(event.getAction()){
+//		case MotionEvent.ACTION_DOWN:
+//			touchHandler.clear(event.getX(), event.getY());
+//			return true;
+//		case MotionEvent.ACTION_MOVE:
+//			touchHandler.setCurrentX(event.getX());
+//			touchHandler.setCurrentY(event.getY());
+//			return true;
+//		case MotionEvent.ACTION_UP:
+//			touchHandler.process();
+//			return true;
+//		}
+//		
+//		return super.onTouchEvent(event);
+//	}
+
 	/* (non-Javadoc)
 	 * @see org.hummer.kickstalker.task.i.TaskCallbackI#onTaskStarted(org.hummer.kickstalker.task.AbstractTask)
 	 */
@@ -129,4 +150,40 @@ public class ProjectDetailActivity extends BaseActivity implements TaskCallbackI
 		currentTask = null;
 	}
 	
+//	private class TouchHandler{
+//
+//		float currentX, currentY;
+//		float movedX, movedY;
+//				
+//		
+//		public void setCurrentX(float x){
+//			movedX = x - currentX;
+//			currentX = x;
+//		}
+//		
+//		public void setCurrentY(float y){
+//			movedY = y - currentY;
+//			currentY = y;
+//		}
+//		
+//		public void process(){
+//			Log.i(TAG, "Processing touch event ...");
+//			TabHost tabHost = detailFragment.getTabHost();
+//			int current = tabHost.getCurrentTab();
+//			int ubound = tabHost.getTabWidget().getTabCount() - 1;
+//			if(movedX < 0 && current > 0){
+//				tabHost.setCurrentTab(--current);
+//			}else if(movedX > 0 && current < ubound){
+//				tabHost.setCurrentTab(++current);
+//			}
+//		}
+//		
+//		public void clear(float x, float y){
+//			currentX = x;
+//			currentY= y;
+//			movedX = 0;
+//			movedY = 0;
+//		}
+//	}
+//	
 }

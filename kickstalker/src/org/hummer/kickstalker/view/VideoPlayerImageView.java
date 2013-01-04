@@ -32,6 +32,7 @@ public class VideoPlayerImageView extends ImageView {
 	private static Bitmap playerIcon;
 	int playerIconX, playerIconY;
 	boolean video = false;
+	
 
 	public VideoPlayerImageView(Context context) {
 		super(context);

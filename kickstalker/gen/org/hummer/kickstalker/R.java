@@ -11,6 +11,10 @@ public final class R {
     public static final class anim {
         public static final int incoming=0x7f040000;
         public static final int outgoing=0x7f040001;
+        public static final int slide_left_in=0x7f040002;
+        public static final int slide_left_out=0x7f040003;
+        public static final int slide_right_in=0x7f040004;
+        public static final int slide_right_out=0x7f040005;
     }
     public static final class attr {
     }
@@ -42,33 +46,36 @@ public final class R {
         public static final int kick_progressbar_completed=0x7f02000e;
         public static final int kick_progressbar_failed=0x7f02000f;
         public static final int kick_progressbar_running=0x7f020010;
-        public static final int list_tile_highlight=0x7f020011;
-        public static final int project_image_template=0x7f020012;
-        public static final int videoplayer_play=0x7f020013;
+        public static final int kick_widget_background=0x7f020011;
+        public static final int kick_widget_image=0x7f020012;
+        public static final int list_tile_highlight=0x7f020013;
+        public static final int project_image_template=0x7f020014;
+        public static final int videoplayer_play=0x7f020015;
     }
     public static final class id {
-        public static final int ac_about=0x7f0b003f;
-        public static final int ac_bookmark=0x7f0b0042;
-        public static final int ac_cancel=0x7f0b0041;
-        public static final int ac_config=0x7f0b003e;
-        public static final int ac_favorite_projects=0x7f0b003d;
-        public static final int ac_projects_backed=0x7f0b0045;
-        public static final int ac_projects_discover=0x7f0b0044;
-        public static final int ac_save=0x7f0b0040;
-        public static final int ac_search=0x7f0b003c;
-        public static final int ac_share=0x7f0b0043;
+        public static final int ac_about=0x7f0b0040;
+        public static final int ac_bookmark=0x7f0b0043;
+        public static final int ac_cancel=0x7f0b0042;
+        public static final int ac_config=0x7f0b003f;
+        public static final int ac_favorite_projects=0x7f0b003e;
+        public static final int ac_projects_backed=0x7f0b0046;
+        public static final int ac_projects_discover=0x7f0b0045;
+        public static final int ac_save=0x7f0b0041;
+        public static final int ac_search=0x7f0b003d;
+        public static final int ac_share=0x7f0b0044;
         public static final int appContent=0x7f0b0004;
-        public static final int buttonCancel=0x7f0b003b;
+        public static final int buttonCancel=0x7f0b003c;
         public static final int buttonSearch=0x7f0b0009;
-        public static final int commentAuthor=0x7f0b002d;
-        public static final int commentContent=0x7f0b002f;
-        public static final int commentDate=0x7f0b002e;
+        public static final int commentAuthor=0x7f0b002e;
+        public static final int commentContent=0x7f0b0030;
+        public static final int commentDate=0x7f0b002f;
         public static final int commentProgressBar=0x7f0b0026;
         public static final int fieldBackers=0x7f0b0015;
         public static final int fieldCreator=0x7f0b0012;
         public static final int fieldDescription=0x7f0b0020;
         public static final int fieldGoal=0x7f0b001c;
         public static final int fieldIconLicense=0x7f0b002c;
+        public static final int fieldLibLicense=0x7f0b002d;
         public static final int fieldOwnLicense=0x7f0b002b;
         public static final int fieldPercent=0x7f0b0019;
         public static final int fieldPledged=0x7f0b0018;
@@ -77,12 +84,12 @@ public final class R {
         public static final int fieldTimeLeft=0x7f0b001f;
         public static final int fieldTitle=0x7f0b0000;
         public static final int fieldUsername=0x7f0b0003;
-        public static final int fieldWidgetText=0x7f0b0039;
+        public static final int fieldWidgetText=0x7f0b003a;
         public static final int horizontalScrollView1=0x7f0b000c;
         public static final int labelBackers=0x7f0b0014;
         public static final int labelCreator=0x7f0b0011;
         public static final int labelGoal=0x7f0b001b;
-        public static final int labelPickProject=0x7f0b003a;
+        public static final int labelPickProject=0x7f0b003b;
         public static final int labelPledged=0x7f0b0017;
         public static final int labelSearch=0x7f0b0006;
         public static final int labelTimeLeft=0x7f0b001e;
@@ -92,9 +99,9 @@ public final class R {
         public static final int loadingProgressBar=0x7f0b002a;
         public static final int progressBar1=0x7f0b0005;
         public static final int progressFunding=0x7f0b000b;
-        public static final int progressFundingCompleted=0x7f0b0037;
-        public static final int progressFundingFailed=0x7f0b0038;
-        public static final int progressFundingRunning=0x7f0b0036;
+        public static final int progressFundingCompleted=0x7f0b0038;
+        public static final int progressFundingFailed=0x7f0b0039;
+        public static final int progressFundingRunning=0x7f0b0037;
         public static final int projectCommentContent=0x7f0b0025;
         public static final int projectDetailContent=0x7f0b000d;
         public static final int projectImage=0x7f0b000f;
@@ -109,14 +116,14 @@ public final class R {
         public static final int tableRow4=0x7f0b001a;
         public static final int tableRow5=0x7f0b001d;
         public static final int textView1=0x7f0b0001;
-        public static final int tierBackers=0x7f0b0031;
-        public static final int tierBody=0x7f0b0032;
+        public static final int tierBackers=0x7f0b0032;
+        public static final int tierBody=0x7f0b0033;
         public static final int tierProgressBar=0x7f0b0022;
-        public static final int tierTitle=0x7f0b0030;
-        public static final int updateBody=0x7f0b0035;
-        public static final int updateId=0x7f0b0034;
+        public static final int tierTitle=0x7f0b0031;
+        public static final int updateBody=0x7f0b0036;
+        public static final int updateId=0x7f0b0035;
         public static final int updateProgressBar=0x7f0b0024;
-        public static final int updateTitle=0x7f0b0033;
+        public static final int updateTitle=0x7f0b0034;
     }
     public static final class layout {
         public static final int activity_configuration=0x7f030000;
@@ -149,17 +156,19 @@ public final class R {
         public static final int configuration_activity_label_username=0x7f080002;
         public static final int configuration_activity_username_hint=0x7f080003;
         public static final int description_username=0x7f080014;
-        public static final int dialog_label_search=0x7f08001d;
+        public static final int dialog_label_search=0x7f08001e;
+        public static final int error_no_videoplayer=0x7f08001f;
         public static final int fragment_caption_discover=0x7f080006;
-        public static final int label_about=0x7f080017;
+        public static final int label_about=0x7f080018;
         public static final int label_cancel=0x7f08000e;
         public static final int label_config=0x7f08000f;
-        public static final int label_pickproject=0x7f080019;
+        public static final int label_pickproject=0x7f08001a;
         public static final int label_project_name=0x7f080005;
         public static final int label_save=0x7f08000d;
-        public static final int label_search=0x7f08001c;
-        public static final int label_share=0x7f08001a;
+        public static final int label_search=0x7f08001d;
+        public static final int label_share=0x7f08001b;
         public static final int license_icons=0x7f080016;
+        public static final int license_libs=0x7f080017;
         public static final int license_own=0x7f080015;
         public static final int project_detail_label_backers=0x7f080007;
         public static final int project_detail_label_creator=0x7f080010;
@@ -168,8 +177,8 @@ public final class R {
         public static final int project_detail_label_timeleft=0x7f080009;
         public static final int starred_projects=0x7f080013;
         public static final int title_project_detail=0x7f080001;
-        public static final int title_search=0x7f08001b;
-        public static final int widget_project_title=0x7f080018;
+        public static final int title_search=0x7f08001c;
+        public static final int widget_project_title=0x7f080019;
     }
     public static final class style {
         /** 

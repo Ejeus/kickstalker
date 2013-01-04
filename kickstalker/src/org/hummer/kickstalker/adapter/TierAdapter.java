@@ -65,6 +65,11 @@ public class TierAdapter extends BaseAdapter {
 		return position;
 	}
 
+	@Override
+	public boolean isEnabled(int position){
+		return false;
+	}
+	
 	/* (non-Javadoc)
 	 * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
 	 */

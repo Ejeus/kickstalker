@@ -116,14 +116,14 @@ OnTabChangeListener, TaskCallbackI {
 		imageView = (ImageView) view.findViewById(R.id.projectImage);
 		DetailFragmentBuilder.initialize(getActivity(), view);
 
-		((TabHost)view.findViewById(android.R.id.tabhost)).
-		setOnTabChangedListener(this);
+		((TabHost)view.findViewById(android.R.id.tabhost))
+			.setOnTabChangedListener(this);
 
 		refresh(view, project);
 		return view;
 
 	}
-
+	
 	public void setData(Project project){
 
 		if(project==null || !project.equals(this.project))

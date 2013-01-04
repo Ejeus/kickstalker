@@ -47,7 +47,9 @@ public class ListDataLoader extends AbstractTask<Void, Void, List<Reference>>{
 	@Override
 	protected List<Reference> doInBackground(Void... params) {
 		
-		callback.onTaskStarted(this);;
+		callback.onTaskStarted(this);
+		if(filterParam==null) filterParam = "";
+		
 		try {
 			if(type.equals(KickstarterListFragment.TYPE_SEARCH)){
 				return client.getProjectsFor(filterParam);
